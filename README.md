@@ -19,3 +19,8 @@ Förutsätter att du installerat Marp för VS Code:
 2. En mapp med namnet **dist** skapas med en html-version och en PDF-version av presentationen.
 
 (Obs! Använd *inte* Marp-extensionens "Export slide deck" - den ger inte lika bra resultat som **npm run make**.)
+
+### Skapa ett eget repo från detta.
+1. Vi rekommenderar inte att forka detta repo, kopiera istället över koden i ert eget repo.
+2. Glömt inte att få med **.gitignore** - det är viktigt att *node_modules* och *dist*-mapparna ignoreras i Git, vilket redan är inställt korrekt.
+3. Vill ni börja med Python-kod (eller Java-kod) i repot, justera  **.gitignore** för detta så att onödiga filer ej tas med! Just nu är **.gitgnore** optimerad för Node.js-baserade projekt.
