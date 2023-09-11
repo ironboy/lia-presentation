@@ -1,3 +1,10 @@
+# Mac shit
+.DS_Store
+
+# Compiled source to HTML and PDF etc 
+# (ignore in Git)
+dist
+
 # Logs
 logs
 *.log
