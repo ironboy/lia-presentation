@@ -209,3 +209,7 @@ section.nodehill-faces a {
 section.first-page figure {
   background-position-y: 0% !important;
 }
+
+section.info-the-blog figure {
+  border-left: 1px solid #999 !important;
+}

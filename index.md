@@ -17,6 +17,7 @@ language: sv-SE
 ## Arbetstider, arbetsformer & projektinfo
 
 ---
+
 <!-- paginate: true -->
 ![bg right:30%](images/example-image-1.jpg)
 
@@ -33,6 +34,7 @@ language: sv-SE
 - *Samt:* Ni [läser artiklarna på bloggen](https://lia.nodehill.se), diskuterar dessa gemensamt och börjar därefter er gemensamma sprintplanering!
 
 ---
+
 ![bg left:30%](images/example-image-3.jpg)
 
 # Vem genomför sin LIA hos Node Hill?
@@ -86,7 +88,6 @@ Mattias har en bakgrund som Technical Advisor på CCC Nordic A/S, Örestad och s
 
 ---
 
-
 ![bg left:30%](images/planning2.jpg)
 
 # Arbetstider och former
@@ -119,6 +120,8 @@ Mattias har en bakgrund som Technical Advisor på CCC Nordic A/S, Örestad och s
 
 ![bg right:40%](images/blogg.jpg)
 
+<!-- class: info-the-blog -->
+
 # Läs artiklarna på bloggen
 [Det finns en blogg](https://lia.nodehill.se) där du bl.a. kan läsa artiklar om hur Node Hill arbetar med:
 - Versionshantering i Git
@@ -133,11 +136,11 @@ Mattias har en bakgrund som Technical Advisor på CCC Nordic A/S, Örestad och s
 
 ---
 
-![bg left:38%](images/todo-doing-done.jpg)
+![bg left:38%](images/bilderbok-exempel.jpg)
 
-# Projektinfo
+# Projektinfo: AI-bilderboken
 Projektet ni ska jobba i har följande **mål**/EPICS:
-- Skapa ett system där en författare kan skriva texten till en bilderbok som [markdown](https://www.markdownguide.org) och lägga in bilder manuellt, få den automatiskt layoutad med [MARP](https://marp.app) + [CSS](https://www.w3schools.com/css/) + ytterligare kod för att skapa HTML och PDF från Marp [redan skriven av Node Hill](https://github.com/xxx).
+- Skapa ett system där en författare kan skriva texten till en bilderbok som [markdown](https://www.markdownguide.org) och lägga in bilder manuellt, få den automatiskt layoutad med [MARP](https://marp.app) + [CSS](https://www.w3schools.com/css/) + ytterligare kod för att skapa HTML och PDF från Marp [redan skriven av Node Hill](https://github.com/ironboy/lia-presentation).
 - Gör research på hur bilderböcker fungerar, de har uppslag, olika laouyt för vänster/höger-sidor etc. Fundera även på en lämplig [typografi](https://www.figma.com/resource-library/typography-in-design) (teckensnitt och teckenstorlekar) etc för er mall.
 - Få bilderboken att automatiskt illustreras via AI:<br>[Stable Diffusion:s API](https://stablediffusionweb.com).
 - Går det att extrahera information för illustrationerna direkt från texten eller ska vi införa tillägg i vår markdown-syntax där författaren kan "prompta" (skriva instruktioner till) AI:n?
@@ -148,7 +151,6 @@ Ni kommer att hinna 5-6 sprinter. Vilken/vilka EPIC:s börjar ni med?
 ---
 
 ![bg right:35%](images/mattias-again.jpg)
-
 
 <br><br>
 <br><br>
