@@ -118,7 +118,7 @@ Mattias har en bakgrund som Technical Advisor på CCC Nordic A/S, Örestad och s
 
 ---
 
-![bg right:40%](images/blogg.jpg)
+![bg right:42%](images/blogg.jpg)
 
 <!-- class: info-the-blog -->
 
