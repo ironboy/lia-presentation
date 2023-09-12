@@ -1,6 +1,16 @@
 # lia-presentation
 Lia-presentation byggd med MARP + Mrs Marper
 
+### Viktigt! Installera Ghossctscript
+För att skapande/komprimering av PDF:er ska fungera:
+
+GhostScript måste vara installerat på datorn och tillgängligt som en global path via kommandot 'gs' i terminalen/shell. Se installationsinställningar:
+
+Windows: https://ghostscript.com/docs/9.54.0/Install.htm#Install_Windows
+Mac:     https://formulae.brew.sh/formula/ghostscript
+Ubuntu:  sudo apt-get -y install ghostscript
+
+
 ## Installera
 1. Se till att Node.js är installerat!
 2. Använd VSC (Visual Studio Code) som din kodeditor. Ställ in enligt bloggen.
