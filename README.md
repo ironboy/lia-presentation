@@ -10,7 +10,6 @@ Windows: https://ghostscript.com/docs/9.54.0/Install.htm#Install_Windows
 Mac:     https://formulae.brew.sh/formula/ghostscript
 Ubuntu:  sudo apt-get -y install ghostscript
 
-
 ## Installera
 1. Se till att Node.js är installerat!
 2. Använd VSC (Visual Studio Code) som din kodeditor. Ställ in enligt bloggen.
