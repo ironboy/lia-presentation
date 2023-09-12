@@ -45,8 +45,8 @@ En lista över LIA-praktikanter, samt era handledare på Node Hill:
 |:--|:--|
 | Filip Sandbacka |fsandbacka@gmail.com
 | Linus Edlung | linus.edlund2@hotmail.com
-| Rick Nykvist | mrnykvist@gmail.com
-| Sava Eftekhari | sabaeftekhari@hotmail.com
+| Rickard Nykvist | mrnykvist@gmail.com
+| Saba Eftekhari | sabaeftekhari@hotmail.com
 | Xiangbin Xiao | xiangbin.xiao@student.nbi-handelsakademin.se
 | Yunus Abubakar| yunusabu10@yahoo.com
 | Mattias Herzig | mattias@nodehill.com &nbsp;(LIA-handledare), 072-398 77 93
