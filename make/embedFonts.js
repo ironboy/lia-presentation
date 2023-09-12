@@ -5,7 +5,6 @@ _export = function embedFonts(html) {
   // don't work with marp preview in VSC...
   let fonts = '\n' + readFileSync('./fonts.css') + '\n';
   html = html.replace(/\@import url\('https:\/\/fonts.googleapis.com[^\)]*\);/, fonts);
-  // url(data:application/x-font-woff;charset=utf-8;base64,<base64_encoded>) format('woff');
   let fontUrls = JSON.parse(JSON.stringify([...html.matchAll(/url\('\.\.\/fonts\/[^;]*;/g)])).map(x => x[0]);
   let fontPaths = fontUrls.map(x => './fonts/' + x.split('fonts/')[1].split('\') format')[0]);
   let prefix = 'url(data:application/x-font-woff;charset=utf-8;base64,';
