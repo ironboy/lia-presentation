@@ -1,24 +1,24 @@
 # lia-presentation
 Lia-presentation byggd med MARP + Mrs Marper
 
-### Viktigt! Installera Ghossctscript
+## Viktigt! Installera Ghossctscript
 För att skapande/komprimering av PDF:er ska fungera:
 
 GhostScript måste vara installerat på datorn och tillgängligt som en global path via kommandot 'gs' i terminalen/shell. Se installationsinställningar:
 
-### Windows (samt Linux Snap)
+#### Windows (samt Linux Snap)
 https://ghostscript.com/releases/gsdnld.html 
 
 *Notera:* Välj rätt OS + AGPL License
 
-### Mac     
+#### Mac     
 ```
 brew install ghostscript
 ```
 
 *Notera:* Installera HomeBrew försto om ej tidigare installerat: https://brew.sh
 
-### Debian/Ubuntu
+#### Debian/Ubuntu
 ```
 sudo apt-get -y install ghostscript
 ```
