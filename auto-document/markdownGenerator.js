@@ -5,7 +5,7 @@ export function markdownGenerator(
     `## ${file}`,
     '',
     '### Description',
-    `${description.split('\n').map(x => x.slice(1).trim()).join('\n').split('-').join('*')}`,
+    `- ${description.split('\n* ').map(x => x.slice(3).trim()).join('\n')}`,
     '',
     exports.length ? `### Exports\n ${exports.map(x => '* ' + x).join('\n')}` : '',
     uses.length ? `\n\n### Uses\n ${uses.map(x => '*' + x.exports.join(', ') + `* from [${x.file}](#${x.file.toLowerCase().replace(/\./g, '')})`).map(x => '* ' + x).join('\n')}` : '',

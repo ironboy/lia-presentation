@@ -1,6 +1,6 @@
 /***
- * - Wraps words inside <a-word> tags
- * - Wraps spaces inside <a-space> tags
+ * - Wraps words inside a-word tags
+ * - Wraps spaces inside a-space tags
  * - Used for letter spacing
  */
 

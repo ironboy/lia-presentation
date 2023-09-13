@@ -83,7 +83,7 @@ We're rather relaxed. But there are some important guidelines you really *should
 ## __settings.js
 
 #### Description
-* Global settings affecting conversion, image quality and typography
+- Global settings affecting conversion, image quality and typography
 
 #### Exports
 * settings
@@ -142,9 +142,9 @@ export const settings = {
 ## _index.js
 
 #### Description
-* Load/import all JS code in the make folder
-* Turn every imported asset into a global variable
-* Calls _make() to start the conversion process
+- Load/import all JS code in the make folder
+- Turn every imported asset into a global variable
+- Calls _make() to start the conversion process
 
 #### Uses
 * *_make* from [_make.js](#_makejs)
@@ -186,8 +186,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 ## _loadDependencies.js
 
 #### Description
-* Loads (imports/requires) all NPM module dependences
-* Exports all the dependencies as globals
+- Loads (imports/requires) all NPM module dependences
+- Exports all the dependencies as globals
 
 #### Exports
 * PDFDocument
@@ -242,8 +242,8 @@ export {
 ## _make.js
 
 #### Description
-* Main/start function
-* Makes HTML, PDF, JPG and PPTX files from index.md
+- Main/start function
+- Makes HTML, PDF, JPG and PPTX files from index.md
 
 #### Exports
 * _make
@@ -313,8 +313,8 @@ export async function _make() {
 ## _makePart2.js
 
 #### Description
-* Part 2 of main/start function
-* Makes HTML, PDF, JPG and PPTX files from index.md
+- Part 2 of main/start function
+- Makes HTML, PDF, JPG and PPTX files from index.md
 
 #### Exports
 * _makePart2
@@ -376,8 +376,8 @@ export async function _makePart2(preWarmedPromise, startTime, r, r2) {
 ## addAndMassageSettings.js
 
 #### Description
-* Adjusts/unfolds some setting parameters
-* Imports settings given in index.md
+- Adjusts/unfolds some setting parameters
+- Imports settings given in index.md
 
 #### Exports
 * addAndMassageSettings
@@ -426,7 +426,7 @@ export function addAndMassageSettings() {
 ## addPptxSlideLinks.js
 
 #### Description
-* Adds hyperlinks to PPTX/PowerPoint
+- Adds hyperlinks to PPTX/PowerPoint
 
 #### Exports
 * addPptxSlideLinks
@@ -463,7 +463,7 @@ export async function addPptxSlideLinks(slide, links) {
 ## adjustLetterSpacing.js
 
 #### Description
-* Adjust the letter-spacing for justified text to minimize gaps
+- Adjust the letter-spacing for justified text to minimize gaps
 
 #### Exports
 * adjustLetterSpacing
@@ -526,7 +526,7 @@ export async function adjustLetterSpacing(page = 1, loadPage) {
 ## bgImagesToClasses.js
 
 #### Description
-* Converts bg images to classes (avoids double embedding)
+- Converts bg images to classes (avoids double embedding)
 
 #### Exports
 * bgImagesToClasses
@@ -565,8 +565,8 @@ export function bgImagesToClasses(html) {
 ## cleanupAndGetPageLength.js
 
 #### Description
-* Returns the page length
-* Removes navigation tool bar (so not printed to PDF and JPG:s)
+- Returns the page length
+- Removes navigation tool bar (so not printed to PDF and JPG:s)
 
 #### Exports
 * cleanupAndGetPageLength
@@ -595,7 +595,7 @@ export function cleanupAndGetPageLength() {
 ## compressPDF.js
 
 #### Description
-* Compress the PDF using Ghostscript
+- Compress the PDF using Ghostscript
 
 #### Exports
 * compressPDF
@@ -627,7 +627,7 @@ export function compressPDF() {
 ## embedFonts.js
 
 #### Description
-* Embeds the fonts in the HTML file
+- Embeds the fonts in the HTML file
 
 #### Exports
 * embedFonts
@@ -665,7 +665,7 @@ export function embedFonts(html) {
 ## embedImages.js
 
 #### Description
-* Embeds the images in the HTML file
+- Embeds the images in the HTML file
 
 #### Exports
 * embedImages
@@ -706,7 +706,7 @@ export async function embedImages(html) {
 ## fixSloppyPDFCropbox.js
 
 #### Description
-* Crops the PDF very slightly to avoid thin white page borders
+- Crops the PDF very slightly to avoid thin white page borders
 
 #### Exports
 * fixSloppyPDFCropbox
@@ -747,7 +747,7 @@ export async function fixSloppyPDFCropbox(r) {
 ## getLinkPositions.js
 
 #### Description
-* Get link positiions so they can be included in the PPTX/PowerPint
+- Get link positiions so they can be included in the PPTX/PowerPint
 
 #### Exports
 * getLinkPositions
@@ -782,7 +782,7 @@ export function getLinkPositions(el, i, mPPTX) {
 ## getPageDimensions.js
 
 #### Description
-* Helps Puppeteer get the page dimensions
+- Helps Puppeteer get the page dimensions
 
 #### Exports
 * getPageDimensions
@@ -820,7 +820,7 @@ export function getPageDimensions(el) {
 ## getSpaceWidths.js
 
 #### Description
-* Get widhts of spaces needed fo letter-spacing adjustments
+- Get widhts of spaces needed fo letter-spacing adjustments
 
 #### Exports
 * getSpaceWidths
@@ -882,7 +882,7 @@ export function getSpaceWidths() {
 ## hyphenate.js
 
 #### Description
-* Hyphenates the text using the hyphen npm module
+- Hyphenates the text using the hyphen npm module
 
 #### Exports
 * hyphenate
@@ -946,7 +946,7 @@ export async function hyphenate(html) {
 ## includeLetterSpacer.js
 
 #### Description
-* Includes the letter spacing logic in the HTML client side code
+- Includes the letter spacing logic in the HTML client side code
 
 #### Exports
 * includeLetterSpacer
@@ -990,7 +990,7 @@ export function includeLetterSpacer(html) {
 ## makeHtml.js
 
 #### Description
-* Creates the HTML file using MARP CLI
+- Creates the HTML file using MARP CLI
 
 #### Exports
 * makeHtml
@@ -1018,7 +1018,7 @@ export async function makeHtml() {
 ## makeLinkTargetsBlank.js
 
 #### Description
-* Client side code assuring that external links opens in new tabs
+- Client side code assuring that external links opens in new tabs
 
 #### Exports
 * makeLinkTargetsBlank
@@ -1048,7 +1048,7 @@ export function makeLinkTargetsBlank() {
 ## makeLinkTargetsBlankAdd.js
 
 #### Description
-* Includes client side code for opening external links in new tabs
+- Includes client side code for opening external links in new tabs
 
 #### Exports
 * makeLinkTargetsBlankAdd
@@ -1076,8 +1076,8 @@ export function makeLinkTargetsBlankAdd(html) {
 ## makePdfFromHtml.js
 
 #### Description
-* Uses Puppeteer to create a PDF and JPG:s
-* Gathers link position info for PPTX/PowerPoint creation
+- Uses Puppeteer to create a PDF and JPG:s
+- Gathers link position info for PPTX/PowerPoint creation
 
 #### Exports
 * makePdfFromHtml
@@ -1151,7 +1151,7 @@ export async function makePdfFromHtml(r, preWarmedPromise) {
 ## makePptx.js
 
 #### Description
-* Creates a PPTX/PowerPoint using the npm module pptxgenjs
+- Creates a PPTX/PowerPoint using the npm module pptxgenjs
 
 #### Exports
 * makePptx
@@ -1194,7 +1194,7 @@ export async function makePptx(widthMm, heightMm, pagePaths, allLinkPositions) {
 ## nonJustify.js
 
 #### Description
-* Helper for space width calculation during letter spacing
+- Helper for space width calculation during letter spacing
 
 #### Exports
 * nonJustify
@@ -1223,7 +1223,7 @@ export function nonJustify() {
 ## pdfMetaData.js
 
 #### Description
-* Sets PDF meta data
+- Sets PDF meta data
 
 #### Exports
 * pdfMetaData
@@ -1257,7 +1257,7 @@ export function pdfMetaData(pdfDoc, r) {
 ## preWarmMakePdfFromHtml.js
 
 #### Description
-* Starts Puppeteer early to have it ready when needed
+- Starts Puppeteer early to have it ready when needed
 
 #### Exports
 * preWarmMakePDFFromHtml
@@ -1283,7 +1283,7 @@ export async function preWarmMakePDFFromHtml() {
 ## reJustify.js
 
 #### Description
-* Helper for space width calculation during letter spacing
+- Helper for space width calculation during letter spacing
 
 #### Exports
 * reJustify
@@ -1308,7 +1308,7 @@ export function reJustify() {
 ## removeQuotes.js
 
 #### Description
-* Remove three different types of quotes from a string
+- Remove three different types of quotes from a string
 
 #### Exports
 * removeQuotes
@@ -1335,7 +1335,7 @@ export function removeQuotes(x) {
 ## scaleImage.js
 
 #### Description
-* Scales imags using the npm module sharp
+- Scales imags using the npm module sharp
 
 #### Exports
 * scaleImage
@@ -1366,7 +1366,7 @@ export async function scaleImage(buffer) {
 ## setHtmlLanguage.js
 
 #### Description
-* Sets the html lang attribute according to settings
+- Sets the html lang attribute according to settings
 
 #### Exports
 * setHTMLLanguage
@@ -1395,8 +1395,8 @@ export function setHTMLLanguage(html) {
 ## textNodesUnder.js
 
 #### Description
-* Extract text nodes in a DOM element
-* Used for letter spacing
+- Extract text nodes in a DOM element
+- Used for letter spacing
 
 #### Exports
 * textNodesUnder
@@ -1423,9 +1423,9 @@ export function textNodesUnder(el) {
 ## wrapWords.js
 
 #### Description
-* Wraps words inside <a-word> tags
-* Wraps spaces inside <a-space> tags
-* Used for letter spacing
+- Wraps words inside a-word tags
+- Wraps spaces inside a-space tags
+- Used for letter spacing
 
 #### Exports
 * wrapWords

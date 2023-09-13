@@ -4,11 +4,10 @@ export function performFinalCleaningOfMarkdown(md, allContent, readFileSync, pat
   let code = allContent.map(x => x.code);
   md = md.replace(/\[theCodeHere\]/g, x => code.shift());
   md = md.replace(/\n{3,}/g, '\n\n');
-  md = md.split('* * ').join('* ');
+  md = md.split('* - ').join('- ');
   md = md.split('** from **_index.js**').join('**index.js**');
   md = md.split('### ').join('#### ');
   md = md.split('\n## ').join('\n---\n## ');
-  md = md.split('<a*').join('<a-');
   md = md.split('letter*spacing').join('letter-spacing')
   md = readFileSync(pathJoin(__dirname, 'base.md'), 'utf-8') + md;
   return md;
