@@ -1,4 +1,6 @@
-_export = async function adjustLetterSpacing(page = 1) {
+_export = async function adjustLetterSpacing(page = 1, loadPage) {
+  loadPage = loadPage || +location.hash.slice(1);
+  (!loadPage || isNaN(loadPage)) && (loadPage = 1);
   let {
     letterSpacingMinRem: minSpace,
     letterSpacingMaxRem: maxSpace
@@ -8,7 +10,7 @@ _export = async function adjustLetterSpacing(page = 1) {
   let section = [...document.querySelectorAll('section')]
     .find(x => x.id.replace(/\D/g, '') === page + '');
   if (!section) {
-    location.hash = '#1';
+    location.hash = '#' + loadPage;
     document.body.style.opacity = 1; // show content
     return;
   }
@@ -31,5 +33,5 @@ _export = async function adjustLetterSpacing(page = 1) {
     })[0];
     words.forEach(w => w.style.letterSpacing = best.space + 'rem');
   }
-  adjustLetterSpacing(page + 1);
+  adjustLetterSpacing(page + 1, loadPage);
 }
