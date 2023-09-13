@@ -9,9 +9,9 @@ A slide-deck built with [MARP](https://marp.app)+ **Mrs Marper**. (It also acts 
 
 The **Mrs Marper** code base is located in the folder [make](make).
 
-**Mrs Marper** is a project started by Node Hill and Ironboy (the most fearless JS coder alive). 
+**Mrs Marper** is a project started by Ironboy at Node Hill.
 
-It  extends the [MARP](https://marp.app) concept by allowing:
+It extends the [MARP](https://marp.app) concept by allowing:
 
 * Auto generation of completely stand alone HTML files (with fonts, css and images embedded).
 *  Generation of much smaller PDF:s than standard MARP can accomplish.
@@ -68,17 +68,17 @@ Don't forget to run **npm install**, then:
 
 The **Mrs Marper** code base can be found in the **make** folder.
 
-## Coding style - we're relaxed and fascist at the same time
+## Coding style &ndash; some ground rules
 We're rather relaxed. But there are some important guidelines you really *should* follow:
-* Name your functions and variables so that they can be easily understood, unless you can understand the purpose of them anyway within 5 lines of code!
+* Name your functions, variables and parameters so that they can be easily understood. (With the exeception of parameter names for very short lambda like functions, where short code is easier to follow.)
 * At the start of each file write a short description as a [JavaDoc](https://www.oracle.com/technical-resources/articles/java/javadoc-tool.html) style comment with one bullet point per line (using "-" for bullets) - see how we've done it our files so far - follow that pattern!
 * **Never** have more than 50 lines of code in a single JS file! Refactor and split if that limit is reached!
 * Install and use the excellent VSC extension [Uncanny Cognitive Complexity](https://marketplace.visualstudio.com/items?itemName=Dabolus.uncanny-cognitive-complexity) to judge the complexity of each of your JS files. Try to keep things simple (below the measurement 10) - never go haywire (you **must** keep things below 20). Keep Mr Incredible happy!
 * Don't uses classes and OOP - we can write complex applications as a bunch of functions in JS. Much less cruft!
 * We **do** use our own export/import system (a thin layer on top of ES6) - the **_export** setter is a bit magical and publishes functions and objects as globals. Don't worry be happy - it's a bit like Java Packages - you can reach everything without having to use import/export in *every* file!
-* *Only* comment things that are really hard to get even if you know JS!
-* *Always* move things that you feel might be *settings/options* to *make/__settings.js*. And in *__settings.js* comment what the setting actually does!
-* *And:* End your lines with ";". It's not that hard - most JS coders do it. All Java and C# coders do so too. (Birds do it - even educated fleas do it...)
+* *Only* comment things that are really hard to understand even if you know JS. **And** things that are domain specific.
+* *Always* move things that you feel might be good to reach as *settings/options* to *make/__settings.js*. And, in *__settings.js*, comment what the setting actually does!
+* End your lines with ";".
 
 ## __settings.js
 
@@ -89,8 +89,8 @@ We're rather relaxed. But there are some important guidelines you really *should
 * settings
 
 #### Used by
-* *make* from [_make.js](#_makejs)
-* *makePart2* from [_makePart2.js](#_makepart2js)
+* *_make* from [_make.js](#_makejs)
+* *_makePart2* from [_makePart2.js](#_makepart2js)
 * *addAndMassageSettings* from [addAndMassageSettings.js](#addandmassagesettingsjs)
 * *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacingjs)
 * *compressPDF* from [compressPDF.js](#compresspdfjs)
@@ -147,7 +147,7 @@ _export = {
 * Calls make() to start the conversion process
 
 #### Uses
-* *make* from [_make.js](#_makejs)
+* *_make* from [_make.js](#_makejs)
 
 #### Code
 
@@ -185,7 +185,7 @@ Object.defineProperty(globalThis, '_export', {
       && await import('./' + file);
   }
   process.chdir('../');
-  make();
+  _make();
 })();
 ```
 
@@ -251,11 +251,11 @@ _export = {
 * Makes HTML, PDF, JPG and PPTX files from index.md
 
 #### Exports
-* make
+* _make
 
 #### Uses
 * *settings* from [__settings.js](#__settingsjs)
-* *makePart2* from [_makePart2.js](#_makepart2js)
+* *_makePart2* from [_makePart2.js](#_makepart2js)
 * *addAndMassageSettings* from [addAndMassageSettings.js](#addandmassagesettingsjs)
 * *embedFonts* from [embedFonts.js](#embedfontsjs)
 * *embedImages* from [embedImages.js](#embedimagesjs)
@@ -271,7 +271,7 @@ _export = {
 **File:** [make/_make.js](make/_make.js)
 
 ```js
-_export = async function make() {
+_export = async function _make() {
   addAndMassageSettings();
   let { makeJPGs } = settings;
   console.warn = () => { }; // silence marp
@@ -308,7 +308,7 @@ _export = async function make() {
   r('HTML -> Embedded fonts.');
   writeFileSync('./index.html', html, 'utf-8');;
   renameSync('./index.html', './dist/index.html');
-  await makePart2(preWarmedPromise, startTime, r, r2);
+  await _makePart2(preWarmedPromise, startTime, r, r2);
 }
 ```
 
@@ -320,7 +320,7 @@ _export = async function make() {
 * Makes HTML, PDF, JPG and PPTX files from index.md
 
 #### Exports
-* makePart2
+* _makePart2
 
 #### Uses
 * *settings* from [__settings.js](#__settingsjs)
@@ -330,14 +330,14 @@ _export = async function make() {
 * *makePptx* from [makePptx.js](#makepptxjs)
 
 #### Used by
-* *make* from [_make.js](#_makejs)
+* *_make* from [_make.js](#_makejs)
 
 #### Code
 
 **File:** [make/_makePart2.js](make/_makePart2.js)
 
 ```js
-_export = async function makePart2(preWarmedPromise, startTime, r, r2) {
+_export = async function _makePart2(preWarmedPromise, startTime, r, r2) {
   let { makePDF, makePPTX: mPPTX, keepJPGs } = settings;
   let { widthMm, heightMm, pagePaths, pages, allLinkPositions }
     = await makePdfFromHtml(r, preWarmedPromise);
@@ -385,10 +385,9 @@ _export = async function makePart2(preWarmedPromise, startTime, r, r2) {
 
 #### Uses
 * *settings* from [__settings.js](#__settingsjs)
-* *make* from [_make.js](#_makejs)
 
 #### Used by
-* *make* from [_make.js](#_makejs)
+* *_make* from [_make.js](#_makejs)
 
 #### Code
 
@@ -596,7 +595,7 @@ _export = function cleanupAndGetPageLength() {
 * *settings* from [__settings.js](#__settingsjs)
 
 #### Used by
-* *makePart2* from [_makePart2.js](#_makepart2js)
+* *_makePart2* from [_makePart2.js](#_makepart2js)
 
 #### Code
 
@@ -623,7 +622,7 @@ _export = function compressPDF() {
 * embedFonts
 
 #### Used by
-* *make* from [_make.js](#_makejs)
+* *_make* from [_make.js](#_makejs)
 
 #### Code
 
@@ -664,7 +663,7 @@ _export = function embedFonts(html) {
 * *scaleImage* from [scaleImage.js](#scaleimagejs)
 
 #### Used by
-* *make* from [_make.js](#_makejs)
+* *_make* from [_make.js](#_makejs)
 
 #### Code
 
@@ -702,7 +701,7 @@ _export = async function embedImages(html) {
 * *pdfMetaData* from [pdfMetaData.js](#pdfmetadatajs)
 
 #### Used by
-* *makePart2* from [_makePart2.js](#_makepart2js)
+* *_makePart2* from [_makePart2.js](#_makepart2js)
 
 #### Code
 
@@ -875,7 +874,7 @@ _export = function getSpaceWidths() {
 * *settings* from [__settings.js](#__settingsjs)
 
 #### Used by
-* *make* from [_make.js](#_makejs)
+* *_make* from [_make.js](#_makejs)
 
 #### Code
 
@@ -943,7 +942,7 @@ _export = async function hyphenate(html) {
 * *wrapWords* from [wrapWords.js](#wrapwordsjs)
 
 #### Used by
-* *make* from [_make.js](#_makejs)
+* *_make* from [_make.js](#_makejs)
 
 #### Code
 
@@ -976,7 +975,7 @@ _export = function includeLetterSpacer(html) {
 * makeHtml
 
 #### Used by
-* *make* from [_make.js](#_makejs)
+* *_make* from [_make.js](#_makejs)
 
 #### Code
 
@@ -1033,7 +1032,7 @@ _export = function makeLinkTargetsBlank() {
 * *makeLinkTargetsBlank* from [makeLinkTargetsBlank.js](#makelinktargetsblankjs)
 
 #### Used by
-* *make* from [_make.js](#_makejs)
+* *_make* from [_make.js](#_makejs)
 
 #### Code
 
@@ -1058,13 +1057,12 @@ _export = function makeLinkTargetsBlankAdd(html) {
 
 #### Uses
 * *settings* from [__settings.js](#__settingsjs)
-* *make* from [_make.js](#_makejs)
 * *cleanupAndGetPageLength* from [cleanupAndGetPageLength.js](#cleanupandgetpagelengthjs)
 * *getLinkPositions* from [getLinkPositions.js](#getlinkpositionsjs)
 * *getPageDimensions* from [getPageDimensions.js](#getpagedimensionsjs)
 
 #### Used by
-* *makePart2* from [_makePart2.js](#_makepart2js)
+* *_makePart2* from [_makePart2.js](#_makepart2js)
 * *getLinkPositions* from [getLinkPositions.js](#getlinkpositionsjs)
 * *getPageDimensions* from [getPageDimensions.js](#getpagedimensionsjs)
 
@@ -1136,7 +1134,7 @@ _export = async function makePdfFromHtml(r, preWarmedPromise) {
 * *addPptxSlideLinks* from [addPptxSlideLinks.js](#addpptxslidelinksjs)
 
 #### Used by
-* *makePart2* from [_makePart2.js](#_makepart2js)
+* *_makePart2* from [_makePart2.js](#_makepart2js)
 
 #### Code
 
@@ -1232,7 +1230,7 @@ _export = function pdfMetaData(pdfDoc, r) {
 * preWarmMakePDFFromHtml
 
 #### Used by
-* *make* from [_make.js](#_makejs)
+* *_make* from [_make.js](#_makejs)
 
 #### Code
 
@@ -1336,7 +1334,7 @@ _export = async function scaleImage(buffer) {
 * *settings* from [__settings.js](#__settingsjs)
 
 #### Used by
-* *make* from [_make.js](#_makejs)
+* *_make* from [_make.js](#_makejs)
 
 #### Code
 

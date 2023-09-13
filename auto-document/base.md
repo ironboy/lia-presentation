@@ -9,9 +9,9 @@ A slide-deck built with [MARP](https://marp.app)+ **Mrs Marper**. (It also acts 
 
 The **Mrs Marper** code base is located in the folder [make](make).
 
-**Mrs Marper** is a project started by Node Hill and Ironboy (the most fearless JS coder alive). 
+**Mrs Marper** is a project started by Ironboy at Node Hill.
 
-It  extends the [MARP](https://marp.app) concept by allowing:
+It extends the [MARP](https://marp.app) concept by allowing:
 
 * Auto generation of completely stand alone HTML files (with fonts, css and images embedded).
 *  Generation of much smaller PDF:s than standard MARP can accomplish.
@@ -68,15 +68,15 @@ Don't forget to run **npm install**, then:
 
 The **Mrs Marper** code base can be found in the **make** folder.
 
-## Coding style - we're relaxed and fascist at the same time
+## Coding style &ndash; some ground rules
 We're rather relaxed. But there are some important guidelines you really *should* follow:
-* Name your functions and variables so that they can be easily understood, unless you can understand the purpose of them anyway within 5 lines of code!
+* Name your functions, variables and parameters so that they can be easily understood. (With the exeception of parameter names for very short lambda like functions, where short code is easier to follow.)
 * At the start of each file write a short description as a [JavaDoc](https://www.oracle.com/technical-resources/articles/java/javadoc-tool.html) style comment with one bullet point per line (using "-" for bullets) - see how we've done it our files so far - follow that pattern!
 * **Never** have more than 50 lines of code in a single JS file! Refactor and split if that limit is reached!
 * Install and use the excellent VSC extension [Uncanny Cognitive Complexity](https://marketplace.visualstudio.com/items?itemName=Dabolus.uncanny-cognitive-complexity) to judge the complexity of each of your JS files. Try to keep things simple (below the measurement 10) - never go haywire (you **must** keep things below 20). Keep Mr Incredible happy!
 * Don't uses classes and OOP - we can write complex applications as a bunch of functions in JS. Much less cruft!
 * We **do** use our own export/import system (a thin layer on top of ES6) - the **_export** setter is a bit magical and publishes functions and objects as globals. Don't worry be happy - it's a bit like Java Packages - you can reach everything without having to use import/export in *every* file!
-* *Only* comment things that are really hard to get even if you know JS!
-* *Always* move things that you feel might be *settings/options* to *make/__settings.js*. And in *__settings.js* comment what the setting actually does!
-* *And:* End your lines with ";". It's not that hard - most JS coders do it. All Java and C# coders do so too. (Birds do it - even educated fleas do it...)
+* *Only* comment things that are really hard to understand even if you know JS. **And** things that are domain specific.
+* *Always* move things that you feel might be good to reach as *settings/options* to *make/__settings.js*. And, in *__settings.js*, comment what the setting actually does!
+* End your lines with ";".
 
