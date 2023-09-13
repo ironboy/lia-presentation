@@ -62,7 +62,7 @@ Don't forget to run **npm install**, then:
 1. Type **npm run make** in the terminal.
 2. A folder named **dist** is created with an HTML version and a PDF version of the presentation.
 
-(Note: *Don't* use Marp the VSC extension command "Export slide deck" - it doesn't give as good results as **npm run make**.)
+(Note: *Don't* use the Marp VSC extension command "Export slide deck" - to create your slides it doesn't give as good results as using **Mrs Marper**, running **npm run make**.)
 
 # Documentation of the Mrs Marper code base 
 
