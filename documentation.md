@@ -63,7 +63,6 @@ _export = {
 * Calls make() to start the conversion process
 
 #### Uses
-* *make* from **_make.js**
 
 #### Code
 
@@ -166,17 +165,6 @@ _export = {
 * make
 
 #### Uses
-* *settings* from **__settings.js**
-* *makePart2* from **_makePart2.js**
-* *addAndMassageSettings* from **addAndMassageSettings.js**
-* *embedFonts* from **embedFonts.js**
-* *embedImages* from **embedImages.js**
-* *hyphenate* from **hyphenate.js**
-* *includeLetterSpacer* from **includeLetterSpacer.js**
-* *makeHtml* from **makeHtml.js**
-* *makeLinkTargetsBlankAdd* from **makeLinkTargetsBlankAdd.js**
-* *preWarmMakePDFFromHtml* from **preWarmMakePdfFromHtml.js**
-* *setHTMLLanguage* from **setHtmlLanguage.js**
 
 #### Code
 
@@ -233,11 +221,7 @@ _export = async function make() {
 * makePart2
 
 #### Uses
-* *settings* from **__settings.js**
-* *compressPDF* from **compressPDF.js**
-* *fixSloppyPDFCropbox* from **fixSloppyPDFCropbox.js**
-* *makePdfFromHtml* from **makePdfFromHtml.js**
-* *makePptx* from **makePptx.js**
+* *make* from [_make.js](#_makejs)
 
 #### Used by
 * *make* from [_make.js](#_makejs)
@@ -292,8 +276,7 @@ _export = async function makePart2(preWarmedPromise, startTime, r, r2) {
 * addAndMassageSettings
 
 #### Uses
-* *settings* from **__settings.js**
-* *make* from **_make.js**
+* *make* from [_make.js](#_makejs)
 
 #### Used by
 * *make* from [_make.js](#_makejs)
@@ -371,9 +354,7 @@ _export = async function addPptxSlideLinks(slide, links) {
 * adjustLetterSpacing
 
 #### Uses
-* *settings* from **__settings.js**
-* *getSpaceWidths* from **getSpaceWidths.js**
-* *wrapWords* from **wrapWords.js**
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
 
 #### Used by
 * *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
@@ -491,7 +472,7 @@ _export = function cleanupAndGetPageLength() {
 * compressPDF
 
 #### Uses
-* *settings* from **__settings.js**
+* *makePart2* from [_makePart2.js](#_makepart2js)
 
 #### Used by
 * *makePart2* from [_makePart2.js](#_makepart2js)
@@ -553,9 +534,7 @@ _export = function embedFonts(html) {
 * embedImages
 
 #### Uses
-* *bgImagesToClasses* from **bgImagesToClasses.js**
-* *removeQuotes* from **removeQuotes.js**
-* *scaleImage* from **scaleImage.js**
+* *make* from [_make.js](#_makejs)
 
 #### Used by
 * *make* from [_make.js](#_makejs)
@@ -590,8 +569,7 @@ _export = async function embedImages(html) {
 * fixSloppyPDFCropbox
 
 #### Uses
-* *settings* from **__settings.js**
-* *pdfMetaData* from **pdfMetaData.js**
+* *makePart2* from [_makePart2.js](#_makepart2js)
 
 #### Used by
 * *makePart2* from [_makePart2.js](#_makepart2js)
@@ -627,7 +605,7 @@ _export = async function fixSloppyPDFCropbox(r) {
 * getLinkPositions
 
 #### Uses
-* *makePdfFromHtml* from **makePdfFromHtml.js**
+* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
 
 #### Used by
 * *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
@@ -661,7 +639,7 @@ _export = function getLinkPositions(el, i, mPPTX) {
 * getPageDimensions
 
 #### Uses
-* *makePdfFromHtml* from **makePdfFromHtml.js**
+* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
 
 #### Used by
 * *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
@@ -698,9 +676,8 @@ _export = function getPageDimensions(el) {
 * getSpaceWidths
 
 #### Uses
-* *settings* from **__settings.js**
-* *nonJustify* from **nonJustify.js**
-* *reJustify* from **reJustify.js**
+* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacingjs)
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
 
 #### Used by
 * *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacingjs)
@@ -756,7 +733,7 @@ _export = function getSpaceWidths() {
 * hyphenate
 
 #### Uses
-* *settings* from **__settings.js**
+* *make* from [_make.js](#_makejs)
 
 #### Used by
 * *make* from [_make.js](#_makejs)
@@ -816,13 +793,7 @@ _export = async function hyphenate(html) {
 * includeLetterSpacer
 
 #### Uses
-* *settings* from **__settings.js**
-* *adjustLetterSpacing* from **adjustLetterSpacing.js**
-* *getSpaceWidths* from **getSpaceWidths.js**
-* *nonJustify* from **nonJustify.js**
-* *reJustify* from **reJustify.js**
-* *textNodesUnder* from **textNodesUnder.js**
-* *wrapWords* from **wrapWords.js**
+* *make* from [_make.js](#_makejs)
 
 #### Used by
 * *make* from [_make.js](#_makejs)
@@ -906,7 +877,7 @@ _export = function makeLinkTargetsBlank() {
 * makeLinkTargetsBlankAdd
 
 #### Uses
-* *makeLinkTargetsBlank* from **makeLinkTargetsBlank.js**
+* *make* from [_make.js](#_makejs)
 
 #### Used by
 * *make* from [_make.js](#_makejs)
@@ -931,11 +902,9 @@ _export = function makeLinkTargetsBlankAdd(html) {
 * makePdfFromHtml
 
 #### Uses
-* *settings* from **__settings.js**
-* *make* from **_make.js**
-* *cleanupAndGetPageLength* from **cleanupAndGetPageLength.js**
-* *getLinkPositions* from **getLinkPositions.js**
-* *getPageDimensions* from **getPageDimensions.js**
+* *makePart2* from [_makePart2.js](#_makepart2js)
+* *getLinkPositions* from [getLinkPositions.js](#getlinkpositionsjs)
+* *getPageDimensions* from [getPageDimensions.js](#getpagedimensionsjs)
 
 #### Used by
 * *makePart2* from [_makePart2.js](#_makepart2js)
@@ -1004,8 +973,7 @@ _export = async function makePdfFromHtml(r, preWarmedPromise) {
 * makePptx
 
 #### Uses
-* *settings* from **__settings.js**
-* *addPptxSlideLinks* from **addPptxSlideLinks.js**
+* *makePart2* from [_makePart2.js](#_makepart2js)
 
 #### Used by
 * *makePart2* from [_makePart2.js](#_makepart2js)
@@ -1068,7 +1036,7 @@ _export = function nonJustify() {
 * pdfMetaData
 
 #### Uses
-* *settings* from **__settings.js**
+* *fixSloppyPDFCropbox* from [fixSloppyPDFCropbox.js](#fixsloppypdfcropboxjs)
 
 #### Used by
 * *fixSloppyPDFCropbox* from [fixSloppyPDFCropbox.js](#fixsloppypdfcropboxjs)
@@ -1164,7 +1132,7 @@ _export = function removeQuotes(x) {
 * scaleImage
 
 #### Uses
-* *settings* from **__settings.js**
+* *embedImages* from [embedImages.js](#embedimagesjs)
 
 #### Used by
 * *embedImages* from [embedImages.js](#embedimagesjs)
@@ -1191,7 +1159,7 @@ _export = async function scaleImage(buffer) {
 * setHTMLLanguage
 
 #### Uses
-* *settings* from **__settings.js**
+* *make* from [_make.js](#_makejs)
 
 #### Used by
 * *make* from [_make.js](#_makejs)
@@ -1242,7 +1210,8 @@ _export = function textNodesUnder(el) {
 * wrapWords
 
 #### Uses
-* *textNodesUnder* from **textNodesUnder.js**
+* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacingjs)
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
 
 #### Used by
 * *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacingjs)
