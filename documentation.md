@@ -8,19 +8,19 @@
 
 #### Used by
 * *make* from [_make.js](#_make-js)
-* *makePart2* from [_makePart2.js](#_makePart2-js)
-* *addAndMassageSettings* from [addAndMassageSettings.js](#addAndMassageSettings-js)
-* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustLetterSpacing-js)
-* *compressPDF* from [compressPDF.js](#compressPDF-js)
-* *fixSloppyPDFCropbox* from [fixSloppyPDFCropbox.js](#fixSloppyPDFCropbox-js)
-* *getSpaceWidths* from [getSpaceWidths.js](#getSpaceWidths-js)
+* *makePart2* from [_makePart2.js](#_makepart2-js)
+* *addAndMassageSettings* from [addAndMassageSettings.js](#addandmassagesettings-js)
+* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacing-js)
+* *compressPDF* from [compressPDF.js](#compresspdf-js)
+* *fixSloppyPDFCropbox* from [fixSloppyPDFCropbox.js](#fixsloppypdfcropbox-js)
+* *getSpaceWidths* from [getSpaceWidths.js](#getspacewidths-js)
 * *hyphenate* from [hyphenate.js](#hyphenate-js)
-* *includeLetterSpacer* from [includeLetterSpacer.js](#includeLetterSpacer-js)
-* *makePdfFromHtml* from [makePdfFromHtml.js](#makePdfFromHtml-js)
-* *makePptx* from [makePptx.js](#makePptx-js)
-* *pdfMetaData* from [pdfMetaData.js](#pdfMetaData-js)
-* *scaleImage* from [scaleImage.js](#scaleImage-js)
-* *setHTMLLanguage* from [setHtmlLanguage.js](#setHtmlLanguage-js)
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacer-js)
+* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtml-js)
+* *makePptx* from [makePptx.js](#makepptx-js)
+* *pdfMetaData* from [pdfMetaData.js](#pdfmetadata-js)
+* *scaleImage* from [scaleImage.js](#scaleimage-js)
+* *setHTMLLanguage* from [setHtmlLanguage.js](#sethtmllanguage-js)
 ```js
 _export = {
   settings: {
@@ -323,7 +323,7 @@ _export = function addAndMassageSettings() {
 * addPptxSlideLinks
 
 #### Used by
-* *makePptx* from [makePptx.js](#makePptx-js)
+* *makePptx* from [makePptx.js](#makepptx-js)
 ```js
 _export = async function addPptxSlideLinks(slide, links) {
   for (let link of links) {
@@ -358,7 +358,7 @@ _export = async function addPptxSlideLinks(slide, links) {
 * *wrapWords* from **wrapWords.js**
 
 #### Used by
-* *includeLetterSpacer* from [includeLetterSpacer.js](#includeLetterSpacer-js)
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacer-js)
 ```js
 _export = async function adjustLetterSpacing(page = 1, loadPage) {
   loadPage = loadPage || +location.hash.slice(1);
@@ -409,7 +409,7 @@ _export = async function adjustLetterSpacing(page = 1, loadPage) {
 * bgImagesToClasses
 
 #### Used by
-* *embedImages* from [embedImages.js](#embedImages-js)
+* *embedImages* from [embedImages.js](#embedimages-js)
 ```js
 _export = function bgImagesToClasses(html) {
   let i = 0;
@@ -442,7 +442,7 @@ _export = function bgImagesToClasses(html) {
 * cleanupAndGetPageLength
 
 #### Used by
-* *makePdfFromHtml* from [makePdfFromHtml.js](#makePdfFromHtml-js)
+* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtml-js)
 ```js
 _export = function cleanupAndGetPageLength() {
   // change id:s of sections to valid id:s (must start with character)
@@ -467,7 +467,7 @@ _export = function cleanupAndGetPageLength() {
 * *settings* from **__settings.js**
 
 #### Used by
-* *makePart2* from [_makePart2.js](#_makePart2-js)
+* *makePart2* from [_makePart2.js](#_makepart2-js)
 ```js
 _export = function compressPDF() {
   let { ghostScriptPdfQuality: q } = settings;
@@ -558,7 +558,7 @@ _export = async function embedImages(html) {
 * *pdfMetaData* from **pdfMetaData.js**
 
 #### Used by
-* *makePart2* from [_makePart2.js](#_makePart2-js)
+* *makePart2* from [_makePart2.js](#_makepart2-js)
 ```js
 _export = async function fixSloppyPDFCropbox(r) {
   const existingPdfBytes = readFileSync('./dist/index.pdf');
@@ -591,7 +591,7 @@ _export = async function fixSloppyPDFCropbox(r) {
 * *makePdfFromHtml* from **makePdfFromHtml.js**
 
 #### Used by
-* *makePdfFromHtml* from [makePdfFromHtml.js](#makePdfFromHtml-js)
+* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtml-js)
 ```js
 // note: runs from makePdfFromHtml inside puppeteer browser page
 _export = function getLinkPositions(el, i, mPPTX) {
@@ -622,7 +622,7 @@ _export = function getLinkPositions(el, i, mPPTX) {
 * *makePdfFromHtml* from **makePdfFromHtml.js**
 
 #### Used by
-* *makePdfFromHtml* from [makePdfFromHtml.js](#makePdfFromHtml-js)
+* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtml-js)
 ```js
 // note: runs from makePdfFromHtml inside puppeteer browser page
 _export = function getPageDimensions(el) {
@@ -658,8 +658,8 @@ _export = function getPageDimensions(el) {
 * *reJustify* from **reJustify.js**
 
 #### Used by
-* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustLetterSpacing-js)
-* *includeLetterSpacer* from [includeLetterSpacer.js](#includeLetterSpacer-js)
+* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacing-js)
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacer-js)
 ```js
 _export = function getSpaceWidths() {
   let { hyphenateTags: parentSel } = settings;
@@ -823,7 +823,7 @@ _export = async function makeHtml() {
 * makeLinkTargetsBlank
 
 #### Used by
-* *makeLinkTargetsBlankAdd* from [makeLinkTargetsBlankAdd.js](#makeLinkTargetsBlankAdd-js)
+* *makeLinkTargetsBlankAdd* from [makeLinkTargetsBlankAdd.js](#makelinktargetsblankadd-js)
 ```js
 _export = function makeLinkTargetsBlank() {
   document.body.addEventListener('click', e => {
@@ -875,9 +875,9 @@ _export = function makeLinkTargetsBlankAdd(html) {
 * *getPageDimensions* from **getPageDimensions.js**
 
 #### Used by
-* *makePart2* from [_makePart2.js](#_makePart2-js)
-* *getLinkPositions* from [getLinkPositions.js](#getLinkPositions-js)
-* *getPageDimensions* from [getPageDimensions.js](#getPageDimensions-js)
+* *makePart2* from [_makePart2.js](#_makepart2-js)
+* *getLinkPositions* from [getLinkPositions.js](#getlinkpositions-js)
+* *getPageDimensions* from [getPageDimensions.js](#getpagedimensions-js)
 ```js
 _export = async function makePdfFromHtml(r, preWarmedPromise) {
   let { makePDF, makeJPGs, makePPTX: mPPTX, keepJPGs } = settings;
@@ -942,7 +942,7 @@ _export = async function makePdfFromHtml(r, preWarmedPromise) {
 * *addPptxSlideLinks* from **addPptxSlideLinks.js**
 
 #### Used by
-* *makePart2* from [_makePart2.js](#_makePart2-js)
+* *makePart2* from [_makePart2.js](#_makepart2-js)
 ```js
 _export = async function makePptx(widthMm, heightMm, pagePaths, allLinkPositions) {
   let { author, title, description } = settings;
@@ -974,8 +974,8 @@ _export = async function makePptx(widthMm, heightMm, pagePaths, allLinkPositions
 * nonJustify
 
 #### Used by
-* *getSpaceWidths* from [getSpaceWidths.js](#getSpaceWidths-js)
-* *includeLetterSpacer* from [includeLetterSpacer.js](#includeLetterSpacer-js)
+* *getSpaceWidths* from [getSpaceWidths.js](#getspacewidths-js)
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacer-js)
 ```js
 _export = function nonJustify() {
   let head = document.querySelector('head');
@@ -999,7 +999,7 @@ _export = function nonJustify() {
 * *settings* from **__settings.js**
 
 #### Used by
-* *fixSloppyPDFCropbox* from [fixSloppyPDFCropbox.js](#fixSloppyPDFCropbox-js)
+* *fixSloppyPDFCropbox* from [fixSloppyPDFCropbox.js](#fixsloppypdfcropbox-js)
 ```js
 _export = function pdfMetaData(pdfDoc, r) {
   let { author, language, title, description } = settings;
@@ -1042,8 +1042,8 @@ _export = async function preWarmMakePDFFromHtml() {
 * reJustify
 
 #### Used by
-* *getSpaceWidths* from [getSpaceWidths.js](#getSpaceWidths-js)
-* *includeLetterSpacer* from [includeLetterSpacer.js](#includeLetterSpacer-js)
+* *getSpaceWidths* from [getSpaceWidths.js](#getspacewidths-js)
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacer-js)
 ```js
 _export = function reJustify() {
   document.querySelector('style.non-justify').remove();
@@ -1060,7 +1060,7 @@ _export = function reJustify() {
 * removeQuotes
 
 #### Used by
-* *embedImages* from [embedImages.js](#embedImages-js)
+* *embedImages* from [embedImages.js](#embedimages-js)
 ```js
 _export = function removeQuotes(x) {
   return x
@@ -1083,7 +1083,7 @@ _export = function removeQuotes(x) {
 * *settings* from **__settings.js**
 
 #### Used by
-* *embedImages* from [embedImages.js](#embedImages-js)
+* *embedImages* from [embedImages.js](#embedimages-js)
 ```js
 _export = async function scaleImage(buffer) {
   let { resizeSettings, jpegSettings } = settings;
@@ -1127,8 +1127,8 @@ _export = function setHTMLLanguage(html) {
 * textNodesUnder
 
 #### Used by
-* *includeLetterSpacer* from [includeLetterSpacer.js](#includeLetterSpacer-js)
-* *wrapWords* from [wrapWords.js](#wrapWords-js)
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacer-js)
+* *wrapWords* from [wrapWords.js](#wrapwords-js)
 ```js
 _export = function textNodesUnder(el) {
   var n, a = [], walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
@@ -1152,8 +1152,8 @@ _export = function textNodesUnder(el) {
 * *textNodesUnder* from **textNodesUnder.js**
 
 #### Used by
-* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustLetterSpacing-js)
-* *includeLetterSpacer* from [includeLetterSpacer.js](#includeLetterSpacer-js)
+* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacing-js)
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacer-js)
 ```js
 _export = function wrapWords(insideEl) {
   let nodes = textNodesUnder(insideEl)
