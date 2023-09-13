@@ -7,7 +7,10 @@ export function parseAndextractInfo(allContent) {
   }
   for (let part of allContent) {
     part.uses = allContent.filter(x =>
-      x !== part && x.exports.some(x => part.code.match(new RegExp(x + '\\W'))));
+      x !== part && x.exports.some(
+        x => ('\n' + part.code)
+          .replace(/\n\s*\/\/[^\n]*/g, '')
+          .match(new RegExp(x + '\\W'))));
     part.file === '__settings.js' && (part.uses.length = 0);
     part.uses.forEach(x => x.usedBy.push(part));
     part.uses = part.uses.filter(x => x.file !== '_loadDependencies.js');

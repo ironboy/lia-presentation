@@ -735,9 +735,6 @@ _export = async function fixSloppyPDFCropbox(r) {
 #### Exports
 * getLinkPositions
 
-#### Uses
-* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
-
 #### Used by
 * *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
 
@@ -770,9 +767,6 @@ _export = function getLinkPositions(el, i, mPPTX) {
 
 #### Exports
 * getPageDimensions
-
-#### Uses
-* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
 
 #### Used by
 * *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
@@ -1063,8 +1057,6 @@ _export = function makeLinkTargetsBlankAdd(html) {
 
 #### Used by
 * *_makePart2* from [_makePart2.js](#_makepart2js)
-* *getLinkPositions* from [getLinkPositions.js](#getlinkpositionsjs)
-* *getPageDimensions* from [getPageDimensions.js](#getpagedimensionsjs)
 
 #### Code
 
