@@ -1,0 +1,61 @@
+# LIA-presentaion / Mrs Marper
+A slide-deck built with MARP + Mrs Marper. Also the repo for Mrs Marper source code for now.
+
+The Mrs Marper code base is located in the folder [make](make).
+
+**Mrs Marper** is a project started by Node Hill and Ironboy (the most fearless JS coder alive). 
+
+It  extends the [MARP](https://marp.app) concept by allowing auto generation of completely stand alone HTML files (with fonts, css and images embedded) as well as much smaller PDF:s than standard MARP can accomplish.
+
+It also addresses things like hyphenation and letter-spacing in justified text. 
+
+The goal is to achieve good typography with correct hyphenation and a mild variable letter-spacing that counteracts large spaces in justified text.
+
+The content ([index.md](index.md) + [theme.css](theme.css)) - LIA-presentation - is just an example of content we can convert and format with **Mrs Marper**.
+
+## Important! Install Ghostscript
+For PDF creation/compression to work:
+
+GhostScript must be installed on the computer and accessible as a global path via the 'gs' command in the terminal/shell. See installation settings:
+
+#### Windows (as well as Linux Snap)
+https://ghostscript.com/releases/gsdnld.html
+
+*Note:* Select the correct OS + AGPL License
+
+#### Mac
+```
+brew install ghostscript
+```
+
+*Note:* Install HomeBrew first if not already installed: https://brew.sh
+
+#### Debian/Ubuntu
+```
+sudo apt-get -y install ghostscript
+```
+
+## Install Node.js and VSCode
+1. Make sure Node.js and VSCode (Visual Studio Code) are installed!
+2. Use VSC (Visual Studio Code) as your code editor.
+3. In Visual Studio Code, install the following extension: 
+*Marp for VS Code*.
+4. In the terminal (inside VSC) run the **npm install** command.
+
+## Watch markdown and preview as Marp in VSC
+Assuming you have installed Marp for VS Code:
+1. Open index.md
+2. Click on the preview symbol in the upper corner (pages with magnifying glass).
+3. Note: The appearance is controlled by the *theme.css* file - but you have to set this once in VSC: Click on the Marp symbol and select "Open extension settings", then on *Add item* at the bottom of the list and write in "./theme.css"
+
+## Generate finished HTML and PDF from markdown
+Don't forget to run **npm install**, then:
+
+1. Type **npm run make** in the terminal.
+2. A folder named **dist** is created with an HTML version and a PDF version of the presentation.
+
+(Note: *Don't* use Marp the VSC extension command "Export slide deck" - it doesn't give as good results as **npm run make**.)
+
+# Documentation of the Mrs maper code base 
+
+The **Mrs Marper** code base can be found in the **make** folder.
