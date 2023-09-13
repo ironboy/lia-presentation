@@ -24,9 +24,9 @@
 
 #### Code
 
-```js
 **File:** [make/__settings.js](make/__settings.js)
 
+```js
 _export = {
   settings: {
     /* which formats to create apart from html (which is always created) */
@@ -69,9 +69,9 @@ _export = {
 
 #### Code
 
-```js
 **File:** [make/_index.js](make/_index.js)
 
+```js
 /* 
    Thomas Frank 2023 
    * Make a self-contained html file from MARP Markdown
@@ -131,9 +131,9 @@ Object.defineProperty(globalThis, '_export', {
 
 #### Code
 
-```js
 **File:** [make/_loadDependencies.js](make/_loadDependencies.js)
 
+```js
 // Load (import/require) dependecies 
 import {
   readFileSync, writeFileSync, statSync,
@@ -186,9 +186,9 @@ _export = {
 
 #### Code
 
-```js
 **File:** [make/_make.js](make/_make.js)
 
+```js
 _export = async function make() {
   addAndMassageSettings();
   let { makeJPGs } = settings;
@@ -252,9 +252,9 @@ _export = async function make() {
 
 #### Code
 
-```js
 **File:** [make/_makePart2.js](make/_makePart2.js)
 
+```js
 _export = async function makePart2(preWarmedPromise, startTime, r, r2) {
   let { makePDF, makePPTX: mPPTX, keepJPGs } = settings;
   let { widthMm, heightMm, pagePaths, pages, allLinkPositions }
@@ -310,9 +310,9 @@ _export = async function makePart2(preWarmedPromise, startTime, r, r2) {
 
 #### Code
 
-```js
 **File:** [make/addAndMassageSettings.js](make/addAndMassageSettings.js)
 
+```js
 _export = function addAndMassageSettings() {
   // "unpack" settings for sharp
   settings.resizeSettings = [
@@ -354,9 +354,9 @@ _export = function addAndMassageSettings() {
 
 #### Code
 
-```js
 **File:** [make/addPptxSlideLinks.js](make/addPptxSlideLinks.js)
 
+```js
 _export = async function addPptxSlideLinks(slide, links) {
   for (let link of links) {
     await slide.addText(' ', {
@@ -394,9 +394,9 @@ _export = async function addPptxSlideLinks(slide, links) {
 
 #### Code
 
-```js
 **File:** [make/adjustLetterSpacing.js](make/adjustLetterSpacing.js)
 
+```js
 _export = async function adjustLetterSpacing(page = 1, loadPage) {
   loadPage = loadPage || +location.hash.slice(1);
   (!loadPage || isNaN(loadPage)) && (loadPage = 1);
@@ -450,9 +450,9 @@ _export = async function adjustLetterSpacing(page = 1, loadPage) {
 
 #### Code
 
-```js
 **File:** [make/bgImagesToClasses.js](make/bgImagesToClasses.js)
 
+```js
 _export = function bgImagesToClasses(html) {
   let i = 0;
   let hash = {};
@@ -488,9 +488,9 @@ _export = function bgImagesToClasses(html) {
 
 #### Code
 
-```js
 **File:** [make/cleanupAndGetPageLength.js](make/cleanupAndGetPageLength.js)
 
+```js
 _export = function cleanupAndGetPageLength() {
   // change id:s of sections to valid id:s (must start with character)
   [...document.querySelectorAll('section[id]')].forEach(x => x.id = 'x' + x.id);
@@ -518,9 +518,9 @@ _export = function cleanupAndGetPageLength() {
 
 #### Code
 
-```js
 **File:** [make/compressPDF.js](make/compressPDF.js)
 
+```js
 _export = function compressPDF() {
   let { ghostScriptPdfQuality: q } = settings;
   execSync(
@@ -545,9 +545,9 @@ _export = function compressPDF() {
 
 #### Code
 
-```js
 **File:** [make/embedFonts.js](make/embedFonts.js)
 
+```js
 _export = function embedFonts(html) {
   // replace import from google fonts with locally downloaded fonts
   // (see https://gwfh.mranftl.com/fonts)
@@ -586,9 +586,9 @@ _export = function embedFonts(html) {
 
 #### Code
 
-```js
 **File:** [make/embedImages.js](make/embedImages.js)
 
+```js
 _export = async function embedImages(html) {
   html = bgImagesToClasses(html);
   let htmlImages = html.split('img src="').slice(1).map(x => x.split('"')[0]);
@@ -624,9 +624,9 @@ _export = async function embedImages(html) {
 
 #### Code
 
-```js
 **File:** [make/fixSloppyPDFCropbox.js](make/fixSloppyPDFCropbox.js)
 
+```js
 _export = async function fixSloppyPDFCropbox(r) {
   const existingPdfBytes = readFileSync('./dist/index.pdf');
   const pdfDoc = await PDFDocument.load(existingPdfBytes);
@@ -662,9 +662,9 @@ _export = async function fixSloppyPDFCropbox(r) {
 
 #### Code
 
-```js
 **File:** [make/getLinkPositions.js](make/getLinkPositions.js)
 
+```js
 // note: runs from makePdfFromHtml inside puppeteer browser page
 _export = function getLinkPositions(el, i, mPPTX) {
   location.hash = '#' + i;
@@ -698,9 +698,9 @@ _export = function getLinkPositions(el, i, mPPTX) {
 
 #### Code
 
-```js
 **File:** [make/getPageDimensions.js](make/getPageDimensions.js)
 
+```js
 // note: runs from makePdfFromHtml inside puppeteer browser page
 _export = function getPageDimensions(el) {
   let tempDiv = document.createElement('div');
@@ -740,9 +740,9 @@ _export = function getPageDimensions(el) {
 
 #### Code
 
-```js
 **File:** [make/getSpaceWidths.js](make/getSpaceWidths.js)
 
+```js
 _export = function getSpaceWidths() {
   let { hyphenateTags: parentSel } = settings;
   parentSel = parentSel.join(', ');
@@ -797,9 +797,9 @@ _export = function getSpaceWidths() {
 
 #### Code
 
-```js
 **File:** [make/hyphenate.js](make/hyphenate.js)
 
+```js
 _export = async function hyphenate(html) {
   let {
     hyphenateTags: els,
@@ -865,9 +865,9 @@ _export = async function hyphenate(html) {
 
 #### Code
 
-```js
 **File:** [make/includeLetterSpacer.js](make/includeLetterSpacer.js)
 
+```js
 _export = function includeLetterSpacer(html) {
   let code = [
     'const settings = ' + JSON.stringify(settings),
@@ -898,9 +898,9 @@ _export = function includeLetterSpacer(html) {
 
 #### Code
 
-```js
 **File:** [make/makeHtml.js](make/makeHtml.js)
 
+```js
 _export = async function makeHtml() {
   await marpCli([
     'index.md', '--html',
@@ -924,9 +924,9 @@ _export = async function makeHtml() {
 
 #### Code
 
-```js
 **File:** [make/makeLinkTargetsBlank.js](make/makeLinkTargetsBlank.js)
 
+```js
 _export = function makeLinkTargetsBlank() {
   document.body.addEventListener('click', e => {
     let a = e.target.closest('a');
@@ -955,9 +955,9 @@ _export = function makeLinkTargetsBlank() {
 
 #### Code
 
-```js
 **File:** [make/makeLinkTargetsBlankAdd.js](make/makeLinkTargetsBlankAdd.js)
 
+```js
 _export = function makeLinkTargetsBlankAdd(html) {
   html = html.split('</body>').join('<script>' + makeLinkTargetsBlank + ';makeLinkTargetsBlank();</script></body>');
   return html;
@@ -988,9 +988,9 @@ _export = function makeLinkTargetsBlankAdd(html) {
 
 #### Code
 
-```js
 **File:** [make/makePdfFromHtml.js](make/makePdfFromHtml.js)
 
+```js
 _export = async function makePdfFromHtml(r, preWarmedPromise) {
   let { makePDF, makeJPGs, makePPTX: mPPTX, keepJPGs } = settings;
   let { browser, page } = await preWarmedPromise;
@@ -1058,9 +1058,9 @@ _export = async function makePdfFromHtml(r, preWarmedPromise) {
 
 #### Code
 
-```js
 **File:** [make/makePptx.js](make/makePptx.js)
 
+```js
 _export = async function makePptx(widthMm, heightMm, pagePaths, allLinkPositions) {
   let { author, title, description } = settings;
   let cFactorInches = 0.0393700787;
@@ -1096,9 +1096,9 @@ _export = async function makePptx(widthMm, heightMm, pagePaths, allLinkPositions
 
 #### Code
 
-```js
 **File:** [make/nonJustify.js](make/nonJustify.js)
 
+```js
 _export = function nonJustify() {
   let head = document.querySelector('head');
   let style = document.createElement('style');
@@ -1125,9 +1125,9 @@ _export = function nonJustify() {
 
 #### Code
 
-```js
 **File:** [make/pdfMetaData.js](make/pdfMetaData.js)
 
+```js
 _export = function pdfMetaData(pdfDoc, r) {
   let { author, language, title, description } = settings;
   pdfDoc.setTitle(title);
@@ -1154,9 +1154,9 @@ _export = function pdfMetaData(pdfDoc, r) {
 
 #### Code
 
-```js
 **File:** [make/preWarmMakePdfFromHtml.js](make/preWarmMakePdfFromHtml.js)
 
+```js
 _export = async function preWarmMakePDFFromHtml() {
   let browser = await puppeteer.launch({ headless: 'new' });
   let page = await browser.newPage();
@@ -1179,9 +1179,9 @@ _export = async function preWarmMakePDFFromHtml() {
 
 #### Code
 
-```js
 **File:** [make/reJustify.js](make/reJustify.js)
 
+```js
 _export = function reJustify() {
   document.querySelector('style.non-justify').remove();
 }
@@ -1201,9 +1201,9 @@ _export = function reJustify() {
 
 #### Code
 
-```js
 **File:** [make/removeQuotes.js](make/removeQuotes.js)
 
+```js
 _export = function removeQuotes(x) {
   return x
     .split('"').join('')
@@ -1229,9 +1229,9 @@ _export = function removeQuotes(x) {
 
 #### Code
 
-```js
 **File:** [make/scaleImage.js](make/scaleImage.js)
 
+```js
 _export = async function scaleImage(buffer) {
   let { resizeSettings, jpegSettings } = settings;
   return sharp(buffer)
@@ -1258,9 +1258,9 @@ _export = async function scaleImage(buffer) {
 
 #### Code
 
-```js
 **File:** [make/setHtmlLanguage.js](make/setHtmlLanguage.js)
 
+```js
 _export = function setHTMLLanguage(html) {
   let { language } = settings;
   html = html.replace(/<html[^>]*>/g, `<html lang="${language}">`);
@@ -1284,9 +1284,9 @@ _export = function setHTMLLanguage(html) {
 
 #### Code
 
-```js
 **File:** [make/textNodesUnder.js](make/textNodesUnder.js)
 
+```js
 _export = function textNodesUnder(el) {
   var n, a = [], walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
   while (n = walk.nextNode()) a.push(n);
@@ -1314,9 +1314,9 @@ _export = function textNodesUnder(el) {
 
 #### Code
 
-```js
 **File:** [make/wrapWords.js](make/wrapWords.js)
 
+```js
 _export = function wrapWords(insideEl) {
   let nodes = textNodesUnder(insideEl)
     .filter(x => x.textContent.replace(/\n/g, '').length > 1);
