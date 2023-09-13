@@ -1,15 +1,17 @@
 # LIA-presentaion / Mrs Marper
-A slide-deck built with MARP + Mrs Marper. Also the repo for Mrs Marper source code for now.
+A slide-deck built with [MARP](https://marp.app)+ **Mrs Marper**. Also the repo for Mrs Marper source code for now.
 
-The Mrs Marper code base is located in the folder [make](make).
+The **Mrs Marper** code base is located in the folder [make](make).
 
 **Mrs Marper** is a project started by Node Hill and Ironboy (the most fearless JS coder alive). 
 
-It  extends the [MARP](https://marp.app) concept by allowing auto generation of completely stand alone HTML files (with fonts, css and images embedded) as well as much smaller PDF:s than standard MARP can accomplish.
+It  extends the [MARP](https://marp.app) concept by allowing:
 
-It also addresses things like hyphenation and letter-spacing in justified text. 
+* Auto generation of completely stand alone HTML files (with fonts, css and images embedded).
+*  Generation of much smaller PDF:s than standard MARP can accomplish.
+* Generation of PPTX/PowerPoint files with internal and external links intact.
 
-The goal is to achieve good typography with correct hyphenation and a mild variable letter-spacing that counteracts large spaces in justified text.
+**Mrs Marper** also addresses things like hyphenation and letter-spacing in justified text. Our goal is to achieve good typography with correct hyphenation and a mild variable letter-spacing that counteracts large spaces in justified text.
 
 The content ([index.md](index.md) + [theme.css](theme.css)) - LIA-presentation - is just an example of content we can convert and format with **Mrs Marper**.
 
