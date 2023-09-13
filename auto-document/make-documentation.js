@@ -2,6 +2,9 @@
 
 import { join as pathJoin } from 'path';
 import { readdirSync, readFileSync, writeFileSync } from 'fs';
+import { markdownGenerator } from './markdownGenerator.js';
+import { parseAndextractInfo } from './parseAndextractInfo.js';
+import { performFinalCleaningOfMarkdown } from './performFinalCleaningOfMarkdown.js';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -29,54 +32,12 @@ Object.defineProperty(globalThis, '_export', {
         usedBy: []
       });
   }
-  for (let part of allContent) {
-    part.description = part.content.split('/***')[1].split('*/')[0];
-    part.code = part.content.split('/***' + part.description + '*/').join('').trim();
-    part.description = part.description.trim();
-    delete part.content;
-  }
-  for (let part of allContent) {
-    part.uses = allContent.filter(x =>
-      x !== part && x.exports.some(x => part.code.match(new RegExp(x + '\\W'))));
-    part.file === '__settings.js' && (part.uses.length = 0);
-    part.uses.forEach(x => x.usedBy.push(part));
-    part.uses = part.uses.filter(x => x.file !== '_loadDependencies.js');
-  }
-  let lDep = allContent.find(x => x.file === '_loadDependencies.js');
-  lDep.uses = [];
-  lDep.usedBy = [];
-  let _make = allContent.find(x => x.file === '_make.js');
-  _make.usedBy = [];
+  parseAndextractInfo(allContent);
   let md = [];
   for (let { file, exports, description, uses, usedBy } of allContent) {
-    md.push([
-      `## ${file}`,
-      '',
-      '### Description',
-      `${description.split('\n').map(x => x.slice(1).trim()).join('\n').split('-').join('*')}`,
-      '',
-      exports.length ? `### Exports\n ${exports.map(x => '* ' + x).join('\n')}` : '',
-      uses.length ? `\n\n### Uses\n ${uses.map(x => '*' + x.exports.join(', ') + `* from [${x.file}](#${x.file.toLowerCase().replace(/\./g, '')})`).map(x => '* ' + x).join('\n')}` : '',
-      usedBy.length ? `\n\n### Used by\n ${usedBy.map(x => '*' + x.exports.join(', ') + `* from [${x.file}](#${x.file.toLowerCase().replace(/\./g, '')})`).map(x => '* ' + x).join('\n')}` : '',
-      '\n### Code\n\n',
-      `**File:** [make/${file}](make/${file})`,
-      '',
-      '```js',
-      `[theCodeHere]`,
-      '```'
-    ].join('\n'))
+    markdownGenerator(md, file, exports, description, uses, usedBy);
   }
-  md = md.join('\n\n');
-  md = md.split('\n').map(x => x.trim()).join('\n');
-  let code = allContent.map(x => x.code);
-  md = md.replace(/\[theCodeHere\]/g, x => code.shift());
-  md = md.replace(/\n{3,}/g, '\n\n');
-  md = md.split('* * ').join('* ');
-  md = md.split('** from **_index.js**').join('**index.js**');
-  md = md.split('### ').join('#### ');
-  md = md.split('\n## ').join('\n---\n## ');
-  md = md.split('<a*').join('<a-');
-  md = readFileSync(pathJoin(__dirname, 'base.md'), 'utf-8') + md;
+  md = performFinalCleaningOfMarkdown(md, allContent, readFileSync, pathJoin, __dirname);
   writeFileSync(pathJoin(__dirname, '../', 'README.md'), md, 'utf-8');
   console.log("\nDocumentation written to README.md\n");
 })();
