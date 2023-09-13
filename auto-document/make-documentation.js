@@ -77,5 +77,6 @@ Object.defineProperty(globalThis, '_export', {
   md = md.split('\n## ').join('\n---\n## ');
   md = md.split('<a*').join('<a-');
   md = readFileSync(pathJoin(__dirname, 'base.md'), 'utf-8') + md;
-  writeFileSync(pathJoin(__dirname, '../', 'documentation.md'), md, 'utf-8');
+  writeFileSync(pathJoin(__dirname, '../', 'README.md'), md, 'utf-8');
+  console.log("\nDocumentation written to README.md\n");
 })();

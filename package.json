@@ -5,7 +5,8 @@
   "description": "Lia-presentation byggd med MARP + Mrs Marper",
   "main": "index.js",
   "scripts": {
-    "make": "node make/_index.js"
+    "make": "node make/_index.js",
+    "make-doc": "node auto-document/make-documentation.js"
   },
   "repository": {
     "type": "git",
