@@ -3,7 +3,7 @@
  * - Imports settings given in index.md
  */
 
-_export = function addAndMassageSettings() {
+export function addAndMassageSettings() {
   // "unpack" settings for sharp
   settings.resizeSettings = [
     settings.sharpScaleJpgsTo,

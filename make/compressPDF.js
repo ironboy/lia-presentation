@@ -2,7 +2,7 @@
  * - Compress the PDF using Ghostscript
  */
 
-_export = function compressPDF() {
+export function compressPDF() {
   let { ghostScriptPdfQuality: q } = settings;
   execSync(
     `gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.7 ` +

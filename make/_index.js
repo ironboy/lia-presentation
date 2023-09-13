@@ -18,21 +18,12 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// export function that exports a named function,
-// or object properties from an object as global vars
-Object.defineProperty(globalThis, '_export', {
-  set(x) {
-    typeof x === 'function' && (globalThis[x.name] = x);
-    typeof x === 'object' && Object.assign(globalThis, x);
-  }
-});
-
-// import all scripts in this folder and start make
+// import all scripts in this folder and start _make
 (async () => {
   process.chdir(__dirname);
   for (let file of readdirSync('./')) {
-    file !== '_index.js' && file.slice(-3) === '.js'
-      && await import('./' + file);
+    file !== '_index.js' && file.slice(-3) === '.js' &&
+      Object.assign(globalThis, await import('./' + file));
   }
   process.chdir('../');
   _make();

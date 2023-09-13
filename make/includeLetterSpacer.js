@@ -2,7 +2,7 @@
  * - Includes the letter spacing logic in the HTML client side code
  */
 
-_export = function includeLetterSpacer(html) {
+export function includeLetterSpacer(html) {
   let code = [
     'const settings = ' + JSON.stringify(settings),
     textNodesUnder,

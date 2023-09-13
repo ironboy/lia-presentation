@@ -2,7 +2,7 @@
  * - Hyphenates the text using the hyphen npm module
  */
 
-_export = async function hyphenate(html) {
+export async function hyphenate(html) {
   let {
     hyphenateTags: els,
     hyphenateMinWordLength: minWordLength,

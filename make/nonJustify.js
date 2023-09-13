@@ -2,7 +2,7 @@
  * - Helper for space width calculation during letter spacing
  */
 
-_export = function nonJustify() {
+export function nonJustify() {
   let head = document.querySelector('head');
   let style = document.createElement('style');
   style.classList.add('non-justify')

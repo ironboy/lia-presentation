@@ -3,7 +3,7 @@
  */
 
 // note: runs from makePdfFromHtml inside puppeteer browser page
-_export = function getLinkPositions(el, i, mPPTX) {
+export function getLinkPositions(el, i, mPPTX) {
   location.hash = '#' + i;
   if (!mPPTX) { return []; }
   return [...document.querySelectorAll(`#x${i} a[href]`)]

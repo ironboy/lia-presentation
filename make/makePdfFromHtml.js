@@ -3,7 +3,7 @@
  * - Gathers link position info for PPTX/PowerPoint creation
  */
 
-_export = async function makePdfFromHtml(r, preWarmedPromise) {
+export async function makePdfFromHtml(r, preWarmedPromise) {
   let { makePDF, makeJPGs, makePPTX: mPPTX, keepJPGs } = settings;
   let { browser, page } = await preWarmedPromise;
   let url = import.meta.url.split('/make/')[0] + '/dist/index.html';

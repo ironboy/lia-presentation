@@ -19,7 +19,7 @@ const sharp = require('sharp');
 
 
 // Export dependencies
-_export = {
+export {
   readFileSync, writeFileSync, statSync,
   renameSync, mkdirSync, rmSync, existsSync,
   execSync,

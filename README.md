@@ -75,7 +75,7 @@ We're rather relaxed. But there are some important guidelines you really *should
 * **Never** have more than 50 lines of code in a single JS file! Refactor and split if that limit is reached!
 * Install and use the excellent VSC extension [Uncanny Cognitive Complexity](https://marketplace.visualstudio.com/items?itemName=Dabolus.uncanny-cognitive-complexity) to judge the complexity of each of your JS files. Try to keep things simple (below the measurement 10) - never go haywire (you **must** keep things below 20). Keep Mr Incredible happy!
 * Don't uses classes and OOP &ndash; this application is a bunch of JS functions and that is a *deliberate choice*. Much less cruft in this particular case, although OOP is a better fit in other cases...
-* We **do** use our own export/import system (a thin layer on top of ES6) - the **_export** setter is a bit magical and publishes functions and objects as globals. Don't worry be happy - it's a bit like Java Packages - you can reach everything without having to use import/export in *every* file!
+* *Note* that all *export*:s are automatically *imported* and made in to global variables in **_index.js**, so follow that convention and *don't* add import statements in your files!
 * *Only* comment things that are really hard to understand even if you know JS. **And** things that are domain specific.
 * *Always* move things that you feel might be good to reach as *settings/options* to *make/__settings.js*. And, in *__settings.js*, comment what the setting actually does!
 * End your lines with ";".
@@ -85,56 +85,35 @@ We're rather relaxed. But there are some important guidelines you really *should
 #### Description
 * Global settings affecting conversion, image quality and typography
 
-#### Exports
-* settings
-
-#### Used by
-* *_make* from [_make.js](#_makejs)
-* *_makePart2* from [_makePart2.js](#_makepart2js)
-* *addAndMassageSettings* from [addAndMassageSettings.js](#addandmassagesettingsjs)
-* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacingjs)
-* *compressPDF* from [compressPDF.js](#compresspdfjs)
-* *fixSloppyPDFCropbox* from [fixSloppyPDFCropbox.js](#fixsloppypdfcropboxjs)
-* *getSpaceWidths* from [getSpaceWidths.js](#getspacewidthsjs)
-* *hyphenate* from [hyphenate.js](#hyphenatejs)
-* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
-* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
-* *makePptx* from [makePptx.js](#makepptxjs)
-* *pdfMetaData* from [pdfMetaData.js](#pdfmetadatajs)
-* *scaleImage* from [scaleImage.js](#scaleimagejs)
-* *setHTMLLanguage* from [setHtmlLanguage.js](#sethtmllanguagejs)
-
 #### Code
 
 **File:** [make/__settings.js](make/__settings.js)
 
 ```js
-_export = {
-  settings: {
-    /* which formats to create apart from html (which is always created) */
-    makePDF: 1,
-    makeJPGs: 0,
-    makePPTX: 0,
-    /* hyphenation */
-    hyphenateTags: ['p', 'li', 'th', 'td'],
-    hyphenateMinWordLength: 6,
-    hyphenateMinCharsBefore: 3,
-    hyphenateMinCharsAfter: 3,
-    /* variable letter-spacing (counteracts big spaces on hyphenation) */
-    letterSpacingMinRem: -0.02,
-    letterSpacingMaxRem: 0.02,
-    /* jpg settings compression before embedding in html */
-    sharpScaleJpgsTo: 1500,
-    sharpJpgQuality: 65,
-    /* JPG quality and deviceScaleFactor, jpg screenshots from puppeteer */
-    deviceScaleFactor: 2,
-    jpgScreenshotQuality: 70,
-    /* PDF, image quality, LO to HI: screen, ebook, printer, prepress */
-    ghostScriptPdfQuality: 'prepress',
-    /* crop PDF file and screenshots from Puppeteer
-       slightly to avoid tiny white stripes along sides */
-    pdfCropPercent: 0.15
-  }
+export const settings = {
+  /* which formats to create apart from html (which is always created) */
+  makePDF: 1,
+  makeJPGs: 0,
+  makePPTX: 0,
+  /* hyphenation */
+  hyphenateTags: ['p', 'li', 'th', 'td'],
+  hyphenateMinWordLength: 6,
+  hyphenateMinCharsBefore: 3,
+  hyphenateMinCharsAfter: 3,
+  /* variable letter-spacing (counteracts big spaces on hyphenation) */
+  letterSpacingMinRem: -0.02,
+  letterSpacingMaxRem: 0.02,
+  /* jpg settings compression before embedding in html */
+  sharpScaleJpgsTo: 1500,
+  sharpJpgQuality: 65,
+  /* JPG quality and deviceScaleFactor, jpg screenshots from puppeteer */
+  deviceScaleFactor: 2,
+  jpgScreenshotQuality: 70,
+  /* PDF, image quality, LO to HI: screen, ebook, printer, prepress */
+  ghostScriptPdfQuality: 'prepress',
+  /* crop PDF file and screenshots from Puppeteer
+     slightly to avoid tiny white stripes along sides */
+  pdfCropPercent: 0.15
 }
 ```
 
@@ -144,10 +123,7 @@ _export = {
 #### Description
 * Provides an export function for all JS files: _export
 * Load all JS code in the make folder
-* Calls make() to start the conversion process
-
-#### Uses
-* *_make* from [_make.js](#_makejs)
+* Calls _make() to start the conversion process
 
 #### Code
 
@@ -168,21 +144,12 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// export function that exports a named function,
-// or object properties from an object as global vars
-Object.defineProperty(globalThis, '_export', {
-  set(x) {
-    typeof x === 'function' && (globalThis[x.name] = x);
-    typeof x === 'object' && Object.assign(globalThis, x);
-  }
-});
-
-// import all scripts in this folder and start make
+// import all scripts in this folder and start _make
 (async () => {
   process.chdir(__dirname);
   for (let file of readdirSync('./')) {
-    file !== '_index.js' && file.slice(-3) === '.js'
-      && await import('./' + file);
+    file !== '_index.js' && file.slice(-3) === '.js' &&
+      Object.assign(globalThis, await import('./' + file));
   }
   process.chdir('../');
   _make();
@@ -195,21 +162,6 @@ Object.defineProperty(globalThis, '_export', {
 #### Description
 * Loads (imports/requires) all NPM module dependences
 * Exports all the dependencies as globals
-
-#### Exports
-* readFileSync
-* writeFileSync
-* statSync
-* renameSync
-* mkdirSync
-* rmSync
-* existsSync
-* execSync
-* PDFDocument
-* puppeteer
-* pptxgen
-* marpCli
-* sharp
 
 #### Code
 
@@ -231,7 +183,7 @@ const { marpCli } = require('@marp-team/marp-cli');
 const sharp = require('sharp');
 
 // Export dependencies
-_export = {
+export {
   readFileSync, writeFileSync, statSync,
   renameSync, mkdirSync, rmSync, existsSync,
   execSync,
@@ -250,28 +202,12 @@ _export = {
 * Main/start function
 * Makes HTML, PDF, JPG and PPTX files from index.md
 
-#### Exports
-* _make
-
-#### Uses
-* *settings* from [__settings.js](#__settingsjs)
-* *_makePart2* from [_makePart2.js](#_makepart2js)
-* *addAndMassageSettings* from [addAndMassageSettings.js](#addandmassagesettingsjs)
-* *embedFonts* from [embedFonts.js](#embedfontsjs)
-* *embedImages* from [embedImages.js](#embedimagesjs)
-* *hyphenate* from [hyphenate.js](#hyphenatejs)
-* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
-* *makeHtml* from [makeHtml.js](#makehtmljs)
-* *makeLinkTargetsBlankAdd* from [makeLinkTargetsBlankAdd.js](#makelinktargetsblankaddjs)
-* *preWarmMakePDFFromHtml* from [preWarmMakePdfFromHtml.js](#prewarmmakepdffromhtmljs)
-* *setHTMLLanguage* from [setHtmlLanguage.js](#sethtmllanguagejs)
-
 #### Code
 
 **File:** [make/_make.js](make/_make.js)
 
 ```js
-_export = async function _make() {
+export async function _make() {
   addAndMassageSettings();
   let { makeJPGs } = settings;
   console.warn = () => { }; // silence marp
@@ -319,25 +255,12 @@ _export = async function _make() {
 * Part 2 of main/start function
 * Makes HTML, PDF, JPG and PPTX files from index.md
 
-#### Exports
-* _makePart2
-
-#### Uses
-* *settings* from [__settings.js](#__settingsjs)
-* *compressPDF* from [compressPDF.js](#compresspdfjs)
-* *fixSloppyPDFCropbox* from [fixSloppyPDFCropbox.js](#fixsloppypdfcropboxjs)
-* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
-* *makePptx* from [makePptx.js](#makepptxjs)
-
-#### Used by
-* *_make* from [_make.js](#_makejs)
-
 #### Code
 
 **File:** [make/_makePart2.js](make/_makePart2.js)
 
 ```js
-_export = async function _makePart2(preWarmedPromise, startTime, r, r2) {
+export async function _makePart2(preWarmedPromise, startTime, r, r2) {
   let { makePDF, makePPTX: mPPTX, keepJPGs } = settings;
   let { widthMm, heightMm, pagePaths, pages, allLinkPositions }
     = await makePdfFromHtml(r, preWarmedPromise);
@@ -380,21 +303,12 @@ _export = async function _makePart2(preWarmedPromise, startTime, r, r2) {
 * Adjusts/unfolds some setting parameters
 * Imports settings given in index.md
 
-#### Exports
-* addAndMassageSettings
-
-#### Uses
-* *settings* from [__settings.js](#__settingsjs)
-
-#### Used by
-* *_make* from [_make.js](#_makejs)
-
 #### Code
 
 **File:** [make/addAndMassageSettings.js](make/addAndMassageSettings.js)
 
 ```js
-_export = function addAndMassageSettings() {
+export function addAndMassageSettings() {
   // "unpack" settings for sharp
   settings.resizeSettings = [
     settings.sharpScaleJpgsTo,
@@ -427,18 +341,12 @@ _export = function addAndMassageSettings() {
 #### Description
 * Adds hyperlinks to PPTX/PowerPoint
 
-#### Exports
-* addPptxSlideLinks
-
-#### Used by
-* *makePptx* from [makePptx.js](#makepptxjs)
-
 #### Code
 
 **File:** [make/addPptxSlideLinks.js](make/addPptxSlideLinks.js)
 
 ```js
-_export = async function addPptxSlideLinks(slide, links) {
+export async function addPptxSlideLinks(slide, links) {
   for (let link of links) {
     await slide.addText(' ', {
       hyperlink: link.href[0] !== '#' ?
@@ -462,23 +370,12 @@ _export = async function addPptxSlideLinks(slide, links) {
 #### Description
 * Adjust the letter-spacing for justified text to minimize gaps
 
-#### Exports
-* adjustLetterSpacing
-
-#### Uses
-* *settings* from [__settings.js](#__settingsjs)
-* *getSpaceWidths* from [getSpaceWidths.js](#getspacewidthsjs)
-* *wrapWords* from [wrapWords.js](#wrapwordsjs)
-
-#### Used by
-* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
-
 #### Code
 
 **File:** [make/adjustLetterSpacing.js](make/adjustLetterSpacing.js)
 
 ```js
-_export = async function adjustLetterSpacing(page = 1, loadPage) {
+export async function adjustLetterSpacing(page = 1, loadPage) {
   loadPage = loadPage || +location.hash.slice(1);
   (!loadPage || isNaN(loadPage)) && (loadPage = 1);
   let {
@@ -523,18 +420,12 @@ _export = async function adjustLetterSpacing(page = 1, loadPage) {
 #### Description
 * Converts bg images to classes (avoids double embedding)
 
-#### Exports
-* bgImagesToClasses
-
-#### Used by
-* *embedImages* from [embedImages.js](#embedimagesjs)
-
 #### Code
 
 **File:** [make/bgImagesToClasses.js](make/bgImagesToClasses.js)
 
 ```js
-_export = function bgImagesToClasses(html) {
+export function bgImagesToClasses(html) {
   let i = 0;
   let hash = {};
   html = html.replace(/<figure style="background-image[^>]*>/g, (x => {
@@ -561,18 +452,12 @@ _export = function bgImagesToClasses(html) {
 * Returns the page length
 * Removes navigation tool bar (so not printed to PDF and JPG:s)
 
-#### Exports
-* cleanupAndGetPageLength
-
-#### Used by
-* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
-
 #### Code
 
 **File:** [make/cleanupAndGetPageLength.js](make/cleanupAndGetPageLength.js)
 
 ```js
-_export = function cleanupAndGetPageLength() {
+export function cleanupAndGetPageLength() {
   // change id:s of sections to valid id:s (must start with character)
   [...document.querySelectorAll('section[id]')].forEach(x => x.id = 'x' + x.id);
   // remove navigator (otherwise it shows in screenshots)
@@ -588,21 +473,12 @@ _export = function cleanupAndGetPageLength() {
 #### Description
 * Compress the PDF using Ghostscript
 
-#### Exports
-* compressPDF
-
-#### Uses
-* *settings* from [__settings.js](#__settingsjs)
-
-#### Used by
-* *_makePart2* from [_makePart2.js](#_makepart2js)
-
 #### Code
 
 **File:** [make/compressPDF.js](make/compressPDF.js)
 
 ```js
-_export = function compressPDF() {
+export function compressPDF() {
   let { ghostScriptPdfQuality: q } = settings;
   execSync(
     `gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.7 ` +
@@ -618,18 +494,12 @@ _export = function compressPDF() {
 #### Description
 * Embeds the fonts in the HTML file
 
-#### Exports
-* embedFonts
-
-#### Used by
-* *_make* from [_make.js](#_makejs)
-
 #### Code
 
 **File:** [make/embedFonts.js](make/embedFonts.js)
 
 ```js
-_export = function embedFonts(html) {
+export function embedFonts(html) {
   // replace import from google fonts with locally downloaded fonts
   // (see https://gwfh.mranftl.com/fonts)
   // ...the reason for not using these in theme.css is that they
@@ -654,23 +524,12 @@ _export = function embedFonts(html) {
 #### Description
 * Embeds the images in the HTML file
 
-#### Exports
-* embedImages
-
-#### Uses
-* *bgImagesToClasses* from [bgImagesToClasses.js](#bgimagestoclassesjs)
-* *removeQuotes* from [removeQuotes.js](#removequotesjs)
-* *scaleImage* from [scaleImage.js](#scaleimagejs)
-
-#### Used by
-* *_make* from [_make.js](#_makejs)
-
 #### Code
 
 **File:** [make/embedImages.js](make/embedImages.js)
 
 ```js
-_export = async function embedImages(html) {
+export async function embedImages(html) {
   html = bgImagesToClasses(html);
   let htmlImages = html.split('img src="').slice(1).map(x => x.split('"')[0]);
   let cssImages = html.split('background-image:url(').slice(1).map(x => removeQuotes(x.split(')')[0]));
@@ -693,22 +552,12 @@ _export = async function embedImages(html) {
 #### Description
 * Crops the PDF very slightly to avoid thin white page borders
 
-#### Exports
-* fixSloppyPDFCropbox
-
-#### Uses
-* *settings* from [__settings.js](#__settingsjs)
-* *pdfMetaData* from [pdfMetaData.js](#pdfmetadatajs)
-
-#### Used by
-* *_makePart2* from [_makePart2.js](#_makepart2js)
-
 #### Code
 
 **File:** [make/fixSloppyPDFCropbox.js](make/fixSloppyPDFCropbox.js)
 
 ```js
-_export = async function fixSloppyPDFCropbox(r) {
+export async function fixSloppyPDFCropbox(r) {
   const existingPdfBytes = readFileSync('./dist/index.pdf');
   const pdfDoc = await PDFDocument.load(existingPdfBytes);
   pdfMetaData(pdfDoc, r);
@@ -732,19 +581,13 @@ _export = async function fixSloppyPDFCropbox(r) {
 #### Description
 * Get link positiions so they can be included in the PPTX/PowerPint
 
-#### Exports
-* getLinkPositions
-
-#### Used by
-* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
-
 #### Code
 
 **File:** [make/getLinkPositions.js](make/getLinkPositions.js)
 
 ```js
 // note: runs from makePdfFromHtml inside puppeteer browser page
-_export = function getLinkPositions(el, i, mPPTX) {
+export function getLinkPositions(el, i, mPPTX) {
   location.hash = '#' + i;
   if (!mPPTX) { return []; }
   return [...document.querySelectorAll(`#x${i} a[href]`)]
@@ -765,19 +608,13 @@ _export = function getLinkPositions(el, i, mPPTX) {
 #### Description
 * Helps Puppeteer get the page dimensions
 
-#### Exports
-* getPageDimensions
-
-#### Used by
-* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
-
 #### Code
 
 **File:** [make/getPageDimensions.js](make/getPageDimensions.js)
 
 ```js
 // note: runs from makePdfFromHtml inside puppeteer browser page
-_export = function getPageDimensions(el) {
+export function getPageDimensions(el) {
   let tempDiv = document.createElement('div');
   tempDiv.style.width = '100mm';
   el.append(tempDiv);
@@ -801,24 +638,12 @@ _export = function getPageDimensions(el) {
 #### Description
 * Get widhts of spaces needed fo letter-spacing adjustments
 
-#### Exports
-* getSpaceWidths
-
-#### Uses
-* *settings* from [__settings.js](#__settingsjs)
-* *nonJustify* from [nonJustify.js](#nonjustifyjs)
-* *reJustify* from [reJustify.js](#rejustifyjs)
-
-#### Used by
-* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacingjs)
-* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
-
 #### Code
 
 **File:** [make/getSpaceWidths.js](make/getSpaceWidths.js)
 
 ```js
-_export = function getSpaceWidths() {
+export function getSpaceWidths() {
   let { hyphenateTags: parentSel } = settings;
   parentSel = parentSel.join(', ');
   let words = [...document.querySelectorAll('a-word')];
@@ -861,21 +686,12 @@ _export = function getSpaceWidths() {
 #### Description
 * Hyphenates the text using the hyphen npm module
 
-#### Exports
-* hyphenate
-
-#### Uses
-* *settings* from [__settings.js](#__settingsjs)
-
-#### Used by
-* *_make* from [_make.js](#_makejs)
-
 #### Code
 
 **File:** [make/hyphenate.js](make/hyphenate.js)
 
 ```js
-_export = async function hyphenate(html) {
+export async function hyphenate(html) {
   let {
     hyphenateTags: els,
     hyphenateMinWordLength: minWordLength,
@@ -923,27 +739,12 @@ _export = async function hyphenate(html) {
 #### Description
 * Includes the letter spacing logic in the HTML client side code
 
-#### Exports
-* includeLetterSpacer
-
-#### Uses
-* *settings* from [__settings.js](#__settingsjs)
-* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacingjs)
-* *getSpaceWidths* from [getSpaceWidths.js](#getspacewidthsjs)
-* *nonJustify* from [nonJustify.js](#nonjustifyjs)
-* *reJustify* from [reJustify.js](#rejustifyjs)
-* *textNodesUnder* from [textNodesUnder.js](#textnodesunderjs)
-* *wrapWords* from [wrapWords.js](#wrapwordsjs)
-
-#### Used by
-* *_make* from [_make.js](#_makejs)
-
 #### Code
 
 **File:** [make/includeLetterSpacer.js](make/includeLetterSpacer.js)
 
 ```js
-_export = function includeLetterSpacer(html) {
+export function includeLetterSpacer(html) {
   let code = [
     'const settings = ' + JSON.stringify(settings),
     textNodesUnder,
@@ -965,18 +766,12 @@ _export = function includeLetterSpacer(html) {
 #### Description
 * Creates the HTML file using MARP CLI
 
-#### Exports
-* makeHtml
-
-#### Used by
-* *_make* from [_make.js](#_makejs)
-
 #### Code
 
 **File:** [make/makeHtml.js](make/makeHtml.js)
 
 ```js
-_export = async function makeHtml() {
+export async function makeHtml() {
   await marpCli([
     'index.md', '--html',
     '--allow-local-files',
@@ -991,18 +786,12 @@ _export = async function makeHtml() {
 #### Description
 * Client side code assuring that external links opens in new tabs
 
-#### Exports
-* makeLinkTargetsBlank
-
-#### Used by
-* *makeLinkTargetsBlankAdd* from [makeLinkTargetsBlankAdd.js](#makelinktargetsblankaddjs)
-
 #### Code
 
 **File:** [make/makeLinkTargetsBlank.js](make/makeLinkTargetsBlank.js)
 
 ```js
-_export = function makeLinkTargetsBlank() {
+export function makeLinkTargetsBlank() {
   document.body.addEventListener('click', e => {
     let a = e.target.closest('a');
     if (!a) { return; }
@@ -1019,21 +808,12 @@ _export = function makeLinkTargetsBlank() {
 #### Description
 * Includes client side code for opening external links in new tabs
 
-#### Exports
-* makeLinkTargetsBlankAdd
-
-#### Uses
-* *makeLinkTargetsBlank* from [makeLinkTargetsBlank.js](#makelinktargetsblankjs)
-
-#### Used by
-* *_make* from [_make.js](#_makejs)
-
 #### Code
 
 **File:** [make/makeLinkTargetsBlankAdd.js](make/makeLinkTargetsBlankAdd.js)
 
 ```js
-_export = function makeLinkTargetsBlankAdd(html) {
+export function makeLinkTargetsBlankAdd(html) {
   html = html.split('</body>').join('<script>' + makeLinkTargetsBlank + ';makeLinkTargetsBlank();</script></body>');
   return html;
 }
@@ -1046,24 +826,12 @@ _export = function makeLinkTargetsBlankAdd(html) {
 * Uses Puppeteer to create a PDF and JPG:s
 * Gathers link position info for PPTX/PowerPoint creation
 
-#### Exports
-* makePdfFromHtml
-
-#### Uses
-* *settings* from [__settings.js](#__settingsjs)
-* *cleanupAndGetPageLength* from [cleanupAndGetPageLength.js](#cleanupandgetpagelengthjs)
-* *getLinkPositions* from [getLinkPositions.js](#getlinkpositionsjs)
-* *getPageDimensions* from [getPageDimensions.js](#getpagedimensionsjs)
-
-#### Used by
-* *_makePart2* from [_makePart2.js](#_makepart2js)
-
 #### Code
 
 **File:** [make/makePdfFromHtml.js](make/makePdfFromHtml.js)
 
 ```js
-_export = async function makePdfFromHtml(r, preWarmedPromise) {
+export async function makePdfFromHtml(r, preWarmedPromise) {
   let { makePDF, makeJPGs, makePPTX: mPPTX, keepJPGs } = settings;
   let { browser, page } = await preWarmedPromise;
   let url = import.meta.url.split('/make/')[0] + '/dist/index.html';
@@ -1118,22 +886,12 @@ _export = async function makePdfFromHtml(r, preWarmedPromise) {
 #### Description
 * Creates a PPTX/PowerPoint using the npm module pptxgenjs
 
-#### Exports
-* makePptx
-
-#### Uses
-* *settings* from [__settings.js](#__settingsjs)
-* *addPptxSlideLinks* from [addPptxSlideLinks.js](#addpptxslidelinksjs)
-
-#### Used by
-* *_makePart2* from [_makePart2.js](#_makepart2js)
-
 #### Code
 
 **File:** [make/makePptx.js](make/makePptx.js)
 
 ```js
-_export = async function makePptx(widthMm, heightMm, pagePaths, allLinkPositions) {
+export async function makePptx(widthMm, heightMm, pagePaths, allLinkPositions) {
   let { author, title, description } = settings;
   let cFactorInches = 0.0393700787;
   let width = widthMm * cFactorInches, height = heightMm * cFactorInches;
@@ -1159,19 +917,12 @@ _export = async function makePptx(widthMm, heightMm, pagePaths, allLinkPositions
 #### Description
 * Helper for space width calculation during letter spacing
 
-#### Exports
-* nonJustify
-
-#### Used by
-* *getSpaceWidths* from [getSpaceWidths.js](#getspacewidthsjs)
-* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
-
 #### Code
 
 **File:** [make/nonJustify.js](make/nonJustify.js)
 
 ```js
-_export = function nonJustify() {
+export function nonJustify() {
   let head = document.querySelector('head');
   let style = document.createElement('style');
   style.classList.add('non-justify')
@@ -1186,21 +937,12 @@ _export = function nonJustify() {
 #### Description
 * Sets PDF meta data
 
-#### Exports
-* pdfMetaData
-
-#### Uses
-* *settings* from [__settings.js](#__settingsjs)
-
-#### Used by
-* *fixSloppyPDFCropbox* from [fixSloppyPDFCropbox.js](#fixsloppypdfcropboxjs)
-
 #### Code
 
 **File:** [make/pdfMetaData.js](make/pdfMetaData.js)
 
 ```js
-_export = function pdfMetaData(pdfDoc, r) {
+export function pdfMetaData(pdfDoc, r) {
   let { author, language, title, description } = settings;
   pdfDoc.setTitle(title);
   pdfDoc.setSubject(description);
@@ -1218,18 +960,12 @@ _export = function pdfMetaData(pdfDoc, r) {
 #### Description
 * Starts Puppeteer early to have it ready when needed
 
-#### Exports
-* preWarmMakePDFFromHtml
-
-#### Used by
-* *_make* from [_make.js](#_makejs)
-
 #### Code
 
 **File:** [make/preWarmMakePdfFromHtml.js](make/preWarmMakePdfFromHtml.js)
 
 ```js
-_export = async function preWarmMakePDFFromHtml() {
+export async function preWarmMakePDFFromHtml() {
   let browser = await puppeteer.launch({ headless: 'new' });
   let page = await browser.newPage();
   return { browser, page };
@@ -1242,19 +978,12 @@ _export = async function preWarmMakePDFFromHtml() {
 #### Description
 * Helper for space width calculation during letter spacing
 
-#### Exports
-* reJustify
-
-#### Used by
-* *getSpaceWidths* from [getSpaceWidths.js](#getspacewidthsjs)
-* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
-
 #### Code
 
 **File:** [make/reJustify.js](make/reJustify.js)
 
 ```js
-_export = function reJustify() {
+export function reJustify() {
   document.querySelector('style.non-justify').remove();
 }
 ```
@@ -1265,18 +994,12 @@ _export = function reJustify() {
 #### Description
 * Remove three different types of quotes from a string
 
-#### Exports
-* removeQuotes
-
-#### Used by
-* *embedImages* from [embedImages.js](#embedimagesjs)
-
 #### Code
 
 **File:** [make/removeQuotes.js](make/removeQuotes.js)
 
 ```js
-_export = function removeQuotes(x) {
+export function removeQuotes(x) {
   return x
     .split('"').join('')
     .split("'").join('')
@@ -1290,21 +1013,12 @@ _export = function removeQuotes(x) {
 #### Description
 * Scales imags using the npm module sharp
 
-#### Exports
-* scaleImage
-
-#### Uses
-* *settings* from [__settings.js](#__settingsjs)
-
-#### Used by
-* *embedImages* from [embedImages.js](#embedimagesjs)
-
 #### Code
 
 **File:** [make/scaleImage.js](make/scaleImage.js)
 
 ```js
-_export = async function scaleImage(buffer) {
+export async function scaleImage(buffer) {
   let { resizeSettings, jpegSettings } = settings;
   return sharp(buffer)
     .resize(...resizeSettings)
@@ -1319,21 +1033,12 @@ _export = async function scaleImage(buffer) {
 #### Description
 * Sets the html lang attribute according to settings
 
-#### Exports
-* setHTMLLanguage
-
-#### Uses
-* *settings* from [__settings.js](#__settingsjs)
-
-#### Used by
-* *_make* from [_make.js](#_makejs)
-
 #### Code
 
 **File:** [make/setHtmlLanguage.js](make/setHtmlLanguage.js)
 
 ```js
-_export = function setHTMLLanguage(html) {
+export function setHTMLLanguage(html) {
   let { language } = settings;
   html = html.replace(/<html[^>]*>/g, `<html lang="${language}">`);
   return html;
@@ -1347,19 +1052,12 @@ _export = function setHTMLLanguage(html) {
 * Extract text nodes in a DOM element
 * Used for letter spacing
 
-#### Exports
-* textNodesUnder
-
-#### Used by
-* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
-* *wrapWords* from [wrapWords.js](#wrapwordsjs)
-
 #### Code
 
 **File:** [make/textNodesUnder.js](make/textNodesUnder.js)
 
 ```js
-_export = function textNodesUnder(el) {
+export function textNodesUnder(el) {
   var n, a = [], walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
   while (n = walk.nextNode()) a.push(n);
   return a;
@@ -1374,22 +1072,12 @@ _export = function textNodesUnder(el) {
 * Wraps spaces inside <a-space> tags
 * Used for letter spacing
 
-#### Exports
-* wrapWords
-
-#### Uses
-* *textNodesUnder* from [textNodesUnder.js](#textnodesunderjs)
-
-#### Used by
-* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacingjs)
-* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
-
 #### Code
 
 **File:** [make/wrapWords.js](make/wrapWords.js)
 
 ```js
-_export = function wrapWords(insideEl) {
+export function wrapWords(insideEl) {
   let nodes = textNodesUnder(insideEl)
     .filter(x => x.textContent.replace(/\n/g, '').length > 1);
   nodes.forEach(node => {

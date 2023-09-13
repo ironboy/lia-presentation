@@ -2,7 +2,7 @@
  * - Get widhts of spaces needed fo letter-spacing adjustments
  */
 
-_export = function getSpaceWidths() {
+export function getSpaceWidths() {
   let { hyphenateTags: parentSel } = settings;
   parentSel = parentSel.join(', ');
   let words = [...document.querySelectorAll('a-word')];

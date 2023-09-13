@@ -4,7 +4,7 @@
  * - Used for letter spacing
  */
 
-_export = function wrapWords(insideEl) {
+export function wrapWords(insideEl) {
   let nodes = textNodesUnder(insideEl)
     .filter(x => x.textContent.replace(/\n/g, '').length > 1);
   nodes.forEach(node => {

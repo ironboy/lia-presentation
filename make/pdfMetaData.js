@@ -2,7 +2,7 @@
  * - Sets PDF meta data
  */
 
-_export = function pdfMetaData(pdfDoc, r) {
+export function pdfMetaData(pdfDoc, r) {
   let { author, language, title, description } = settings;
   pdfDoc.setTitle(title);
   pdfDoc.setSubject(description);

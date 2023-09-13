@@ -2,7 +2,7 @@
  * - Embeds the fonts in the HTML file
  */
 
-_export = function embedFonts(html) {
+export function embedFonts(html) {
   // replace import from google fonts with locally downloaded fonts
   // (see https://gwfh.mranftl.com/fonts)
   // ...the reason for not using these in theme.css is that they

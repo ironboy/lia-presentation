@@ -2,7 +2,7 @@
  * - Adds hyperlinks to PPTX/PowerPoint
  */
 
-_export = async function addPptxSlideLinks(slide, links) {
+export async function addPptxSlideLinks(slide, links) {
   for (let link of links) {
     await slide.addText(' ', {
       hyperlink: link.href[0] !== '#' ?

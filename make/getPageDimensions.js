@@ -3,7 +3,7 @@
  */
 
 // note: runs from makePdfFromHtml inside puppeteer browser page
-_export = function getPageDimensions(el) {
+export function getPageDimensions(el) {
   let tempDiv = document.createElement('div');
   tempDiv.style.width = '100mm';
   el.append(tempDiv);

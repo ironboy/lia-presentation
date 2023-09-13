@@ -3,7 +3,7 @@
  * - Makes HTML, PDF, JPG and PPTX files from index.md
  */
 
-_export = async function _make() {
+export async function _make() {
   addAndMassageSettings();
   let { makeJPGs } = settings;
   console.warn = () => { }; // silence marp
