@@ -76,5 +76,5 @@ We're rather relaxed. But there are some important guidelines you really *should
 * We **do** use our own export/import system (a thin layer on top of ES6) - the **_export** setter is a bit magical and publishes functions and objects as globals. Don't worry be happy - it's a bit like Java Packages - you can reach everything without having to use import/export in *every* file!
 * *Only* comment things that are really hard to get even if you know JS!
 * *Always* move things that you feel might be *settings/options* to *make/__settings.js*. And in *__settings.js* comment what the setting actually does!
-* *And:* End your lines with ";". It's not that hard - most JS coders do it. All Java and C# do too.
+* *And:* End your lines with ";". It's not that hard - most JS coders do it. All Java and C# coders do so too. (Birds do it - even educated fleas do it...)
 
