@@ -121,8 +121,8 @@ export const settings = {
 ## _index.js
 
 #### Description
-* Provides an export function for all JS files: _export
-* Load all JS code in the make folder
+* Load/import all JS code in the make folder
+* Turn every imported asset into a global variable
 * Calls _make() to start the conversion process
 
 #### Code
