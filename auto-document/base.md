@@ -72,7 +72,7 @@ The **Mrs Marper** code base can be found in the **make** folder.
 We're rather relaxed. But there are some important guidelines you really *should* follow:
 * Name your functions and variables so that they can be easily understood, unless you can understand the purpose of them anyway within 5 lines of code!
 * At the start of each file write a short description as a [JavaDoc](https://www.oracle.com/technical-resources/articles/java/javadoc-tool.html) style comment with one bullet point per line (using "-" for bullets) - see how we've done it our files so far - follow that pattern!
-* Never have more than 50 lines of code in a single JS file! Refactor and split if that limit is reached!
+* **Never** have more than 50 lines of code in a single JS file! Refactor and split if that limit is reached!
 * Install and use the excellent VSC extension [Uncanny Cognitive Complexity](https://marketplace.visualstudio.com/items?itemName=Dabolus.uncanny-cognitive-complexity) to judge the complexity of each of your JS files. Try to keep things simple (below the measurement 10) - never go haywire (you **must** keep things below 20). Keep Mr Incredible happy!
 * Don't uses classes and OOP - we can write complex applications as a bunch of functions in JS. Much less cruft!
 * We **do** use our own export/import system (a thin layer on top of ES6) - the **_export** setter is a bit magical and publishes functions and objects as globals. Don't worry be happy - it's a bit like Java Packages - you can reach everything without having to use import/export in *every* file!

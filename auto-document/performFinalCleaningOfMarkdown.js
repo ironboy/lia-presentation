@@ -9,6 +9,7 @@ export function performFinalCleaningOfMarkdown(md, allContent, readFileSync, pat
   md = md.split('### ').join('#### ');
   md = md.split('\n## ').join('\n---\n## ');
   md = md.split('<a*').join('<a-');
+  md = md.split('letter*spacing').join('letter-spacing')
   md = readFileSync(pathJoin(__dirname, 'base.md'), 'utf-8') + md;
   return md;
 }
