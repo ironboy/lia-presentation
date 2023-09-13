@@ -1,5 +1,5 @@
 # LIA-presentaion / Mrs Marper
-A slide-deck built with [MARP](https://marp.app)+ **Mrs Marper**. Also the repo for Mrs Marper source code for now.
+A slide-deck built with [MARP](https://marp.app)+ **Mrs Marper**. (It also acts as the repo for the **Mrs Marper** code base for now.
 
 The **Mrs Marper** code base is located in the folder [make](make).
 
@@ -58,7 +58,7 @@ Don't forget to run **npm install**, then:
 
 (Note: *Don't* use Marp the VSC extension command "Export slide deck" - it doesn't give as good results as **npm run make**.)
 
-# Documentation of the Mrs maper code base 
+# Documentation of the Mrs Marper code base 
 
 The **Mrs Marper** code base can be found in the **make** folder.
 ## __settings.js
