@@ -5,7 +5,7 @@
 **Note 2:** If you are a LIA student of Node Hill from HAK - [here is an alternate README file](README-HAK.md) in Swedish, focusing on the project you're working in.
 
 ## What do we have here?
-A slide-deck built with [MARP](https://marp.app)+ **Mrs Marper**. (It also acts as the repo for the **Mrs Marper** code base for now.
+A slide-deck built with [MARP](https://marp.app)+ **Mrs Marper**. (It also acts as the repo for the **Mrs Marper** code base for now.)
 
 The **Mrs Marper** code base is located in the folder [make](make).
 
