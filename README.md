@@ -73,7 +73,7 @@ We're rather relaxed. But there are some important guidelines you really *should
 * Name your functions, variables and parameters so that they can be easily understood. (With the exeception of parameter names for very short lambda like functions, where short code is easier to follow.)
 * At the start of each file write a short description as a [JavaDoc](https://www.oracle.com/technical-resources/articles/java/javadoc-tool.html) style comment with one bullet point per line (using "-" for bullets) - see how we've done it our files so far - follow that pattern!
 * **Never** have more than 50 lines of code in a single JS file! Refactor and split if that limit is reached!
-* Install and use the excellent VSC extension [Uncanny Cognitive Complexity](https://marketplace.visualstudio.com/items?itemName=Dabolus.uncanny-cognitive-complexity) to judge the complexity of each of your JS files. Try to keep things simple (below the measurement 10) - never go haywire (you **must** keep things below 20). Keep Mr Incredible happy!
+* Install and use the excellent VSC extension [Uncanny Cognitive Complexity](https://marketplace.visualstudio.com/items?itemName=Dabolus.uncanny-cognitive-complexity) to judge the complexity of each of your JS files. Try to keep things simple, below the measurement 10, and never go haywire (you **must** keep things below 20). Keep Mr Incredible happy! (You can read [more about Cognitive Complexity here](https://www.baeldung.com/java-cognitive-complexity).)
 * Don't uses classes and OOP &ndash; this application is a bunch of JS functions and that is a *deliberate choice*. Much less cruft in this particular case, although OOP is a better fit in other cases...
 * *Note* that all *export*:s are automatically *imported* and made in to global variables in **_index.js**, so follow that convention and *don't* add *any* import statements in your files!
 * *Only* comment things that are really hard to understand even if you know JS. **And** things that are domain specific.
@@ -107,6 +107,7 @@ We're rather relaxed. But there are some important guidelines you really *should
 #### Code
 
 **File:** [make/__settings.js](make/__settings.js)
+**Cognitive Complexity:** 0
 
 ```js
 export const settings = {
@@ -150,6 +151,7 @@ export const settings = {
 #### Code
 
 **File:** [make/_index.js](make/_index.js)
+**Cognitive Complexity:** 2
 
 ```js
 /* 
@@ -203,6 +205,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 #### Code
 
 **File:** [make/_loadDependencies.js](make/_loadDependencies.js)
+**Cognitive Complexity:** 0
 
 ```js
 // Load (import/require) dependecies 
@@ -258,6 +261,7 @@ export {
 #### Code
 
 **File:** [make/_make.js](make/_make.js)
+**Cognitive Complexity:** 2
 
 ```js
 export async function _make() {
@@ -324,6 +328,7 @@ export async function _make() {
 #### Code
 
 **File:** [make/_makePart2.js](make/_makePart2.js)
+**Cognitive Complexity:** 6
 
 ```js
 export async function _makePart2(preWarmedPromise, startTime, r, r2) {
@@ -381,6 +386,7 @@ export async function _makePart2(preWarmedPromise, startTime, r, r2) {
 #### Code
 
 **File:** [make/addAndMassageSettings.js](make/addAndMassageSettings.js)
+**Cognitive Complexity:** 4
 
 ```js
 export function addAndMassageSettings() {
@@ -425,6 +431,7 @@ export function addAndMassageSettings() {
 #### Code
 
 **File:** [make/addPptxSlideLinks.js](make/addPptxSlideLinks.js)
+**Cognitive Complexity:** 5
 
 ```js
 export async function addPptxSlideLinks(slide, links) {
@@ -465,6 +472,7 @@ export async function addPptxSlideLinks(slide, links) {
 #### Code
 
 **File:** [make/adjustLetterSpacing.js](make/adjustLetterSpacing.js)
+**Cognitive Complexity:** 18
 
 ```js
 export async function adjustLetterSpacing(page = 1, loadPage) {
@@ -521,6 +529,7 @@ export async function adjustLetterSpacing(page = 1, loadPage) {
 #### Code
 
 **File:** [make/bgImagesToClasses.js](make/bgImagesToClasses.js)
+**Cognitive Complexity:** 2
 
 ```js
 export function bgImagesToClasses(html) {
@@ -559,6 +568,7 @@ export function bgImagesToClasses(html) {
 #### Code
 
 **File:** [make/cleanupAndGetPageLength.js](make/cleanupAndGetPageLength.js)
+**Cognitive Complexity:** 0
 
 ```js
 export function cleanupAndGetPageLength() {
@@ -589,6 +599,7 @@ export function cleanupAndGetPageLength() {
 #### Code
 
 **File:** [make/compressPDF.js](make/compressPDF.js)
+**Cognitive Complexity:** 0
 
 ```js
 export function compressPDF() {
@@ -616,6 +627,7 @@ export function compressPDF() {
 #### Code
 
 **File:** [make/embedFonts.js](make/embedFonts.js)
+**Cognitive Complexity:** 1
 
 ```js
 export function embedFonts(html) {
@@ -657,6 +669,7 @@ export function embedFonts(html) {
 #### Code
 
 **File:** [make/embedImages.js](make/embedImages.js)
+**Cognitive Complexity:** 2
 
 ```js
 export async function embedImages(html) {
@@ -695,6 +708,7 @@ export async function embedImages(html) {
 #### Code
 
 **File:** [make/fixSloppyPDFCropbox.js](make/fixSloppyPDFCropbox.js)
+**Cognitive Complexity:** 1
 
 ```js
 export async function fixSloppyPDFCropbox(r) {
@@ -730,6 +744,7 @@ export async function fixSloppyPDFCropbox(r) {
 #### Code
 
 **File:** [make/getLinkPositions.js](make/getLinkPositions.js)
+**Cognitive Complexity:** 1
 
 ```js
 // note: runs from makePdfFromHtml inside puppeteer browser page
@@ -763,6 +778,7 @@ export function getLinkPositions(el, i, mPPTX) {
 #### Code
 
 **File:** [make/getPageDimensions.js](make/getPageDimensions.js)
+**Cognitive Complexity:** 0
 
 ```js
 // note: runs from makePdfFromHtml inside puppeteer browser page
@@ -805,6 +821,7 @@ export function getPageDimensions(el) {
 #### Code
 
 **File:** [make/getSpaceWidths.js](make/getSpaceWidths.js)
+**Cognitive Complexity:** 2
 
 ```js
 export function getSpaceWidths() {
@@ -862,6 +879,7 @@ export function getSpaceWidths() {
 #### Code
 
 **File:** [make/hyphenate.js](make/hyphenate.js)
+**Cognitive Complexity:** 14
 
 ```js
 export async function hyphenate(html) {
@@ -930,6 +948,7 @@ export async function hyphenate(html) {
 #### Code
 
 **File:** [make/includeLetterSpacer.js](make/includeLetterSpacer.js)
+**Cognitive Complexity:** 0
 
 ```js
 export function includeLetterSpacer(html) {
@@ -963,6 +982,7 @@ export function includeLetterSpacer(html) {
 #### Code
 
 **File:** [make/makeHtml.js](make/makeHtml.js)
+**Cognitive Complexity:** 0
 
 ```js
 export async function makeHtml() {
@@ -989,6 +1009,7 @@ export async function makeHtml() {
 #### Code
 
 **File:** [make/makeLinkTargetsBlank.js](make/makeLinkTargetsBlank.js)
+**Cognitive Complexity:** 4
 
 ```js
 export function makeLinkTargetsBlank() {
@@ -1020,6 +1041,7 @@ export function makeLinkTargetsBlank() {
 #### Code
 
 **File:** [make/makeLinkTargetsBlankAdd.js](make/makeLinkTargetsBlankAdd.js)
+**Cognitive Complexity:** 0
 
 ```js
 export function makeLinkTargetsBlankAdd(html) {
@@ -1050,6 +1072,7 @@ export function makeLinkTargetsBlankAdd(html) {
 #### Code
 
 **File:** [make/makePdfFromHtml.js](make/makePdfFromHtml.js)
+**Cognitive Complexity:** 7
 
 ```js
 export async function makePdfFromHtml(r, preWarmedPromise) {
@@ -1120,6 +1143,7 @@ export async function makePdfFromHtml(r, preWarmedPromise) {
 #### Code
 
 **File:** [make/makePptx.js](make/makePptx.js)
+**Cognitive Complexity:** 1
 
 ```js
 export async function makePptx(widthMm, heightMm, pagePaths, allLinkPositions) {
@@ -1158,6 +1182,7 @@ export async function makePptx(widthMm, heightMm, pagePaths, allLinkPositions) {
 #### Code
 
 **File:** [make/nonJustify.js](make/nonJustify.js)
+**Cognitive Complexity:** 0
 
 ```js
 export function nonJustify() {
@@ -1187,6 +1212,7 @@ export function nonJustify() {
 #### Code
 
 **File:** [make/pdfMetaData.js](make/pdfMetaData.js)
+**Cognitive Complexity:** 0
 
 ```js
 export function pdfMetaData(pdfDoc, r) {
@@ -1216,6 +1242,7 @@ export function pdfMetaData(pdfDoc, r) {
 #### Code
 
 **File:** [make/preWarmMakePdfFromHtml.js](make/preWarmMakePdfFromHtml.js)
+**Cognitive Complexity:** 0
 
 ```js
 export async function preWarmMakePDFFromHtml() {
@@ -1241,6 +1268,7 @@ export async function preWarmMakePDFFromHtml() {
 #### Code
 
 **File:** [make/reJustify.js](make/reJustify.js)
+**Cognitive Complexity:** 0
 
 ```js
 export function reJustify() {
@@ -1263,6 +1291,7 @@ export function reJustify() {
 #### Code
 
 **File:** [make/removeQuotes.js](make/removeQuotes.js)
+**Cognitive Complexity:** 0
 
 ```js
 export function removeQuotes(x) {
@@ -1291,6 +1320,7 @@ export function removeQuotes(x) {
 #### Code
 
 **File:** [make/scaleImage.js](make/scaleImage.js)
+**Cognitive Complexity:** 0
 
 ```js
 export async function scaleImage(buffer) {
@@ -1320,6 +1350,7 @@ export async function scaleImage(buffer) {
 #### Code
 
 **File:** [make/setHtmlLanguage.js](make/setHtmlLanguage.js)
+**Cognitive Complexity:** 0
 
 ```js
 export function setHTMLLanguage(html) {
@@ -1346,6 +1377,7 @@ export function setHTMLLanguage(html) {
 #### Code
 
 **File:** [make/textNodesUnder.js](make/textNodesUnder.js)
+**Cognitive Complexity:** 1
 
 ```js
 export function textNodesUnder(el) {
@@ -1376,6 +1408,7 @@ export function textNodesUnder(el) {
 #### Code
 
 **File:** [make/wrapWords.js](make/wrapWords.js)
+**Cognitive Complexity:** 8
 
 ```js
 export function wrapWords(insideEl) {

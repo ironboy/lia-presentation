@@ -1,4 +1,6 @@
-export function markdownGenerator(md, file, exports, description, uses, usedBy) {
+export function markdownGenerator(
+  md, file, exports, description, uses, usedBy, cComplexity
+) {
   md.push([
     `## ${file}`,
     '',
@@ -10,6 +12,7 @@ export function markdownGenerator(md, file, exports, description, uses, usedBy) 
     usedBy.length ? `\n\n### Used by\n ${usedBy.map(x => '*' + x.exports.join(', ') + `* from [${x.file}](#${x.file.toLowerCase().replace(/\./g, '')})`).map(x => '* ' + x).join('\n')}` : '',
     '\n### Code\n\n',
     `**File:** [make/${file}](make/${file})`,
+    `**Cognitive Complexity:** ${cComplexity}`,
     '',
     '```js',
     `[theCodeHere]`,
