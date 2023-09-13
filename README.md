@@ -106,9 +106,9 @@ We're rather relaxed. But there are some important guidelines you really *should
 
 #### Code
 
-**File:** [make/__settings.js](make/__settings.js)
+*File:* [make/__settings.js](make/__settings.js)
 
-**Cognitive Complexity:** 0
+*Cognitive Complexity:* 0
 
 ```js
 export const settings = {
@@ -151,9 +151,9 @@ export const settings = {
 
 #### Code
 
-**File:** [make/_index.js](make/_index.js)
+*File:* [make/_index.js](make/_index.js)
 
-**Cognitive Complexity:** 2
+*Cognitive Complexity:* 2
 
 ```js
 /* 
@@ -206,9 +206,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 #### Code
 
-**File:** [make/_loadDependencies.js](make/_loadDependencies.js)
+*File:* [make/_loadDependencies.js](make/_loadDependencies.js)
 
-**Cognitive Complexity:** 0
+*Cognitive Complexity:* 0
 
 ```js
 // Load (import/require) dependecies 
@@ -263,9 +263,9 @@ export {
 
 #### Code
 
-**File:** [make/_make.js](make/_make.js)
+*File:* [make/_make.js](make/_make.js)
 
-**Cognitive Complexity:** 2
+*Cognitive Complexity:* 2
 
 ```js
 export async function _make() {
@@ -331,9 +331,9 @@ export async function _make() {
 
 #### Code
 
-**File:** [make/_makePart2.js](make/_makePart2.js)
+*File:* [make/_makePart2.js](make/_makePart2.js)
 
-**Cognitive Complexity:** 6
+*Cognitive Complexity:* 6
 
 ```js
 export async function _makePart2(preWarmedPromise, startTime, r, r2) {
@@ -390,9 +390,9 @@ export async function _makePart2(preWarmedPromise, startTime, r, r2) {
 
 #### Code
 
-**File:** [make/addAndMassageSettings.js](make/addAndMassageSettings.js)
+*File:* [make/addAndMassageSettings.js](make/addAndMassageSettings.js)
 
-**Cognitive Complexity:** 4
+*Cognitive Complexity:* 4
 
 ```js
 export function addAndMassageSettings() {
@@ -436,9 +436,9 @@ export function addAndMassageSettings() {
 
 #### Code
 
-**File:** [make/addPptxSlideLinks.js](make/addPptxSlideLinks.js)
+*File:* [make/addPptxSlideLinks.js](make/addPptxSlideLinks.js)
 
-**Cognitive Complexity:** 5
+*Cognitive Complexity:* 5
 
 ```js
 export async function addPptxSlideLinks(slide, links) {
@@ -478,9 +478,9 @@ export async function addPptxSlideLinks(slide, links) {
 
 #### Code
 
-**File:** [make/adjustLetterSpacing.js](make/adjustLetterSpacing.js)
+*File:* [make/adjustLetterSpacing.js](make/adjustLetterSpacing.js)
 
-**Cognitive Complexity:** 18
+*Cognitive Complexity:* 18
 
 ```js
 export async function adjustLetterSpacing(page = 1, loadPage) {
@@ -536,9 +536,9 @@ export async function adjustLetterSpacing(page = 1, loadPage) {
 
 #### Code
 
-**File:** [make/bgImagesToClasses.js](make/bgImagesToClasses.js)
+*File:* [make/bgImagesToClasses.js](make/bgImagesToClasses.js)
 
-**Cognitive Complexity:** 2
+*Cognitive Complexity:* 2
 
 ```js
 export function bgImagesToClasses(html) {
@@ -576,9 +576,9 @@ export function bgImagesToClasses(html) {
 
 #### Code
 
-**File:** [make/cleanupAndGetPageLength.js](make/cleanupAndGetPageLength.js)
+*File:* [make/cleanupAndGetPageLength.js](make/cleanupAndGetPageLength.js)
 
-**Cognitive Complexity:** 0
+*Cognitive Complexity:* 0
 
 ```js
 export function cleanupAndGetPageLength() {
@@ -608,9 +608,9 @@ export function cleanupAndGetPageLength() {
 
 #### Code
 
-**File:** [make/compressPDF.js](make/compressPDF.js)
+*File:* [make/compressPDF.js](make/compressPDF.js)
 
-**Cognitive Complexity:** 0
+*Cognitive Complexity:* 0
 
 ```js
 export function compressPDF() {
@@ -637,9 +637,9 @@ export function compressPDF() {
 
 #### Code
 
-**File:** [make/embedFonts.js](make/embedFonts.js)
+*File:* [make/embedFonts.js](make/embedFonts.js)
 
-**Cognitive Complexity:** 1
+*Cognitive Complexity:* 1
 
 ```js
 export function embedFonts(html) {
@@ -680,9 +680,9 @@ export function embedFonts(html) {
 
 #### Code
 
-**File:** [make/embedImages.js](make/embedImages.js)
+*File:* [make/embedImages.js](make/embedImages.js)
 
-**Cognitive Complexity:** 2
+*Cognitive Complexity:* 2
 
 ```js
 export async function embedImages(html) {
@@ -720,9 +720,9 @@ export async function embedImages(html) {
 
 #### Code
 
-**File:** [make/fixSloppyPDFCropbox.js](make/fixSloppyPDFCropbox.js)
+*File:* [make/fixSloppyPDFCropbox.js](make/fixSloppyPDFCropbox.js)
 
-**Cognitive Complexity:** 1
+*Cognitive Complexity:* 1
 
 ```js
 export async function fixSloppyPDFCropbox(r) {
@@ -757,9 +757,9 @@ export async function fixSloppyPDFCropbox(r) {
 
 #### Code
 
-**File:** [make/getLinkPositions.js](make/getLinkPositions.js)
+*File:* [make/getLinkPositions.js](make/getLinkPositions.js)
 
-**Cognitive Complexity:** 1
+*Cognitive Complexity:* 1
 
 ```js
 // note: runs from makePdfFromHtml inside puppeteer browser page
@@ -792,9 +792,9 @@ export function getLinkPositions(el, i, mPPTX) {
 
 #### Code
 
-**File:** [make/getPageDimensions.js](make/getPageDimensions.js)
+*File:* [make/getPageDimensions.js](make/getPageDimensions.js)
 
-**Cognitive Complexity:** 0
+*Cognitive Complexity:* 0
 
 ```js
 // note: runs from makePdfFromHtml inside puppeteer browser page
@@ -836,9 +836,9 @@ export function getPageDimensions(el) {
 
 #### Code
 
-**File:** [make/getSpaceWidths.js](make/getSpaceWidths.js)
+*File:* [make/getSpaceWidths.js](make/getSpaceWidths.js)
 
-**Cognitive Complexity:** 2
+*Cognitive Complexity:* 2
 
 ```js
 export function getSpaceWidths() {
@@ -895,9 +895,9 @@ export function getSpaceWidths() {
 
 #### Code
 
-**File:** [make/hyphenate.js](make/hyphenate.js)
+*File:* [make/hyphenate.js](make/hyphenate.js)
 
-**Cognitive Complexity:** 14
+*Cognitive Complexity:* 14
 
 ```js
 export async function hyphenate(html) {
@@ -965,9 +965,9 @@ export async function hyphenate(html) {
 
 #### Code
 
-**File:** [make/includeLetterSpacer.js](make/includeLetterSpacer.js)
+*File:* [make/includeLetterSpacer.js](make/includeLetterSpacer.js)
 
-**Cognitive Complexity:** 0
+*Cognitive Complexity:* 0
 
 ```js
 export function includeLetterSpacer(html) {
@@ -1000,9 +1000,9 @@ export function includeLetterSpacer(html) {
 
 #### Code
 
-**File:** [make/makeHtml.js](make/makeHtml.js)
+*File:* [make/makeHtml.js](make/makeHtml.js)
 
-**Cognitive Complexity:** 0
+*Cognitive Complexity:* 0
 
 ```js
 export async function makeHtml() {
@@ -1028,9 +1028,9 @@ export async function makeHtml() {
 
 #### Code
 
-**File:** [make/makeLinkTargetsBlank.js](make/makeLinkTargetsBlank.js)
+*File:* [make/makeLinkTargetsBlank.js](make/makeLinkTargetsBlank.js)
 
-**Cognitive Complexity:** 4
+*Cognitive Complexity:* 4
 
 ```js
 export function makeLinkTargetsBlank() {
@@ -1061,9 +1061,9 @@ export function makeLinkTargetsBlank() {
 
 #### Code
 
-**File:** [make/makeLinkTargetsBlankAdd.js](make/makeLinkTargetsBlankAdd.js)
+*File:* [make/makeLinkTargetsBlankAdd.js](make/makeLinkTargetsBlankAdd.js)
 
-**Cognitive Complexity:** 0
+*Cognitive Complexity:* 0
 
 ```js
 export function makeLinkTargetsBlankAdd(html) {
@@ -1093,9 +1093,9 @@ export function makeLinkTargetsBlankAdd(html) {
 
 #### Code
 
-**File:** [make/makePdfFromHtml.js](make/makePdfFromHtml.js)
+*File:* [make/makePdfFromHtml.js](make/makePdfFromHtml.js)
 
-**Cognitive Complexity:** 7
+*Cognitive Complexity:* 7
 
 ```js
 export async function makePdfFromHtml(r, preWarmedPromise) {
@@ -1165,9 +1165,9 @@ export async function makePdfFromHtml(r, preWarmedPromise) {
 
 #### Code
 
-**File:** [make/makePptx.js](make/makePptx.js)
+*File:* [make/makePptx.js](make/makePptx.js)
 
-**Cognitive Complexity:** 1
+*Cognitive Complexity:* 1
 
 ```js
 export async function makePptx(widthMm, heightMm, pagePaths, allLinkPositions) {
@@ -1205,9 +1205,9 @@ export async function makePptx(widthMm, heightMm, pagePaths, allLinkPositions) {
 
 #### Code
 
-**File:** [make/nonJustify.js](make/nonJustify.js)
+*File:* [make/nonJustify.js](make/nonJustify.js)
 
-**Cognitive Complexity:** 0
+*Cognitive Complexity:* 0
 
 ```js
 export function nonJustify() {
@@ -1236,9 +1236,9 @@ export function nonJustify() {
 
 #### Code
 
-**File:** [make/pdfMetaData.js](make/pdfMetaData.js)
+*File:* [make/pdfMetaData.js](make/pdfMetaData.js)
 
-**Cognitive Complexity:** 0
+*Cognitive Complexity:* 0
 
 ```js
 export function pdfMetaData(pdfDoc, r) {
@@ -1267,9 +1267,9 @@ export function pdfMetaData(pdfDoc, r) {
 
 #### Code
 
-**File:** [make/preWarmMakePdfFromHtml.js](make/preWarmMakePdfFromHtml.js)
+*File:* [make/preWarmMakePdfFromHtml.js](make/preWarmMakePdfFromHtml.js)
 
-**Cognitive Complexity:** 0
+*Cognitive Complexity:* 0
 
 ```js
 export async function preWarmMakePDFFromHtml() {
@@ -1294,9 +1294,9 @@ export async function preWarmMakePDFFromHtml() {
 
 #### Code
 
-**File:** [make/reJustify.js](make/reJustify.js)
+*File:* [make/reJustify.js](make/reJustify.js)
 
-**Cognitive Complexity:** 0
+*Cognitive Complexity:* 0
 
 ```js
 export function reJustify() {
@@ -1318,9 +1318,9 @@ export function reJustify() {
 
 #### Code
 
-**File:** [make/removeQuotes.js](make/removeQuotes.js)
+*File:* [make/removeQuotes.js](make/removeQuotes.js)
 
-**Cognitive Complexity:** 0
+*Cognitive Complexity:* 0
 
 ```js
 export function removeQuotes(x) {
@@ -1348,9 +1348,9 @@ export function removeQuotes(x) {
 
 #### Code
 
-**File:** [make/scaleImage.js](make/scaleImage.js)
+*File:* [make/scaleImage.js](make/scaleImage.js)
 
-**Cognitive Complexity:** 0
+*Cognitive Complexity:* 0
 
 ```js
 export async function scaleImage(buffer) {
@@ -1379,9 +1379,9 @@ export async function scaleImage(buffer) {
 
 #### Code
 
-**File:** [make/setHtmlLanguage.js](make/setHtmlLanguage.js)
+*File:* [make/setHtmlLanguage.js](make/setHtmlLanguage.js)
 
-**Cognitive Complexity:** 0
+*Cognitive Complexity:* 0
 
 ```js
 export function setHTMLLanguage(html) {
@@ -1407,9 +1407,9 @@ export function setHTMLLanguage(html) {
 
 #### Code
 
-**File:** [make/textNodesUnder.js](make/textNodesUnder.js)
+*File:* [make/textNodesUnder.js](make/textNodesUnder.js)
 
-**Cognitive Complexity:** 1
+*Cognitive Complexity:* 1
 
 ```js
 export function textNodesUnder(el) {
@@ -1439,9 +1439,9 @@ export function textNodesUnder(el) {
 
 #### Code
 
-**File:** [make/wrapWords.js](make/wrapWords.js)
+*File:* [make/wrapWords.js](make/wrapWords.js)
 
-**Cognitive Complexity:** 8
+*Cognitive Complexity:* 8
 
 ```js
 export function wrapWords(insideEl) {
