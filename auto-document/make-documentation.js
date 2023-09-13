@@ -56,7 +56,7 @@ Object.defineProperty(globalThis, '_export', {
       `${description.split('\n').map(x => x.slice(1).trim()).join('\n').split('-').join('*')}`,
       '',
       exports.length ? `### Exports\n ${exports.map(x => '* ' + x).join('\n')}` : '',
-      uses.length ? `\n\n### Uses\n ${uses.map(x => '*' + (x.exports.length ? x.exports.join(', ') + '* from' : '') + ' **' + x.file + '** ').map(x => ' * ' + x).join('\n')}` : '',
+      uses.length ? `\n\n### Used by\n ${uses.map(x => '*' + x.exports.join(', ') + `* from [${x.file}](#${x.file.toLowerCase().replace(/\./g, '')})`).map(x => '* ' + x).join('\n')}` : '',
       usedBy.length ? `\n\n### Used by\n ${usedBy.map(x => '*' + x.exports.join(', ') + `* from [${x.file}](#${x.file.toLowerCase().replace(/\./g, '')})`).map(x => '* ' + x).join('\n')}` : '',
       '\n### Code\n\n```js',
       `[theCodeHere]`,
