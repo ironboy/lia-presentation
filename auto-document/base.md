@@ -74,7 +74,7 @@ We're rather relaxed. But there are some important guidelines you really *should
 * At the start of each file write a short description as a [JavaDoc](https://www.oracle.com/technical-resources/articles/java/javadoc-tool.html) style comment with one bullet point per line (using "-" for bullets) - see how we've done it our files so far - follow that pattern!
 * **Never** have more than 50 lines of code in a single JS file! Refactor and split if that limit is reached!
 * Install and use the excellent VSC extension [Uncanny Cognitive Complexity](https://marketplace.visualstudio.com/items?itemName=Dabolus.uncanny-cognitive-complexity) to judge the complexity of each of your JS files. Try to keep things simple (below the measurement 10) - never go haywire (you **must** keep things below 20). Keep Mr Incredible happy!
-* Don't uses classes and OOP - we can write complex applications as a bunch of functions in JS. Much less cruft!
+* Don't uses classes and OOP &ndash; this application is a bunch of JS functions and that is a *deliberate choice*. Much less cruft in this particular case, although OOP is a better fit in other cases...
 * We **do** use our own export/import system (a thin layer on top of ES6) - the **_export** setter is a bit magical and publishes functions and objects as globals. Don't worry be happy - it's a bit like Java Packages - you can reach everything without having to use import/export in *every* file!
 * *Only* comment things that are really hard to understand even if you know JS. **And** things that are domain specific.
 * *Always* move things that you feel might be good to reach as *settings/options* to *make/__settings.js*. And, in *__settings.js*, comment what the setting actually does!
