@@ -4,6 +4,14 @@ _export = {
     makePDF: 1,
     makeJPGs: 0,
     makePPTX: 0,
+    /* hyphenation */
+    hyphenateTags: ['p', 'li', 'th', 'td'],
+    hyphenateMinWordLength: 6,
+    hyphenateMinCharsBefore: 3,
+    hyphenateMinCharsAfter: 3,
+    /* variable letter-spacing (counteracts big spaces on hyphenation) */
+    letterSpacingMinRem: -0.02,
+    letterSpacingMaxRem: 0.02,
     /* jpg settings compression before embedding in html */
     sharpScaleJpgsTo: 1500,
     sharpJpgQuality: 65,

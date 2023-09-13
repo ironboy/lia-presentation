@@ -23,7 +23,10 @@ _export = async function make() {
   r('HTML -> Created index.html.');
   let html = readFileSync('./index.html', 'utf-8');
   html = setHTMLLanguage(html);
-  r('HTML -> Set language (affects hyphenation).')
+  let { html: htm, language: lang } = await hyphenate(html);
+  html = htm;
+  html = includeLetterSpacer(html);
+  r('HTML -> Hyphenation done (language: ' + lang + ')');
   html = makeLinkTargetsBlankAdd(html);
   r('HTML -> Made external links open in new tab.');
   html = await embedImages(html);
