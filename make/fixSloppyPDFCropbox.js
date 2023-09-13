@@ -1,3 +1,7 @@
+/***
+ * - Crops the PDF very slightly to avoid thin white page borders
+ */
+
 _export = async function fixSloppyPDFCropbox(r) {
   const existingPdfBytes = readFileSync('./dist/index.pdf');
   const pdfDoc = await PDFDocument.load(existingPdfBytes);

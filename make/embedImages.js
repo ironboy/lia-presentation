@@ -1,3 +1,7 @@
+/***
+ * - Embeds the images in the HTML file
+ */
+
 _export = async function embedImages(html) {
   html = bgImagesToClasses(html);
   let htmlImages = html.split('img src="').slice(1).map(x => x.split('"')[0]);

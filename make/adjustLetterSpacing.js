@@ -1,3 +1,7 @@
+/***
+ * - Adjust the letter-spacing for justified text to minimize gaps
+ */
+
 _export = async function adjustLetterSpacing(page = 1, loadPage) {
   loadPage = loadPage || +location.hash.slice(1);
   (!loadPage || isNaN(loadPage)) && (loadPage = 1);

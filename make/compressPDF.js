@@ -1,3 +1,7 @@
+/***
+ * - Compress the PDF using Ghostscript
+ */
+
 _export = function compressPDF() {
   let { ghostScriptPdfQuality: q } = settings;
   execSync(

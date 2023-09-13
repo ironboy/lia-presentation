@@ -1,3 +1,8 @@
+/***
+ * - Main/start function
+ * - Makes HTML, PDF, JPG and PPTX files from index.md
+ */
+
 _export = async function make() {
   addAndMassageSettings();
   let { makeJPGs } = settings;

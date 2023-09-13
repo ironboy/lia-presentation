@@ -1,3 +1,9 @@
+/***
+ * - Wraps words inside <a-word> tags
+ * - Wraps spaces inside <a-space> tags
+ * - Used for letter spacing
+ */
+
 _export = function wrapWords(insideEl) {
   let nodes = textNodesUnder(insideEl)
     .filter(x => x.textContent.replace(/\n/g, '').length > 1);

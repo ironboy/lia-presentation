@@ -1,3 +1,7 @@
+/***
+ * - Helps Puppeteer get the page dimensions
+ */
+
 // note: runs from makePdfFromHtml inside puppeteer browser page
 _export = function getPageDimensions(el) {
   let tempDiv = document.createElement('div');

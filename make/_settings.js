@@ -1,3 +1,7 @@
+/***
+ * - Global settings affecting conversion, image quality and typography
+ */
+
 _export = {
   settings: {
     /* which formats to create apart from html (which is always created) */

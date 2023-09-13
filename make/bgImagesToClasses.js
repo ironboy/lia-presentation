@@ -1,3 +1,7 @@
+/***
+ * - Converts bg images to classes (avoids double embedding)
+ */
+
 _export = function bgImagesToClasses(html) {
   let i = 0;
   let hash = {};

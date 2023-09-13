@@ -7,6 +7,11 @@
    * And uses GhostScript to compress the PDF
 */
 
+/***
+ * - Provides an export function for all JS files: _export
+ * - Load all JS code in the make folder
+ */
+
 import { readdirSync } from 'fs';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';

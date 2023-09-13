@@ -1,3 +1,7 @@
+/***
+ * - Creates a PPTX/PowerPoint using the npm module pptxgenjs
+ */
+
 _export = async function makePptx(widthMm, heightMm, pagePaths, allLinkPositions) {
   let { author, title, description } = settings;
   let cFactorInches = 0.0393700787;

@@ -1,3 +1,8 @@
+/***
+ * - Part 2 of main/start function
+ * - Makes HTML, PDF, JPG and PPTX files from index.md
+ */
+
 _export = async function makePart2(preWarmedPromise, startTime, r, r2) {
   let { makePDF, makePPTX: mPPTX, keepJPGs } = settings;
   let { widthMm, heightMm, pagePaths, pages, allLinkPositions }

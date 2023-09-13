@@ -1,3 +1,8 @@
+/***
+ * - Adjusts/unfolds some setting parameters
+ * - Imports settings given in index.md
+ */
+
 _export = function addAndMassageSettings() {
   // "unpack" settings for sharp
   settings.resizeSettings = [

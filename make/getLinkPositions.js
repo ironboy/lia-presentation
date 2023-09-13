@@ -1,3 +1,7 @@
+/***
+ * - Get link positiions so they can be included in the PPTX/PowerPint
+ */
+
 // note: runs from makePdfFromHtml inside puppeteer browser page
 _export = function getLinkPositions(el, i, mPPTX) {
   location.hash = '#' + i;

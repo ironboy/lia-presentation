@@ -1,3 +1,8 @@
+/***
+ * - Returns the page length
+ * - Removes navigation tool bar (so not printed to PDF and JPG:s)
+ */
+
 _export = function cleanupAndGetPageLength() {
   // change id:s of sections to valid id:s (must start with character)
   [...document.querySelectorAll('section[id]')].forEach(x => x.id = 'x' + x.id);

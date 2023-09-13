@@ -1,3 +1,7 @@
+/***
+ * - Client side code assuring that external links opens in new tabs
+ */
+
 _export = function makeLinkTargetsBlank() {
   document.body.addEventListener('click', e => {
     let a = e.target.closest('a');
