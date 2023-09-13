@@ -59,6 +59,8 @@ Object.defineProperty(globalThis, '_export', {
       uses.length ? `\n\n### Uses\n ${uses.map(x => '*' + x.exports.join(', ') + `* from [${x.file}](#${x.file.toLowerCase().replace(/\./g, '')})`).map(x => '* ' + x).join('\n')}` : '',
       usedBy.length ? `\n\n### Used by\n ${usedBy.map(x => '*' + x.exports.join(', ') + `* from [${x.file}](#${x.file.toLowerCase().replace(/\./g, '')})`).map(x => '* ' + x).join('\n')}` : '',
       '\n### Code\n\n```js',
+      `**File:** [make/${file}](make/${file})`,
+      '',
       `[theCodeHere]`,
       '```'
     ].join('\n'))
