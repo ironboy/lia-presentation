@@ -12,7 +12,7 @@ export function markdownGenerator(
     usedBy.length ? `\n\n### Used by\n ${usedBy.map(x => '*' + x.exports.join(', ') + `* from [${x.file}](#${x.file.toLowerCase().replace(/\./g, '')})`).map(x => '* ' + x).join('\n')}` : '',
     '\n### Code\n\n',
     `**File:** [make/${file}](make/${file})`,
-    `**Cognitive Complexity:** ${cComplexity}`,
+    `\n**Cognitive Complexity:** ${cComplexity}`,
     '',
     '```js',
     `[theCodeHere]`,
