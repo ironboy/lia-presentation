@@ -69,11 +69,14 @@ Don't forget to run **npm install**, then:
 The **Mrs Marper** code base can be found in the **make** folder.
 
 ## Coding style - we're relaxed and fascist at the same time
-We're rather relaxed. Bu there are some important guidelines you really **should* follow:
-* Never have more than 50 lines of code in a single js file. Refactor and split if that limit is reached!
-* Install and use the excellent VSC extension [Uncanny Cognitive Complexity](https://marketplace.visualstudio.com/items?itemName=Dabolus.uncanny-cognitive-complexity) to judge the comlexity of each of your JS files. Try to keep things simple (below the measurement 10) - never go haywire (just **must** keep things below 20). Keep Mr Incredible happy!
-* Don't uses classes and OOP - we can write complex applications as functions in JS. Much less cruft!
+We're rather relaxed. But there are some important guidelines you really *should* follow:
+* Never have more than 50 lines of code in a single JS file! Refactor and split if that limit is reached!
+* Install and use the excellent VSC extension [Uncanny Cognitive Complexity](https://marketplace.visualstudio.com/items?itemName=Dabolus.uncanny-cognitive-complexity) to judge the complexity of each of your JS files. Try to keep things simple (below the measurement 10) - never go haywire (you **must** keep things below 20). Keep Mr Incredible happy!
+* Don't uses classes and OOP - we can write complex applications as a bunch of functions in JS. Much less cruft!
 * We **do** use our own export/import system (a thin layer on top of ES6) - the **_export** setter is a bit magical and publishes functions and objects as globals. Don't worry be happy - it's a bit like Java Packages - you can reach everything without having to use import/export in *every* file!
+* *Only* comment things that are really hard to get even if you know JS!
+* *Always* move things that you feel might be *settings/options* to *make/__settings.js*. And in *__settings.js* comment what the setting actually does!
+* *And:* End your lines with ";". It's not that hard - most JS coders do it. All Java and C# do too.
 
 ## __settings.js
 
