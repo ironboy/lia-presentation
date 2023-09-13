@@ -9,21 +9,12 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-let latestExport;
-Object.defineProperty(globalThis, '_export', {
-  set(x) {
-    typeof x === 'function' && (latestExport = [x.name]);
-    typeof x === 'object' && (latestExport = Object.keys(x));
-  }
-});
-
 (async () => {
   let allContent = [];
   let dir = pathJoin(__dirname, '../', 'make');
   for (let file of readdirSync(dir)) {
-    latestExport = [];
-    file !== '_index.js' && file.slice(-3) === '.js'
-      && await import(pathJoin(dir, file));
+    let latestExport = file !== '_index.js' && file.slice(-3) === '.js' ?
+      Object.keys(await import(pathJoin(dir, file))) : [];
     file.slice(-3) === '.js'
       && allContent.push({
         file,

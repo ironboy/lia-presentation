@@ -85,6 +85,25 @@ We're rather relaxed. But there are some important guidelines you really *should
 #### Description
 * Global settings affecting conversion, image quality and typography
 
+#### Exports
+* settings
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
+* *_makePart2* from [_makePart2.js](#_makepart2js)
+* *addAndMassageSettings* from [addAndMassageSettings.js](#addandmassagesettingsjs)
+* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacingjs)
+* *compressPDF* from [compressPDF.js](#compresspdfjs)
+* *fixSloppyPDFCropbox* from [fixSloppyPDFCropbox.js](#fixsloppypdfcropboxjs)
+* *getSpaceWidths* from [getSpaceWidths.js](#getspacewidthsjs)
+* *hyphenate* from [hyphenate.js](#hyphenatejs)
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
+* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
+* *makePptx* from [makePptx.js](#makepptxjs)
+* *pdfMetaData* from [pdfMetaData.js](#pdfmetadatajs)
+* *scaleImage* from [scaleImage.js](#scaleimagejs)
+* *setHTMLLanguage* from [setHtmlLanguage.js](#sethtmllanguagejs)
+
 #### Code
 
 **File:** [make/__settings.js](make/__settings.js)
@@ -125,6 +144,9 @@ export const settings = {
 * Turn every imported asset into a global variable
 * Calls _make() to start the conversion process
 
+#### Uses
+* *_make* from [_make.js](#_makejs)
+
 #### Code
 
 **File:** [make/_index.js](make/_index.js)
@@ -162,6 +184,21 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 #### Description
 * Loads (imports/requires) all NPM module dependences
 * Exports all the dependencies as globals
+
+#### Exports
+* PDFDocument
+* execSync
+* existsSync
+* marpCli
+* mkdirSync
+* pptxgen
+* puppeteer
+* readFileSync
+* renameSync
+* rmSync
+* sharp
+* statSync
+* writeFileSync
 
 #### Code
 
@@ -201,6 +238,22 @@ export {
 #### Description
 * Main/start function
 * Makes HTML, PDF, JPG and PPTX files from index.md
+
+#### Exports
+* _make
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+* *_makePart2* from [_makePart2.js](#_makepart2js)
+* *addAndMassageSettings* from [addAndMassageSettings.js](#addandmassagesettingsjs)
+* *embedFonts* from [embedFonts.js](#embedfontsjs)
+* *embedImages* from [embedImages.js](#embedimagesjs)
+* *hyphenate* from [hyphenate.js](#hyphenatejs)
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
+* *makeHtml* from [makeHtml.js](#makehtmljs)
+* *makeLinkTargetsBlankAdd* from [makeLinkTargetsBlankAdd.js](#makelinktargetsblankaddjs)
+* *preWarmMakePDFFromHtml* from [preWarmMakePdfFromHtml.js](#prewarmmakepdffromhtmljs)
+* *setHTMLLanguage* from [setHtmlLanguage.js](#sethtmllanguagejs)
 
 #### Code
 
@@ -255,6 +308,19 @@ export async function _make() {
 * Part 2 of main/start function
 * Makes HTML, PDF, JPG and PPTX files from index.md
 
+#### Exports
+* _makePart2
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+* *compressPDF* from [compressPDF.js](#compresspdfjs)
+* *fixSloppyPDFCropbox* from [fixSloppyPDFCropbox.js](#fixsloppypdfcropboxjs)
+* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
+* *makePptx* from [makePptx.js](#makepptxjs)
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
+
 #### Code
 
 **File:** [make/_makePart2.js](make/_makePart2.js)
@@ -303,6 +369,15 @@ export async function _makePart2(preWarmedPromise, startTime, r, r2) {
 * Adjusts/unfolds some setting parameters
 * Imports settings given in index.md
 
+#### Exports
+* addAndMassageSettings
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
+
 #### Code
 
 **File:** [make/addAndMassageSettings.js](make/addAndMassageSettings.js)
@@ -341,6 +416,12 @@ export function addAndMassageSettings() {
 #### Description
 * Adds hyperlinks to PPTX/PowerPoint
 
+#### Exports
+* addPptxSlideLinks
+
+#### Used by
+* *makePptx* from [makePptx.js](#makepptxjs)
+
 #### Code
 
 **File:** [make/addPptxSlideLinks.js](make/addPptxSlideLinks.js)
@@ -369,6 +450,17 @@ export async function addPptxSlideLinks(slide, links) {
 
 #### Description
 * Adjust the letter-spacing for justified text to minimize gaps
+
+#### Exports
+* adjustLetterSpacing
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+* *getSpaceWidths* from [getSpaceWidths.js](#getspacewidthsjs)
+* *wrapWords* from [wrapWords.js](#wrapwordsjs)
+
+#### Used by
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
 
 #### Code
 
@@ -420,6 +512,12 @@ export async function adjustLetterSpacing(page = 1, loadPage) {
 #### Description
 * Converts bg images to classes (avoids double embedding)
 
+#### Exports
+* bgImagesToClasses
+
+#### Used by
+* *embedImages* from [embedImages.js](#embedimagesjs)
+
 #### Code
 
 **File:** [make/bgImagesToClasses.js](make/bgImagesToClasses.js)
@@ -452,6 +550,12 @@ export function bgImagesToClasses(html) {
 * Returns the page length
 * Removes navigation tool bar (so not printed to PDF and JPG:s)
 
+#### Exports
+* cleanupAndGetPageLength
+
+#### Used by
+* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
+
 #### Code
 
 **File:** [make/cleanupAndGetPageLength.js](make/cleanupAndGetPageLength.js)
@@ -473,6 +577,15 @@ export function cleanupAndGetPageLength() {
 #### Description
 * Compress the PDF using Ghostscript
 
+#### Exports
+* compressPDF
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+
+#### Used by
+* *_makePart2* from [_makePart2.js](#_makepart2js)
+
 #### Code
 
 **File:** [make/compressPDF.js](make/compressPDF.js)
@@ -493,6 +606,12 @@ export function compressPDF() {
 
 #### Description
 * Embeds the fonts in the HTML file
+
+#### Exports
+* embedFonts
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
 
 #### Code
 
@@ -524,6 +643,17 @@ export function embedFonts(html) {
 #### Description
 * Embeds the images in the HTML file
 
+#### Exports
+* embedImages
+
+#### Uses
+* *bgImagesToClasses* from [bgImagesToClasses.js](#bgimagestoclassesjs)
+* *removeQuotes* from [removeQuotes.js](#removequotesjs)
+* *scaleImage* from [scaleImage.js](#scaleimagejs)
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
+
 #### Code
 
 **File:** [make/embedImages.js](make/embedImages.js)
@@ -551,6 +681,16 @@ export async function embedImages(html) {
 
 #### Description
 * Crops the PDF very slightly to avoid thin white page borders
+
+#### Exports
+* fixSloppyPDFCropbox
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+* *pdfMetaData* from [pdfMetaData.js](#pdfmetadatajs)
+
+#### Used by
+* *_makePart2* from [_makePart2.js](#_makepart2js)
 
 #### Code
 
@@ -581,6 +721,12 @@ export async function fixSloppyPDFCropbox(r) {
 #### Description
 * Get link positiions so they can be included in the PPTX/PowerPint
 
+#### Exports
+* getLinkPositions
+
+#### Used by
+* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
+
 #### Code
 
 **File:** [make/getLinkPositions.js](make/getLinkPositions.js)
@@ -607,6 +753,12 @@ export function getLinkPositions(el, i, mPPTX) {
 
 #### Description
 * Helps Puppeteer get the page dimensions
+
+#### Exports
+* getPageDimensions
+
+#### Used by
+* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
 
 #### Code
 
@@ -637,6 +789,18 @@ export function getPageDimensions(el) {
 
 #### Description
 * Get widhts of spaces needed fo letter-spacing adjustments
+
+#### Exports
+* getSpaceWidths
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+* *nonJustify* from [nonJustify.js](#nonjustifyjs)
+* *reJustify* from [reJustify.js](#rejustifyjs)
+
+#### Used by
+* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacingjs)
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
 
 #### Code
 
@@ -685,6 +849,15 @@ export function getSpaceWidths() {
 
 #### Description
 * Hyphenates the text using the hyphen npm module
+
+#### Exports
+* hyphenate
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
 
 #### Code
 
@@ -739,6 +912,21 @@ export async function hyphenate(html) {
 #### Description
 * Includes the letter spacing logic in the HTML client side code
 
+#### Exports
+* includeLetterSpacer
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacingjs)
+* *getSpaceWidths* from [getSpaceWidths.js](#getspacewidthsjs)
+* *nonJustify* from [nonJustify.js](#nonjustifyjs)
+* *reJustify* from [reJustify.js](#rejustifyjs)
+* *textNodesUnder* from [textNodesUnder.js](#textnodesunderjs)
+* *wrapWords* from [wrapWords.js](#wrapwordsjs)
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
+
 #### Code
 
 **File:** [make/includeLetterSpacer.js](make/includeLetterSpacer.js)
@@ -766,6 +954,12 @@ export function includeLetterSpacer(html) {
 #### Description
 * Creates the HTML file using MARP CLI
 
+#### Exports
+* makeHtml
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
+
 #### Code
 
 **File:** [make/makeHtml.js](make/makeHtml.js)
@@ -785,6 +979,12 @@ export async function makeHtml() {
 
 #### Description
 * Client side code assuring that external links opens in new tabs
+
+#### Exports
+* makeLinkTargetsBlank
+
+#### Used by
+* *makeLinkTargetsBlankAdd* from [makeLinkTargetsBlankAdd.js](#makelinktargetsblankaddjs)
 
 #### Code
 
@@ -808,6 +1008,15 @@ export function makeLinkTargetsBlank() {
 #### Description
 * Includes client side code for opening external links in new tabs
 
+#### Exports
+* makeLinkTargetsBlankAdd
+
+#### Uses
+* *makeLinkTargetsBlank* from [makeLinkTargetsBlank.js](#makelinktargetsblankjs)
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
+
 #### Code
 
 **File:** [make/makeLinkTargetsBlankAdd.js](make/makeLinkTargetsBlankAdd.js)
@@ -825,6 +1034,18 @@ export function makeLinkTargetsBlankAdd(html) {
 #### Description
 * Uses Puppeteer to create a PDF and JPG:s
 * Gathers link position info for PPTX/PowerPoint creation
+
+#### Exports
+* makePdfFromHtml
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+* *cleanupAndGetPageLength* from [cleanupAndGetPageLength.js](#cleanupandgetpagelengthjs)
+* *getLinkPositions* from [getLinkPositions.js](#getlinkpositionsjs)
+* *getPageDimensions* from [getPageDimensions.js](#getpagedimensionsjs)
+
+#### Used by
+* *_makePart2* from [_makePart2.js](#_makepart2js)
 
 #### Code
 
@@ -886,6 +1107,16 @@ export async function makePdfFromHtml(r, preWarmedPromise) {
 #### Description
 * Creates a PPTX/PowerPoint using the npm module pptxgenjs
 
+#### Exports
+* makePptx
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+* *addPptxSlideLinks* from [addPptxSlideLinks.js](#addpptxslidelinksjs)
+
+#### Used by
+* *_makePart2* from [_makePart2.js](#_makepart2js)
+
 #### Code
 
 **File:** [make/makePptx.js](make/makePptx.js)
@@ -917,6 +1148,13 @@ export async function makePptx(widthMm, heightMm, pagePaths, allLinkPositions) {
 #### Description
 * Helper for space width calculation during letter spacing
 
+#### Exports
+* nonJustify
+
+#### Used by
+* *getSpaceWidths* from [getSpaceWidths.js](#getspacewidthsjs)
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
+
 #### Code
 
 **File:** [make/nonJustify.js](make/nonJustify.js)
@@ -936,6 +1174,15 @@ export function nonJustify() {
 
 #### Description
 * Sets PDF meta data
+
+#### Exports
+* pdfMetaData
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+
+#### Used by
+* *fixSloppyPDFCropbox* from [fixSloppyPDFCropbox.js](#fixsloppypdfcropboxjs)
 
 #### Code
 
@@ -960,6 +1207,12 @@ export function pdfMetaData(pdfDoc, r) {
 #### Description
 * Starts Puppeteer early to have it ready when needed
 
+#### Exports
+* preWarmMakePDFFromHtml
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
+
 #### Code
 
 **File:** [make/preWarmMakePdfFromHtml.js](make/preWarmMakePdfFromHtml.js)
@@ -978,6 +1231,13 @@ export async function preWarmMakePDFFromHtml() {
 #### Description
 * Helper for space width calculation during letter spacing
 
+#### Exports
+* reJustify
+
+#### Used by
+* *getSpaceWidths* from [getSpaceWidths.js](#getspacewidthsjs)
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
+
 #### Code
 
 **File:** [make/reJustify.js](make/reJustify.js)
@@ -993,6 +1253,12 @@ export function reJustify() {
 
 #### Description
 * Remove three different types of quotes from a string
+
+#### Exports
+* removeQuotes
+
+#### Used by
+* *embedImages* from [embedImages.js](#embedimagesjs)
 
 #### Code
 
@@ -1012,6 +1278,15 @@ export function removeQuotes(x) {
 
 #### Description
 * Scales imags using the npm module sharp
+
+#### Exports
+* scaleImage
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+
+#### Used by
+* *embedImages* from [embedImages.js](#embedimagesjs)
 
 #### Code
 
@@ -1033,6 +1308,15 @@ export async function scaleImage(buffer) {
 #### Description
 * Sets the html lang attribute according to settings
 
+#### Exports
+* setHTMLLanguage
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
+
 #### Code
 
 **File:** [make/setHtmlLanguage.js](make/setHtmlLanguage.js)
@@ -1051,6 +1335,13 @@ export function setHTMLLanguage(html) {
 #### Description
 * Extract text nodes in a DOM element
 * Used for letter spacing
+
+#### Exports
+* textNodesUnder
+
+#### Used by
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
+* *wrapWords* from [wrapWords.js](#wrapwordsjs)
 
 #### Code
 
@@ -1071,6 +1362,16 @@ export function textNodesUnder(el) {
 * Wraps words inside <a-word> tags
 * Wraps spaces inside <a-space> tags
 * Used for letter spacing
+
+#### Exports
+* wrapWords
+
+#### Uses
+* *textNodesUnder* from [textNodesUnder.js](#textnodesunderjs)
+
+#### Used by
+* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacingjs)
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
 
 #### Code
 
