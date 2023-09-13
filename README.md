@@ -67,6 +67,14 @@ Don't forget to run **npm install**, then:
 # Documentation of the Mrs Marper code base 
 
 The **Mrs Marper** code base can be found in the **make** folder.
+
+## Coding style - we're relaxed and fascist at the same time
+We're rather relaxed. Bu there are some important guidelines you really **should* follow:
+* Never have more than 50 lines of code in a single js file. Refactor and split if that limit is reached!
+* Install and use the excellent VSC extension [Uncanny Cognitive Complexity](https://marketplace.visualstudio.com/items?itemName=Dabolus.uncanny-cognitive-complexity) to judge the comlexity of each of your JS files. Try to keep things simple (below the measurement 10) - never go haywire (just **must** keep things below 20). Keep Mr Incredible happy!
+* Don't uses classes and OOP - we can write complex applications as functions in JS. Much less cruft!
+* We **do** use our own export/import system (a thin layer on top of ES6) - the **_export** setter is a bit magical and publishes functions and objects as globals. Don't worry be happy - it's a bit like Java Packages - you can reach everything without having to use import/export in *every* file!
+
 ## __settings.js
 
 #### Description
