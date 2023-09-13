@@ -3,7 +3,7 @@
  * - Makes HTML, PDF, JPG and PPTX files from index.md
  */
 
-_export = async function make() {
+_export = async function _make() {
   addAndMassageSettings();
   let { makeJPGs } = settings;
   console.warn = () => { }; // silence marp
@@ -40,5 +40,5 @@ _export = async function make() {
   r('HTML -> Embedded fonts.');
   writeFileSync('./index.html', html, 'utf-8');;
   renameSync('./index.html', './dist/index.html');
-  await makePart2(preWarmedPromise, startTime, r, r2);
+  await _makePart2(preWarmedPromise, startTime, r, r2);
 }

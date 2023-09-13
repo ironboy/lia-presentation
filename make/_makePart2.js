@@ -3,7 +3,7 @@
  * - Makes HTML, PDF, JPG and PPTX files from index.md
  */
 
-_export = async function makePart2(preWarmedPromise, startTime, r, r2) {
+_export = async function _makePart2(preWarmedPromise, startTime, r, r2) {
   let { makePDF, makePPTX: mPPTX, keepJPGs } = settings;
   let { widthMm, heightMm, pagePaths, pages, allLinkPositions }
     = await makePdfFromHtml(r, preWarmedPromise);

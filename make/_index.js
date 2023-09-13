@@ -35,5 +35,5 @@ Object.defineProperty(globalThis, '_export', {
       && await import('./' + file);
   }
   process.chdir('../');
-  make();
+  _make();
 })();
