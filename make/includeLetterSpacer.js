@@ -10,7 +10,8 @@ export function includeLetterSpacer(html) {
     nonJustify,
     reJustify,
     getSpaceWidths,
-    adjustLetterSpacing
+    adjustLetterSpacing,
+    findBestLetterSpacing
   ].map(x => x + '').join('\n\n');
   code = `(()=>{\n${code};\n\nadjustLetterSpacing();})();`;
   html = html.split('</body>').join(`<script>${code}</script></body>`);

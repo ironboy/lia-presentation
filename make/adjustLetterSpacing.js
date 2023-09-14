@@ -28,13 +28,7 @@ export async function adjustLetterSpacing(page = 1, loadPage) {
       words.forEach(w => w.style.letterSpacing = i + 'rem');
       candidates.push({ space: i, val: el.offsetWidth / baseW });
     }
-    // choose best candidate
-    let best = candidates.sort((a, b) => {
-      if (a.val === b.val) {
-        return Math.abs(a.space) < Math.abs(b.space) ? -1 : 1;
-      }
-      return a.val < b.val ? -1 : 1;
-    })[0];
+    let best = findBestLetterSpacing(candidates);
     words.forEach(w => w.style.letterSpacing = best.space + 'rem');
   }
   adjustLetterSpacing(page + 1, loadPage);
