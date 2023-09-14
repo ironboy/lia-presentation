@@ -93,6 +93,7 @@ We're rather relaxed. But there are some important guidelines you really *should
 * *_makePart2* from [_makePart2.js](#_makepart2js)
 * *addAndMassageSettings* from [addAndMassageSettings.js](#addandmassagesettingsjs)
 * *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacingjs)
+* *applyHyphenation* from [applyHyphenation.js](#applyhyphenationjs)
 * *compressPDF* from [compressPDF.js](#compresspdfjs)
 * *fixSloppyPDFCropbox* from [fixSloppyPDFCropbox.js](#fixsloppypdfcropboxjs)
 * *getSpaceWidths* from [getSpaceWidths.js](#getspacewidthsjs)
@@ -474,6 +475,7 @@ export async function addPptxSlideLinks(slide, links) {
 
 #### Uses
 * *settings* from [__settings.js](#__settingsjs)
+* *findBestLetterSpacing* from [findBestLetterSpacing.js](#findbestletterspacingjs)
 * *getSpaceWidths* from [getSpaceWidths.js](#getspacewidthsjs)
 * *wrapWords* from [wrapWords.js](#wrapwordsjs)
 
@@ -484,7 +486,7 @@ export async function addPptxSlideLinks(slide, links) {
 
 *File:* [make/adjustLetterSpacing.js](make/adjustLetterSpacing.js)
 
-*Cognitive Complexity:* 18
+*Cognitive Complexity:* 8
 
 ```js
 export async function adjustLetterSpacing(page = 1, loadPage) {
@@ -513,16 +515,60 @@ export async function adjustLetterSpacing(page = 1, loadPage) {
       words.forEach(w => w.style.letterSpacing = i + 'rem');
       candidates.push({ space: i, val: el.offsetWidth / baseW });
     }
-    // choose best candidate
-    let best = candidates.sort((a, b) => {
-      if (a.val === b.val) {
-        return Math.abs(a.space) < Math.abs(b.space) ? -1 : 1;
-      }
-      return a.val < b.val ? -1 : 1;
-    })[0];
+    let best = findBestLetterSpacing(candidates);
     words.forEach(w => w.style.letterSpacing = best.space + 'rem');
   }
   adjustLetterSpacing(page + 1, loadPage);
+}
+```
+
+---
+## applyHyphenation.js
+
+#### Description
+- Apply hyphenation according to settings
+
+#### Exports
+* applyHyphenation
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+
+#### Used by
+* *hyphenate* from [hyphenate.js](#hyphenatejs)
+
+#### Code
+
+*File:* [make/applyHyphenation.js](make/applyHyphenation.js)
+
+*Cognitive Complexity:* 9
+
+```js
+export function applyHyphenation(hyphenator, html) {
+  let {
+    hyphenateTags: els,
+    hyphenateMinWordLength: minWordLength,
+    hyphenateMinCharsBefore: minCharsBefore,
+    hyphenateMinCharsAfter: minCharsAfter,
+  } = settings;
+  // hyphenate
+  for (let el of els) {
+    let reg = new RegExp(`<${el}[^>]*>.*?<\\/${el}>`, 'g');
+    html = html.replace(reg, x => {
+      let a = hyphenator(x, { minWordLength });
+      // adhere to minCharsBefore and minCharsAfter
+      let b = a.split('\u00AD');
+      let c = '';
+      for (let i = 0; i < b.length - 1; i++) {
+        let keep = !(b[i].slice(-minCharsBefore).replace(/[\p{L}-]/ug, ''))
+          && !(b[i + 1].slice(0, minCharsAfter).replace(/[\p{L}-]/ug, ''));
+        c += b[i] + (keep ? '\u00AD' : '');
+      }
+      c += b.slice(-1);
+      return c;
+    });
+  }
+  return html;
 }
 ```
 
@@ -762,6 +808,38 @@ export async function embedImages(html) {
 ```
 
 ---
+## findBestLetterSpacing.js
+
+#### Description
+- Find the base candidate among different letter spacings
+- Closest to normal spacing
+- If several options give the same spacing -> tigher kerning
+
+#### Exports
+* findBestLetterSpacing
+
+#### Used by
+* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacingjs)
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
+
+#### Code
+
+*File:* [make/findBestLetterSpacing.js](make/findBestLetterSpacing.js)
+
+*Cognitive Complexity:* 7
+
+```js
+export function findBestLetterSpacing(candidates) {
+  return candidates.sort((a, b) => {
+    if (a.val === b.val) {
+      return Math.abs(a.space) < Math.abs(b.space) ? -1 : 1;
+    }
+    return a.val < b.val ? -1 : 1;
+  })[0];
+}
+```
+
+---
 ## fixSloppyPDFCropbox.js
 
 #### Description
@@ -948,6 +1026,7 @@ export function getSpaceWidths() {
 
 #### Uses
 * *settings* from [__settings.js](#__settingsjs)
+* *applyHyphenation* from [applyHyphenation.js](#applyhyphenationjs)
 
 #### Used by
 * *_make* from [_make.js](#_makejs)
@@ -956,18 +1035,12 @@ export function getSpaceWidths() {
 
 *File:* [make/hyphenate.js](make/hyphenate.js)
 
-*Cognitive Complexity:* 14
+*Cognitive Complexity:* 5
 
 ```js
 export async function hyphenate(html) {
-  let {
-    hyphenateTags: els,
-    hyphenateMinWordLength: minWordLength,
-    hyphenateMinCharsBefore: minCharsBefore,
-    hyphenateMinCharsAfter: minCharsAfter,
-  } = settings;
   let { language } = settings;
-  // get correct hyphenator - fallback to 'en'
+  // get correct hyphenator dependning on language  - fallback to 'en'
   let hyphenator;
   while (!hyphenator) {
     hyphenator = await import('hyphen/' + language + '/index.js')
@@ -979,24 +1052,9 @@ export async function hyphenate(html) {
       language = 'en';
     }
   }
+  // apply hyphenation
   hyphenator = hyphenator.default.hyphenateHTMLSync;
-  // hyphenate
-  for (let el of els) {
-    let reg = new RegExp(`<${el}[^>]*>.*?<\\/${el}>`, 'g');
-    html = html.replace(reg, x => {
-      let a = hyphenator(x, { minWordLength });
-      // adhere to minCharsBefore and minCharsAfter
-      let b = a.split('\u00AD');
-      let c = '';
-      for (let i = 0; i < b.length - 1; i++) {
-        let keep = !(b[i].slice(-minCharsBefore).replace(/[\p{L}-]/ug, ''))
-          && !(b[i + 1].slice(0, minCharsAfter).replace(/[\p{L}-]/ug, ''));
-        c += b[i] + (keep ? '\u00AD' : '');
-      }
-      c += b.slice(-1);
-      return c;
-    });
-  }
+  html = applyHyphenation(hyphenator, html);
   return { html, language };
 }
 ```
@@ -1013,6 +1071,7 @@ export async function hyphenate(html) {
 #### Uses
 * *settings* from [__settings.js](#__settingsjs)
 * *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacingjs)
+* *findBestLetterSpacing* from [findBestLetterSpacing.js](#findbestletterspacingjs)
 * *getSpaceWidths* from [getSpaceWidths.js](#getspacewidthsjs)
 * *nonJustify* from [nonJustify.js](#nonjustifyjs)
 * *reJustify* from [reJustify.js](#rejustifyjs)
@@ -1037,7 +1096,8 @@ export function includeLetterSpacer(html) {
     nonJustify,
     reJustify,
     getSpaceWidths,
-    adjustLetterSpacing
+    adjustLetterSpacing,
+    findBestLetterSpacing
   ].map(x => x + '').join('\n\n');
   code = `(()=>{\n${code};\n\nadjustLetterSpacing();})();`;
   html = html.split('</body>').join(`<script>${code}</script></body>`);
