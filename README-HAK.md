@@ -16,7 +16,7 @@ https://ghostscript.com/releases/gsdnld.html
 brew install ghostscript
 ```
 
-*Notera:* Installera HomeBrew försto om ej tidigare installerat: https://brew.sh
+*Notera:* Installera HomeBrew först om ej tidigare installerat: https://brew.sh
 
 #### Debian/Ubuntu
 ```
