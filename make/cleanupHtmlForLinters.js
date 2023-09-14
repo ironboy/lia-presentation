@@ -18,29 +18,18 @@ export function cleanupHtmlForLinters(html) {
     cleaned.push([style, ...rest].join('"'));
   }
   html = cleaned.join(' style="');
-  // remove non-standard rules in style tags
-  [
-    '-webkit-print-color-adjust:exact!important;',
-    'color-adjust:exact!important;',
-    '-webkit-appearance:button'
-
-  ].forEach((x, i) =>
-    html = html.split(x).join(i === 2 ? 'appearance:button' : ''));
-  // add the rules back through a script
-  let script = () => {
-    let style = document.createElement('style');
-    style.innerHTML = /*css*/`
-      div#\:\$p>svg>foreignObject>section,div#\:\$p>svg>foreignObject>section * {
-        -webkit-print-color-adjust:exact!important;
-      }
-      div#\:\$p>svg>foreignObject>section,
-      div#\:\$p>svg>foreignObject>section * {
-        color-adjust: exact !important;
-      }
-    `;
-    document.querySelector('head').append(style);
-  }
-  script = `<script>\n(${script})()\n</script>`;
-  html = html.split('</body>').join(script + '\n</body>');
+  // enumerate style tags
+  let i = 1;
+  html = html.replace(/<style>/g, x => `<style class="style-${i++}">`);
+  // replace style tag 3 with link tag and base 64 encoded css since linters
+  // (the one in VSC for example) otherwise complains about non-standard rules
+  let sContent = html.match(/<style class="style-3">.*?<\/style>/s) + '';
+  let sContentInner = sContent.slice(
+    sContent.indexOf('>') + 1, sContent.lastIndexOf('<')
+  );
+  let base64Inner = 'data:text/css;base64,'
+    + Buffer.from(sContentInner, "utf-8").toString('base64');
+  html = html.split(sContent)
+    .join(`<link rel="stylesheet" href="${base64Inner}">`);
   return html;
 }

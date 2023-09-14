@@ -27,8 +27,6 @@ export async function _make() {
   await makeHtml();
   r('HTML -> Created index.html.');
   let html = readFileSync('./index.html', 'utf-8');
-  html = cleanupHtmlForLinters(html);
-  r('HTML -> Cleaned up for linters.');
   html = setHTMLLanguage(html);
   let { html: htm, language: lang } = await hyphenate(html);
   html = htm;
@@ -41,6 +39,8 @@ export async function _make() {
   r('HTML -> Embedded images.');
   html = embedFonts(html);
   r('HTML -> Embedded fonts.');
+  html = cleanupHtmlForLinters(html);
+  r('HTML -> Cleaned up for linters.');
   writeFileSync('./index.html', html, 'utf-8');;
   renameSync('./index.html', './dist/index.html');
   await _makePart2(preWarmedPromise, startTime, r, r2);

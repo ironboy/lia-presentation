@@ -293,8 +293,6 @@ export async function _make() {
   await makeHtml();
   r('HTML -> Created index.html.');
   let html = readFileSync('./index.html', 'utf-8');
-  html = cleanupHtmlForLinters(html);
-  r('HTML -> Cleaned up for linters.');
   html = setHTMLLanguage(html);
   let { html: htm, language: lang } = await hyphenate(html);
   html = htm;
@@ -307,6 +305,8 @@ export async function _make() {
   r('HTML -> Embedded images.');
   html = embedFonts(html);
   r('HTML -> Embedded fonts.');
+  html = cleanupHtmlForLinters(html);
+  r('HTML -> Cleaned up for linters.');
   writeFileSync('./index.html', html, 'utf-8');;
   renameSync('./index.html', './dist/index.html');
   await _makePart2(preWarmedPromise, startTime, r, r2);
@@ -612,7 +612,7 @@ export function cleanupAndGetPageLength() {
 
 *File:* [make/cleanupHtmlForLinters.js](make/cleanupHtmlForLinters.js)
 
-*Cognitive Complexity:* 3
+*Cognitive Complexity:* 1
 
 ```js
 export function cleanupHtmlForLinters(html) {
@@ -630,30 +630,19 @@ export function cleanupHtmlForLinters(html) {
     cleaned.push([style, ...rest].join('"'));
   }
   html = cleaned.join(' style="');
-  // remove non-standard rules in style tags
-  [
-    '-webkit-print-color-adjust:exact!important;',
-    'color-adjust:exact!important;',
-    '-webkit-appearance:button'
-
-  ].forEach((x, i) =>
-    html = html.split(x).join(i === 2 ? 'appearance:button' : ''));
-  // add the rules back through a script
-  let script = () => {
-    let style = document.createElement('style');
-    style.innerHTML = /*css*/`
-      div#\:\$p>svg>foreignObject>section,div#\:\$p>svg>foreignObject>section * {
-        -webkit-print-color-adjust:exact!important;
-      }
-      div#\:\$p>svg>foreignObject>section,
-      div#\:\$p>svg>foreignObject>section * {
-        color-adjust: exact !important;
-      }
-    `;
-    document.querySelector('head').append(style);
-  }
-  script = `<script>\n(${script})()\n</script>`;
-  html = html.split('</body>').join(script + '\n</body>');
+  // enumerate style tags
+  let i = 1;
+  html = html.replace(/<style>/g, x => `<style class="style-${i++}">`);
+  // replace style tag 3 with link tag and base 64 encoded css since linters
+  // (the one in VSC for example) otherwise complains about non-standard rules
+  let sContent = html.match(/<style class="style-3">.*?<\/style>/s) + '';
+  let sContentInner = sContent.slice(
+    sContent.indexOf('>') + 1, sContent.lastIndexOf('<')
+  );
+  let base64Inner = 'data:text/css;base64,'
+    + Buffer.from(sContentInner, "utf-8").toString('base64');
+  html = html.split(sContent)
+    .join(`<link rel="stylesheet" href="${base64Inner}">`);
   return html;
 }
 ```
@@ -724,6 +713,9 @@ export function embedFonts(html) {
   for (let i = 0; i < fontsBin.length; i++) {
     html = html.split(fontUrls[i]).join(fontsBin[i]);
   }
+  // make sure we end the style tag and start another on (important for cleanupHtml)
+  html = html.replace(fontsBin.slice(-1)[0], x => x + 'END-OF-FONT-INCLUSION');
+  html = html.replace(/END-OF-FONT-INCLUSION[^\}]*\}/, '}\n</style>\n<style>\n');
   return html;
 }
 ```
