@@ -252,6 +252,7 @@ export {
 * *settings* from [__settings.js](#__settingsjs)
 * *_makePart2* from [_makePart2.js](#_makepart2js)
 * *addAndMassageSettings* from [addAndMassageSettings.js](#addandmassagesettingsjs)
+* *cleanupHtmlForLinters* from [cleanupHtmlForLinters.js](#cleanuphtmlforlintersjs)
 * *embedFonts* from [embedFonts.js](#embedfontsjs)
 * *embedImages* from [embedImages.js](#embedimagesjs)
 * *hyphenate* from [hyphenate.js](#hyphenatejs)
@@ -292,11 +293,14 @@ export async function _make() {
   await makeHtml();
   r('HTML -> Created index.html.');
   let html = readFileSync('./index.html', 'utf-8');
+  html = cleanupHtmlForLinters(html);
+  r('HTML -> Cleaned up for linters.');
   html = setHTMLLanguage(html);
   let { html: htm, language: lang } = await hyphenate(html);
   html = htm;
-  html = includeLetterSpacer(html);
   r('HTML -> Hyphenation done (language: ' + lang + ')');
+  html = includeLetterSpacer(html);
+  r('HTML -> Included code for letter spacing.')
   html = makeLinkTargetsBlankAdd(html);
   r('HTML -> Made external links open in new tab.');
   html = await embedImages(html);
@@ -588,6 +592,69 @@ export function cleanupAndGetPageLength() {
   document.querySelector('.bespoke-marp-osc').remove();
   // number of pages in document
   return document.querySelectorAll('section[id]').length;
+}
+```
+
+---
+## cleanupHtmlForLinters.js
+
+#### Description
+- Cleanup HTML (mostly included style attributes)
+- Makes the HTML valid in linters such as VSC:s built in linter
+
+#### Exports
+* cleanupHtmlForLinters
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
+
+#### Code
+
+*File:* [make/cleanupHtmlForLinters.js](make/cleanupHtmlForLinters.js)
+
+*Cognitive Complexity:* 3
+
+```js
+export function cleanupHtmlForLinters(html) {
+  // no empty style attribute
+  html = html.replace(/style=""/g, '');
+  html = html.split(' style="');
+  let cleaned = [];
+  // no escaped &lt; or &gt in style attributes
+  // replace with < and >
+  for (let part of html) {
+    let [style, ...rest] = part.split('"');
+    style = style
+      .replace(/\&lt\;/g, '<')
+      .replace(/\&gt\;/g, '>')
+    cleaned.push([style, ...rest].join('"'));
+  }
+  html = cleaned.join(' style="');
+  // remove non-standard rules in style tags
+  [
+    '-webkit-print-color-adjust:exact!important;',
+    'color-adjust:exact!important;',
+    '-webkit-appearance:button'
+
+  ].forEach((x, i) =>
+    html = html.split(x).join(i === 2 ? 'appearance:button' : ''));
+  // add the rules back through a script
+  let script = () => {
+    let style = document.createElement('style');
+    style.innerHTML = /*css*/`
+      div#\:\$p>svg>foreignObject>section,div#\:\$p>svg>foreignObject>section * {
+        -webkit-print-color-adjust:exact!important;
+      }
+      div#\:\$p>svg>foreignObject>section,
+      div#\:\$p>svg>foreignObject>section * {
+        color-adjust: exact !important;
+      }
+    `;
+    document.querySelector('head').append(style);
+  }
+  script = `<script>\n(${script})()\n</script>`;
+  html = html.split('</body>').join(script + '\n</body>');
+  return html;
 }
 ```
 
