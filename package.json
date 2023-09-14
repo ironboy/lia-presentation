@@ -6,7 +6,8 @@
   "main": "index.js",
   "scripts": {
     "make": "node make/_index.js",
-    "make-doc": "node auto-document/make-documentation.js"
+    "make-doc": "node auto-document/make-documentation.js",
+    "cc-test": "npx ccts-ui make"
   },
   "repository": {
     "type": "git",
