@@ -44,6 +44,3 @@ export function cleanupHtmlForLinters(html) {
   html = html.split('</body>').join(script + '\n</body>');
   return html;
 }
-
-
-
