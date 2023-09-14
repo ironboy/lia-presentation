@@ -27,11 +27,14 @@ export async function _make() {
   await makeHtml();
   r('HTML -> Created index.html.');
   let html = readFileSync('./index.html', 'utf-8');
+  html = cleanupHtmlForLinters(html);
+  r('HTML -> Cleaned up for linters.');
   html = setHTMLLanguage(html);
   let { html: htm, language: lang } = await hyphenate(html);
   html = htm;
-  html = includeLetterSpacer(html);
   r('HTML -> Hyphenation done (language: ' + lang + ')');
+  html = includeLetterSpacer(html);
+  r('HTML -> Included code for letter spacing.')
   html = makeLinkTargetsBlankAdd(html);
   r('HTML -> Made external links open in new tab.');
   html = await embedImages(html);
