@@ -7,7 +7,7 @@
   "scripts": {
     "make": "node make/_index.js",
     "make-doc": "node auto-document/make-documentation.js",
-    "cc-test": "npx ccts-ui make"
+    "test-cc": "node auto-document/cc-quick-report.js"
   },
   "repository": {
     "type": "git",
