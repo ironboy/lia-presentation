@@ -1,6 +1,10 @@
 # Mac shit
 .DS_Store
 
+# Temporary files (moved to dist in seconds)
+index.html
+index.pdf
+
 # Compiled source to HTML and PDF etc 
 # (ignore in Git)
 dist
