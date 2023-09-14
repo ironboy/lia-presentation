@@ -1,5 +1,5 @@
 /***
- * - Cleanup HTML (mostly included style attributes)
+ * - Cleanup of HTML (mostly included style attributes)
  * - Makes the HTML valid in linters such as VSC:s built in linter
  */
 
