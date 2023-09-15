@@ -315,6 +315,522 @@ export async function _make() {
 ```
 
 ---
+## preWarmMakePdfFromHtml.js
+
+#### Description
+- Starts Puppeteer early to have it ready when needed
+
+#### Exports
+* preWarmMakePDFFromHtml
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
+
+#### Code
+
+*File:* [make/preWarmMakePdfFromHtml.js](make/preWarmMakePdfFromHtml.js)
+
+*Cognitive Complexity:* 0
+
+```js
+export async function preWarmMakePDFFromHtml() {
+  let browser = await puppeteer.launch({ headless: 'new' });
+  let page = await browser.newPage();
+  return { browser, page };
+}
+```
+
+---
+## makeHtml.js
+
+#### Description
+- Creates the HTML file using MARP CLI
+
+#### Exports
+* makeHtml
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
+
+#### Code
+
+*File:* [make/makeHtml.js](make/makeHtml.js)
+
+*Cognitive Complexity:* 0
+
+```js
+export async function makeHtml() {
+  await marpCli([
+    'index.md', '--html',
+    '--allow-local-files',
+    '--theme', 'theme.css'
+  ]).catch(console.error);
+}
+```
+
+---
+## embedFonts.js
+
+#### Description
+- Embeds the fonts in the HTML file
+
+#### Exports
+* embedFonts
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
+
+#### Code
+
+*File:* [make/embedFonts.js](make/embedFonts.js)
+
+*Cognitive Complexity:* 1
+
+```js
+export function embedFonts(html) {
+  // replace import from google fonts with locally downloaded fonts
+  // (see https://gwfh.mranftl.com/fonts)
+  // ...the reason for not using these in theme.css is that they
+  // don't work with marp preview in VSC...
+  let fonts = '\n' + readFileSync('./fonts.css') + '\n';
+  html = html.replace(/\@import url\('https:\/\/fonts.googleapis.com[^\)]*\);/, fonts);
+  let fontUrls = JSON.parse(JSON.stringify([...html.matchAll(/url\('\.\.\/fonts\/[^;]*;/g)])).map(x => x[0]);
+  let fontPaths = fontUrls.map(x => './fonts/' + x.split('fonts/')[1].split('\') format')[0]);
+  let prefix = 'url(data:application/x-font-woff;charset=utf-8;base64,';
+  let postfix = ") format('woff');"
+  let fontsBin = fontPaths.map(x => prefix + readFileSync(x).toString('base64') + postfix);
+  for (let i = 0; i < fontsBin.length; i++) {
+    html = html.split(fontUrls[i]).join(fontsBin[i]);
+  }
+  // make sure we end the style tag and start another onE (important for cleanupHtml)
+  html = html.replace(fontsBin.slice(-1)[0], x => x + 'END-OF-FONT-INCLUSION');
+  html = html.replace(/END-OF-FONT-INCLUSION[^\}]*\}/, '}\n</style>\n<style>\n');
+  return html;
+}
+```
+
+---
+## cleanupHtmlForLinters.js
+
+#### Description
+- Cleanup of HTML (mostly included style attributes)
+- Makes the HTML valid in linters such as VSC:s built in linter
+
+#### Exports
+* cleanupHtmlForLinters
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
+
+#### Code
+
+*File:* [make/cleanupHtmlForLinters.js](make/cleanupHtmlForLinters.js)
+
+*Cognitive Complexity:* 1
+
+```js
+export function cleanupHtmlForLinters(html) {
+  // no empty style attribute
+  html = html.replace(/style=""/g, '');
+  html = html.split(' style="');
+  let cleaned = [];
+  // no escaped &lt; or &gt in style attributes
+  // replace with < and >
+  for (let part of html) {
+    let [style, ...rest] = part.split('"');
+    style = style
+      .replace(/\&lt\;/g, '<')
+      .replace(/\&gt\;/g, '>')
+    cleaned.push([style, ...rest].join('"'));
+  }
+  html = cleaned.join(' style="');
+  // enumerate style tags
+  let i = 1;
+  html = html.replace(/<style>/g, x => `<style class="style-${i++}">`);
+  // replace style tag 3 with link tag and base 64 encoded css since linters
+  // (the one in VSC for example) otherwise complains about non-standard rules
+  let sContent = html.match(/<style class="style-3">.*?<\/style>/s) + '';
+  let sContentInner = sContent.slice(
+    sContent.indexOf('>') + 1, sContent.lastIndexOf('<')
+  );
+  let base64Inner = 'data:text/css;base64,'
+    + Buffer.from(sContentInner, "utf-8").toString('base64');
+  html = html.split(sContent)
+    .join(`<link rel="stylesheet" href="${base64Inner}">`);
+  return html;
+}
+```
+
+---
+## setHtmlLanguage.js
+
+#### Description
+- Sets the html lang attribute according to settings
+
+#### Exports
+* setHTMLLanguage
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
+
+#### Code
+
+*File:* [make/setHtmlLanguage.js](make/setHtmlLanguage.js)
+
+*Cognitive Complexity:* 0
+
+```js
+export function setHTMLLanguage(html) {
+  let { language } = settings;
+  html = html.replace(/<html[^>]*>/g, `<html lang="${language}">`);
+  return html;
+}
+```
+
+---
+## makeLinkTargetsBlankAdd.js
+
+#### Description
+- Includes client side code for opening external links in new tabs
+
+#### Exports
+* makeLinkTargetsBlankAdd
+
+#### Uses
+* *makeLinkTargetsBlank* from [makeLinkTargetsBlank.js](#makelinktargetsblankjs)
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
+
+#### Code
+
+*File:* [make/makeLinkTargetsBlankAdd.js](make/makeLinkTargetsBlankAdd.js)
+
+*Cognitive Complexity:* 0
+
+```js
+export function makeLinkTargetsBlankAdd(html) {
+  html = html.split('</body>').join('<script>' + makeLinkTargetsBlank + ';makeLinkTargetsBlank();</script></body>');
+  return html;
+}
+```
+
+---
+## makeLinkTargetsBlank.js
+
+#### Description
+- Client side code assuring that external links opens in new tabs
+
+#### Exports
+* makeLinkTargetsBlank
+
+#### Used by
+* *makeLinkTargetsBlankAdd* from [makeLinkTargetsBlankAdd.js](#makelinktargetsblankaddjs)
+
+#### Code
+
+*File:* [make/makeLinkTargetsBlank.js](make/makeLinkTargetsBlank.js)
+
+*Cognitive Complexity:* 4
+
+```js
+export function makeLinkTargetsBlank() {
+  document.body.addEventListener('click', e => {
+    let a = e.target.closest('a');
+    if (!a) { return; }
+    if (a.getAttribute('href').indexOf('http') === 0) {
+      a.setAttribute('target', '_blank');
+    }
+  });
+}
+```
+
+---
+## addAndMassageSettings.js
+
+#### Description
+- Adjusts/unfolds some setting parameters
+- Imports settings given in index.md
+
+#### Exports
+* addAndMassageSettings
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
+
+#### Code
+
+*File:* [make/addAndMassageSettings.js](make/addAndMassageSettings.js)
+
+*Cognitive Complexity:* 4
+
+```js
+export function addAndMassageSettings() {
+  // "unpack" settings for sharp
+  settings.resizeSettings = [
+    settings.sharpScaleJpgsTo,
+    settings.sharpScaleJpgsTo,
+    { fit: 'inside' }
+  ];
+  settings.jpegSettings = [{
+    mozjpeg: true,
+    quality: settings.sharpJpgQuality
+  }];
+
+  // can't make PPTX without JPGs - but we can decide if to keep them
+  settings.keepJPGs = settings.makeJPGs;
+  settings.makePPTX && (settings.makeJPGs = 1);
+
+  // readMarpSettings
+  let x = readFileSync('./index.md', 'utf-8').split('---')[1];
+  x.split('\n')
+    .map(x => x.split(':').map(x => x.trim()))
+    .forEach(([key, val]) => {
+      if (!key || !val || key === 'marp') { return; }
+      settings[key] = val;
+    });
+}
+```
+
+---
+## hyphenate.js
+
+#### Description
+- Hyphenates the text using the hyphen npm module
+
+#### Exports
+* hyphenate
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+* *applyHyphenation* from [applyHyphenation.js](#applyhyphenationjs)
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
+
+#### Code
+
+*File:* [make/hyphenate.js](make/hyphenate.js)
+
+*Cognitive Complexity:* 5
+
+```js
+export async function hyphenate(html) {
+  let { language } = settings;
+  // get correct hyphenator dependning on language  - fallback to 'en'
+  let hyphenator;
+  while (!hyphenator) {
+    hyphenator = await import('hyphen/' + language + '/index.js')
+      .catch(e => { });
+    if (!hyphenator && language.includes('-')) {
+      language = language.split('-')[0]
+    }
+    else if (!hyphenator) {
+      language = 'en';
+    }
+  }
+  // apply hyphenation
+  hyphenator = hyphenator.default.hyphenateHTMLSync;
+  html = applyHyphenation(hyphenator, html);
+  return { html, language };
+}
+```
+
+---
+## applyHyphenation.js
+
+#### Description
+- Apply hyphenation according to settings
+
+#### Exports
+* applyHyphenation
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+
+#### Used by
+* *hyphenate* from [hyphenate.js](#hyphenatejs)
+
+#### Code
+
+*File:* [make/applyHyphenation.js](make/applyHyphenation.js)
+
+*Cognitive Complexity:* 9
+
+```js
+export function applyHyphenation(hyphenator, html) {
+  let {
+    hyphenateTags: els,
+    hyphenateMinWordLength: minWordLength,
+    hyphenateMinCharsBefore: minCharsBefore,
+    hyphenateMinCharsAfter: minCharsAfter,
+  } = settings;
+  // hyphenate
+  for (let el of els) {
+    let reg = new RegExp(`<${el}[^>]*>.*?<\\/${el}>`, 'g');
+    html = html.replace(reg, x => {
+      let a = hyphenator(x, { minWordLength });
+      // adhere to minCharsBefore and minCharsAfter
+      let b = a.split('\u00AD');
+      let c = '';
+      for (let i = 0; i < b.length - 1; i++) {
+        let keep = !(b[i].slice(-minCharsBefore).replace(/[\p{L}-]/ug, ''))
+          && !(b[i + 1].slice(0, minCharsAfter).replace(/[\p{L}-]/ug, ''));
+        c += b[i] + (keep ? '\u00AD' : '');
+      }
+      c += b.slice(-1);
+      return c;
+    });
+  }
+  return html;
+}
+```
+
+---
+## embedImages.js
+
+#### Description
+- Embeds the images in the HTML file
+
+#### Exports
+* embedImages
+
+#### Uses
+* *bgImagesToClasses* from [bgImagesToClasses.js](#bgimagestoclassesjs)
+* *removeQuotes* from [removeQuotes.js](#removequotesjs)
+* *scaleImage* from [scaleImage.js](#scaleimagejs)
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
+
+#### Code
+
+*File:* [make/embedImages.js](make/embedImages.js)
+
+*Cognitive Complexity:* 2
+
+```js
+export async function embedImages(html) {
+  html = bgImagesToClasses(html);
+  let htmlImages = html.split('img src="').slice(1).map(x => x.split('"')[0]);
+  let cssImages = html.split('background-image:url(').slice(1).map(x => removeQuotes(x.split(')')[0]));
+  cssImages = cssImages.filter(x => x.indexOf('data') !== 0);
+  let imagePaths = [...htmlImages, ...cssImages];
+  let images = [];
+  for (let path of imagePaths) {
+    images.push(`data:image/${path.split('.').slice(-1)};base64,` + (await scaleImage(readFileSync('./' + path))).toString('base64'));
+  }
+  for (let i = 0; i < images.length; i++) {
+    html = html.split(imagePaths[i]).join(images[i]);
+  }
+  return html;
+}
+```
+
+---
+## removeQuotes.js
+
+#### Description
+- Remove three different types of quotes from a string
+
+#### Exports
+* removeQuotes
+
+#### Used by
+* *embedImages* from [embedImages.js](#embedimagesjs)
+
+#### Code
+
+*File:* [make/removeQuotes.js](make/removeQuotes.js)
+
+*Cognitive Complexity:* 0
+
+```js
+export function removeQuotes(x) {
+  return x
+    .split('"').join('')
+    .split("'").join('')
+    .split('&quot;').join('')
+}
+```
+
+---
+## bgImagesToClasses.js
+
+#### Description
+- Converts bg images to classes (avoids double embedding)
+
+#### Exports
+* bgImagesToClasses
+
+#### Used by
+* *embedImages* from [embedImages.js](#embedimagesjs)
+
+#### Code
+
+*File:* [make/bgImagesToClasses.js](make/bgImagesToClasses.js)
+
+*Cognitive Complexity:* 2
+
+```js
+export function bgImagesToClasses(html) {
+  let i = 0;
+  let hash = {};
+  html = html.replace(/<figure style="background-image[^>]*>/g, (x => {
+    i++;
+    hash[x] = hash[x] || [];
+    hash[x].push(i);
+    return `<figure class="bg-image-${i}">`;
+  }));
+  let style = "\n";
+  for (let [key, val] of Object.entries(hash)) {
+    let selector = val.map(x => 'figure.bg-image-' + x).join(', ');
+    style += selector + ' {\n  ' + key.split('"')[1].split('&quot;').join("'").slice(0, -1) + '!important;\n}\n';
+  }
+  style += '\n';
+  html = html.replace(/<\/style>/, style + '</style>');
+  return html;
+}
+```
+
+---
+## scaleImage.js
+
+#### Description
+- Scales imags using the npm module sharp
+
+#### Exports
+* scaleImage
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+
+#### Used by
+* *embedImages* from [embedImages.js](#embedimagesjs)
+
+#### Code
+
+*File:* [make/scaleImage.js](make/scaleImage.js)
+
+*Cognitive Complexity:* 0
+
+```js
+export async function scaleImage(buffer) {
+  let { resizeSettings, jpegSettings } = settings;
+  return sharp(buffer)
+    .resize(...resizeSettings)
+    .jpeg(...jpegSettings)
+    .toBuffer();
+};
+```
+
+---
 ## _makePart2.js
 
 #### Description
@@ -378,52 +894,77 @@ export async function _makePart2(preWarmedPromise, startTime, r, r2) {
 ```
 
 ---
-## addAndMassageSettings.js
+## compressPDF.js
 
 #### Description
-- Adjusts/unfolds some setting parameters
-- Imports settings given in index.md
+- Compress the PDF using Ghostscript
 
 #### Exports
-* addAndMassageSettings
+* compressPDF
 
 #### Uses
 * *settings* from [__settings.js](#__settingsjs)
 
 #### Used by
-* *_make* from [_make.js](#_makejs)
+* *_makePart2* from [_makePart2.js](#_makepart2js)
 
 #### Code
 
-*File:* [make/addAndMassageSettings.js](make/addAndMassageSettings.js)
+*File:* [make/compressPDF.js](make/compressPDF.js)
 
-*Cognitive Complexity:* 4
+*Cognitive Complexity:* 0
 
 ```js
-export function addAndMassageSettings() {
-  // "unpack" settings for sharp
-  settings.resizeSettings = [
-    settings.sharpScaleJpgsTo,
-    settings.sharpScaleJpgsTo,
-    { fit: 'inside' }
-  ];
-  settings.jpegSettings = [{
-    mozjpeg: true,
-    quality: settings.sharpJpgQuality
-  }];
+export function compressPDF() {
+  let { ghostScriptPdfQuality: q } = settings;
+  execSync(
+    `gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.7 ` +
+    `-dPDFSETTINGS=/${q} -dNOPAUSE -dQUIET` +
+    `-dBATCH -sOutputFile=dist/index.pdf index.pdf`
+  );
+}
+```
 
-  // can't make PPTX without JPGs - but we can decide if to keep them
-  settings.keepJPGs = settings.makeJPGs;
-  settings.makePPTX && (settings.makeJPGs = 1);
+---
+## makePptx.js
 
-  // readMarpSettings
-  let x = readFileSync('./index.md', 'utf-8').split('---')[1];
-  x.split('\n')
-    .map(x => x.split(':').map(x => x.trim()))
-    .forEach(([key, val]) => {
-      if (!key || !val || key === 'marp') { return; }
-      settings[key] = val;
-    });
+#### Description
+- Creates a PPTX/PowerPoint using the npm module pptxgenjs
+
+#### Exports
+* makePptx
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+* *addPptxSlideLinks* from [addPptxSlideLinks.js](#addpptxslidelinksjs)
+
+#### Used by
+* *_makePart2* from [_makePart2.js](#_makepart2js)
+
+#### Code
+
+*File:* [make/makePptx.js](make/makePptx.js)
+
+*Cognitive Complexity:* 1
+
+```js
+export async function makePptx(widthMm, heightMm, pagePaths, allLinkPositions) {
+  let { author, title, description } = settings;
+  let cFactorInches = 0.0393700787;
+  let width = widthMm * cFactorInches, height = heightMm * cFactorInches;
+  let pptx = new pptxgen();
+  pptx.author = author;
+  pptx.company = author;
+  pptx.subject = description;
+  pptx.title = title;
+  await pptx.defineLayout({ name: 'cSize', width, height });
+  for (let path of pagePaths) {
+    let slide = await pptx.addSlide();
+    await slide.addImage({ path, x: 0, y: 0, w: '100%', h: '100%' });
+    // add links (previously extracted in makePDFFromHtml)
+    await addPptxSlideLinks(slide, allLinkPositions.shift());
+  }
+  await pptx.writeFile({ fileName: './dist/index.pptx', compression: true });
 }
 ```
 
@@ -461,381 +1002,6 @@ export async function addPptxSlideLinks(slide, links) {
       h: (link.bottom - link.y) + '%'
     });
   }
-}
-```
-
----
-## adjustLetterSpacing.js
-
-#### Description
-- Adjust the letter-spacing for justified text to minimize gaps
-
-#### Exports
-* adjustLetterSpacing
-
-#### Uses
-* *settings* from [__settings.js](#__settingsjs)
-* *findBestLetterSpacing* from [findBestLetterSpacing.js](#findbestletterspacingjs)
-* *getSpaceWidths* from [getSpaceWidths.js](#getspacewidthsjs)
-* *wrapWords* from [wrapWords.js](#wrapwordsjs)
-
-#### Used by
-* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
-
-#### Code
-
-*File:* [make/adjustLetterSpacing.js](make/adjustLetterSpacing.js)
-
-*Cognitive Complexity:* 8
-
-```js
-export async function adjustLetterSpacing(page = 1, loadPage) {
-  loadPage = loadPage || +location.hash.slice(1);
-  (!loadPage || isNaN(loadPage)) && (loadPage = 1);
-  let {
-    letterSpacingMinRem: minSpace,
-    letterSpacingMaxRem: maxSpace
-  } = settings;
-  document.body.style.opacity = 0; // temp hide content
-  await document.fonts.ready;
-  let section = [...document.querySelectorAll('section')]
-    .find(x => x.id.replace(/\D/g, '') === page + '');
-  if (!section) {
-    location.hash = '#' + loadPage;
-    document.body.style.opacity = 1; // show content
-    return;
-  }
-  location.hash = '#' + page;
-  wrapWords(section);
-  let spaces = getSpaceWidths();
-  let step = (maxSpace - minSpace) / 50;
-  for (let { el, baseW, words } of spaces) {
-    let candidates = [];
-    for (let i = minSpace; i <= maxSpace; i += step) {
-      words.forEach(w => w.style.letterSpacing = i + 'rem');
-      candidates.push({ space: i, val: el.offsetWidth / baseW });
-    }
-    let best = findBestLetterSpacing(candidates);
-    words.forEach(w => w.style.letterSpacing = best.space + 'rem');
-  }
-  adjustLetterSpacing(page + 1, loadPage);
-}
-```
-
----
-## applyHyphenation.js
-
-#### Description
-- Apply hyphenation according to settings
-
-#### Exports
-* applyHyphenation
-
-#### Uses
-* *settings* from [__settings.js](#__settingsjs)
-
-#### Used by
-* *hyphenate* from [hyphenate.js](#hyphenatejs)
-
-#### Code
-
-*File:* [make/applyHyphenation.js](make/applyHyphenation.js)
-
-*Cognitive Complexity:* 9
-
-```js
-export function applyHyphenation(hyphenator, html) {
-  let {
-    hyphenateTags: els,
-    hyphenateMinWordLength: minWordLength,
-    hyphenateMinCharsBefore: minCharsBefore,
-    hyphenateMinCharsAfter: minCharsAfter,
-  } = settings;
-  // hyphenate
-  for (let el of els) {
-    let reg = new RegExp(`<${el}[^>]*>.*?<\\/${el}>`, 'g');
-    html = html.replace(reg, x => {
-      let a = hyphenator(x, { minWordLength });
-      // adhere to minCharsBefore and minCharsAfter
-      let b = a.split('\u00AD');
-      let c = '';
-      for (let i = 0; i < b.length - 1; i++) {
-        let keep = !(b[i].slice(-minCharsBefore).replace(/[\p{L}-]/ug, ''))
-          && !(b[i + 1].slice(0, minCharsAfter).replace(/[\p{L}-]/ug, ''));
-        c += b[i] + (keep ? '\u00AD' : '');
-      }
-      c += b.slice(-1);
-      return c;
-    });
-  }
-  return html;
-}
-```
-
----
-## bgImagesToClasses.js
-
-#### Description
-- Converts bg images to classes (avoids double embedding)
-
-#### Exports
-* bgImagesToClasses
-
-#### Used by
-* *embedImages* from [embedImages.js](#embedimagesjs)
-
-#### Code
-
-*File:* [make/bgImagesToClasses.js](make/bgImagesToClasses.js)
-
-*Cognitive Complexity:* 2
-
-```js
-export function bgImagesToClasses(html) {
-  let i = 0;
-  let hash = {};
-  html = html.replace(/<figure style="background-image[^>]*>/g, (x => {
-    i++;
-    hash[x] = hash[x] || [];
-    hash[x].push(i);
-    return `<figure class="bg-image-${i}">`;
-  }));
-  let style = "\n";
-  for (let [key, val] of Object.entries(hash)) {
-    let selector = val.map(x => 'figure.bg-image-' + x).join(', ');
-    style += selector + ' {\n  ' + key.split('"')[1].split('&quot;').join("'").slice(0, -1) + '!important;\n}\n';
-  }
-  style += '\n';
-  html = html.replace(/<\/style>/, style + '</style>');
-  return html;
-}
-```
-
----
-## cleanupAndGetPageLength.js
-
-#### Description
-- Returns the page length
-- Removes navigation tool bar (so not printed to PDF and JPG:s)
-
-#### Exports
-* cleanupAndGetPageLength
-
-#### Used by
-* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
-
-#### Code
-
-*File:* [make/cleanupAndGetPageLength.js](make/cleanupAndGetPageLength.js)
-
-*Cognitive Complexity:* 0
-
-```js
-export function cleanupAndGetPageLength() {
-  // change id:s of sections to valid id:s (must start with character)
-  [...document.querySelectorAll('section[id]')].forEach(x => x.id = 'x' + x.id);
-  // remove navigator (otherwise it shows in screenshots)
-  document.querySelector('.bespoke-marp-osc').remove();
-  // number of pages in document
-  return document.querySelectorAll('section[id]').length;
-}
-```
-
----
-## cleanupHtmlForLinters.js
-
-#### Description
-- Cleanup of HTML (mostly included style attributes)
-- Makes the HTML valid in linters such as VSC:s built in linter
-
-#### Exports
-* cleanupHtmlForLinters
-
-#### Used by
-* *_make* from [_make.js](#_makejs)
-
-#### Code
-
-*File:* [make/cleanupHtmlForLinters.js](make/cleanupHtmlForLinters.js)
-
-*Cognitive Complexity:* 1
-
-```js
-export function cleanupHtmlForLinters(html) {
-  // no empty style attribute
-  html = html.replace(/style=""/g, '');
-  html = html.split(' style="');
-  let cleaned = [];
-  // no escaped &lt; or &gt in style attributes
-  // replace with < and >
-  for (let part of html) {
-    let [style, ...rest] = part.split('"');
-    style = style
-      .replace(/\&lt\;/g, '<')
-      .replace(/\&gt\;/g, '>')
-    cleaned.push([style, ...rest].join('"'));
-  }
-  html = cleaned.join(' style="');
-  // enumerate style tags
-  let i = 1;
-  html = html.replace(/<style>/g, x => `<style class="style-${i++}">`);
-  // replace style tag 3 with link tag and base 64 encoded css since linters
-  // (the one in VSC for example) otherwise complains about non-standard rules
-  let sContent = html.match(/<style class="style-3">.*?<\/style>/s) + '';
-  let sContentInner = sContent.slice(
-    sContent.indexOf('>') + 1, sContent.lastIndexOf('<')
-  );
-  let base64Inner = 'data:text/css;base64,'
-    + Buffer.from(sContentInner, "utf-8").toString('base64');
-  html = html.split(sContent)
-    .join(`<link rel="stylesheet" href="${base64Inner}">`);
-  return html;
-}
-```
-
----
-## compressPDF.js
-
-#### Description
-- Compress the PDF using Ghostscript
-
-#### Exports
-* compressPDF
-
-#### Uses
-* *settings* from [__settings.js](#__settingsjs)
-
-#### Used by
-* *_makePart2* from [_makePart2.js](#_makepart2js)
-
-#### Code
-
-*File:* [make/compressPDF.js](make/compressPDF.js)
-
-*Cognitive Complexity:* 0
-
-```js
-export function compressPDF() {
-  let { ghostScriptPdfQuality: q } = settings;
-  execSync(
-    `gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.7 ` +
-    `-dPDFSETTINGS=/${q} -dNOPAUSE -dQUIET` +
-    `-dBATCH -sOutputFile=dist/index.pdf index.pdf`
-  );
-}
-```
-
----
-## embedFonts.js
-
-#### Description
-- Embeds the fonts in the HTML file
-
-#### Exports
-* embedFonts
-
-#### Used by
-* *_make* from [_make.js](#_makejs)
-
-#### Code
-
-*File:* [make/embedFonts.js](make/embedFonts.js)
-
-*Cognitive Complexity:* 1
-
-```js
-export function embedFonts(html) {
-  // replace import from google fonts with locally downloaded fonts
-  // (see https://gwfh.mranftl.com/fonts)
-  // ...the reason for not using these in theme.css is that they
-  // don't work with marp preview in VSC...
-  let fonts = '\n' + readFileSync('./fonts.css') + '\n';
-  html = html.replace(/\@import url\('https:\/\/fonts.googleapis.com[^\)]*\);/, fonts);
-  let fontUrls = JSON.parse(JSON.stringify([...html.matchAll(/url\('\.\.\/fonts\/[^;]*;/g)])).map(x => x[0]);
-  let fontPaths = fontUrls.map(x => './fonts/' + x.split('fonts/')[1].split('\') format')[0]);
-  let prefix = 'url(data:application/x-font-woff;charset=utf-8;base64,';
-  let postfix = ") format('woff');"
-  let fontsBin = fontPaths.map(x => prefix + readFileSync(x).toString('base64') + postfix);
-  for (let i = 0; i < fontsBin.length; i++) {
-    html = html.split(fontUrls[i]).join(fontsBin[i]);
-  }
-  // make sure we end the style tag and start another onE (important for cleanupHtml)
-  html = html.replace(fontsBin.slice(-1)[0], x => x + 'END-OF-FONT-INCLUSION');
-  html = html.replace(/END-OF-FONT-INCLUSION[^\}]*\}/, '}\n</style>\n<style>\n');
-  return html;
-}
-```
-
----
-## embedImages.js
-
-#### Description
-- Embeds the images in the HTML file
-
-#### Exports
-* embedImages
-
-#### Uses
-* *bgImagesToClasses* from [bgImagesToClasses.js](#bgimagestoclassesjs)
-* *removeQuotes* from [removeQuotes.js](#removequotesjs)
-* *scaleImage* from [scaleImage.js](#scaleimagejs)
-
-#### Used by
-* *_make* from [_make.js](#_makejs)
-
-#### Code
-
-*File:* [make/embedImages.js](make/embedImages.js)
-
-*Cognitive Complexity:* 2
-
-```js
-export async function embedImages(html) {
-  html = bgImagesToClasses(html);
-  let htmlImages = html.split('img src="').slice(1).map(x => x.split('"')[0]);
-  let cssImages = html.split('background-image:url(').slice(1).map(x => removeQuotes(x.split(')')[0]));
-  cssImages = cssImages.filter(x => x.indexOf('data') !== 0);
-  let imagePaths = [...htmlImages, ...cssImages];
-  let images = [];
-  for (let path of imagePaths) {
-    images.push(`data:image/${path.split('.').slice(-1)};base64,` + (await scaleImage(readFileSync('./' + path))).toString('base64'));
-  }
-  for (let i = 0; i < images.length; i++) {
-    html = html.split(imagePaths[i]).join(images[i]);
-  }
-  return html;
-}
-```
-
----
-## findBestLetterSpacing.js
-
-#### Description
-- Find the base candidate among different letter spacings
-- Closest to normal spacing
-- If several options give the same spacing -> tigher kerning
-
-#### Exports
-* findBestLetterSpacing
-
-#### Used by
-* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacingjs)
-* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
-
-#### Code
-
-*File:* [make/findBestLetterSpacing.js](make/findBestLetterSpacing.js)
-
-*Cognitive Complexity:* 7
-
-```js
-export function findBestLetterSpacing(candidates) {
-  return candidates.sort((a, b) => {
-    if (a.val === b.val) {
-      return Math.abs(a.space) < Math.abs(b.space) ? -1 : 1;
-    }
-    return a.val < b.val ? -1 : 1;
-  })[0];
 }
 ```
 
@@ -881,313 +1047,36 @@ export async function fixSloppyPDFCropbox(r) {
 ```
 
 ---
-## getLinkPositions.js
+## pdfMetaData.js
 
 #### Description
-- Get link positiions so they can be included in the PPTX/PowerPint
+- Sets PDF meta data
 
 #### Exports
-* getLinkPositions
-
-#### Used by
-* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
-
-#### Code
-
-*File:* [make/getLinkPositions.js](make/getLinkPositions.js)
-
-*Cognitive Complexity:* 1
-
-```js
-// note: runs from makePdfFromHtml inside puppeteer browser page
-export function getLinkPositions(el, i, mPPTX) {
-  location.hash = '#' + i;
-  if (!mPPTX) { return []; }
-  return [...document.querySelectorAll(`#x${i} a[href]`)]
-    .map(x => {
-      let bRect = x.getBoundingClientRect();
-      return {
-        href: x.getAttribute('href'),
-        x: bRect.x, y: bRect.y, right: bRect.right, bottom: bRect.bottom
-      };
-    })
-    .filter(x => x.bottom !== 0);
-}
-```
-
----
-## getPageDimensions.js
-
-#### Description
-- Helps Puppeteer get the page dimensions
-
-#### Exports
-* getPageDimensions
-
-#### Used by
-* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
-
-#### Code
-
-*File:* [make/getPageDimensions.js](make/getPageDimensions.js)
-
-*Cognitive Complexity:* 0
-
-```js
-// note: runs from makePdfFromHtml inside puppeteer browser page
-export function getPageDimensions(el) {
-  let tempDiv = document.createElement('div');
-  tempDiv.style.width = '100mm';
-  el.append(tempDiv);
-  let pxPerMm = getComputedStyle(tempDiv).width.split('px')[0] / 100;
-  let section = document.querySelector('section');
-  let { width: widthPx, height: heightPx } = getComputedStyle(section);
-  widthPx = +widthPx.split('px')[0];
-  heightPx = +heightPx.split('px')[0];
-  let widthMm = Math.round(widthPx / pxPerMm);
-  let heightMm = Math.round(heightPx / pxPerMm);
-  widthPx = Math.round(widthPx);
-  heightPx = Math.round(heightPx);
-  tempDiv.remove();
-  return { pxPerMm, widthPx, heightPx, widthMm, heightMm };
-}
-```
-
----
-## getSpaceWidths.js
-
-#### Description
-- Get widhts of spaces needed fo letter-spacing adjustments
-
-#### Exports
-* getSpaceWidths
+* pdfMetaData
 
 #### Uses
 * *settings* from [__settings.js](#__settingsjs)
-* *nonJustify* from [nonJustify.js](#nonjustifyjs)
-* *reJustify* from [reJustify.js](#rejustifyjs)
 
 #### Used by
-* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacingjs)
-* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
+* *fixSloppyPDFCropbox* from [fixSloppyPDFCropbox.js](#fixsloppypdfcropboxjs)
 
 #### Code
 
-*File:* [make/getSpaceWidths.js](make/getSpaceWidths.js)
-
-*Cognitive Complexity:* 2
-
-```js
-export function getSpaceWidths() {
-  let { hyphenateTags: parentSel } = settings;
-  parentSel = parentSel.join(', ');
-  let words = [...document.querySelectorAll('a-word')];
-  let spaces = [...document.querySelectorAll('a-space')];
-  // only keep one space per common parentNode and line
-  let parentNodeMem = [];
-  spaces = spaces.filter(el => {
-    let pNode = el.closest(parentSel);
-    let y = el.getBoundingClientRect().y;
-    let keep = !parentNodeMem.find(([a, b]) => a === pNode && b === y);
-    parentNodeMem.push([pNode, y]);
-    return keep;
-  });
-  // check how stretched the spaces are
-  nonJustify();
-  spaces = spaces
-    .map(el => ({ el, w: el.offsetWidth }))
-    .filter(({ w }) => w);
-  reJustify();
-  spaces.forEach(x => x.w2 = x.el.offsetWidth);
-  spaces = spaces
-    .filter(({ w, w2 }) => w !== w2)
-    .map(({ el, w, w2 }) => ({
-      el,
-      stretch: w2 / w,
-      baseW: w,
-      words: words.filter(x =>
-        x.closest(parentSel) === el.closest(parentSel)
-        && x.getBoundingClientRect().y === el.getBoundingClientRect().y
-      )
-    }));
-  spaces.forEach(x => x.phrase = x.words.map(x => x.innerText).join(' '));
-  return spaces;
-}
-```
-
----
-## hyphenate.js
-
-#### Description
-- Hyphenates the text using the hyphen npm module
-
-#### Exports
-* hyphenate
-
-#### Uses
-* *settings* from [__settings.js](#__settingsjs)
-* *applyHyphenation* from [applyHyphenation.js](#applyhyphenationjs)
-
-#### Used by
-* *_make* from [_make.js](#_makejs)
-
-#### Code
-
-*File:* [make/hyphenate.js](make/hyphenate.js)
-
-*Cognitive Complexity:* 5
-
-```js
-export async function hyphenate(html) {
-  let { language } = settings;
-  // get correct hyphenator dependning on language  - fallback to 'en'
-  let hyphenator;
-  while (!hyphenator) {
-    hyphenator = await import('hyphen/' + language + '/index.js')
-      .catch(e => { });
-    if (!hyphenator && language.includes('-')) {
-      language = language.split('-')[0]
-    }
-    else if (!hyphenator) {
-      language = 'en';
-    }
-  }
-  // apply hyphenation
-  hyphenator = hyphenator.default.hyphenateHTMLSync;
-  html = applyHyphenation(hyphenator, html);
-  return { html, language };
-}
-```
-
----
-## includeLetterSpacer.js
-
-#### Description
-- Includes the letter spacing logic in the HTML client side code
-
-#### Exports
-* includeLetterSpacer
-
-#### Uses
-* *settings* from [__settings.js](#__settingsjs)
-* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacingjs)
-* *findBestLetterSpacing* from [findBestLetterSpacing.js](#findbestletterspacingjs)
-* *getSpaceWidths* from [getSpaceWidths.js](#getspacewidthsjs)
-* *nonJustify* from [nonJustify.js](#nonjustifyjs)
-* *reJustify* from [reJustify.js](#rejustifyjs)
-* *textNodesUnder* from [textNodesUnder.js](#textnodesunderjs)
-* *wrapWords* from [wrapWords.js](#wrapwordsjs)
-
-#### Used by
-* *_make* from [_make.js](#_makejs)
-
-#### Code
-
-*File:* [make/includeLetterSpacer.js](make/includeLetterSpacer.js)
+*File:* [make/pdfMetaData.js](make/pdfMetaData.js)
 
 *Cognitive Complexity:* 0
 
 ```js
-export function includeLetterSpacer(html) {
-  let code = [
-    'const settings = ' + JSON.stringify(settings),
-    textNodesUnder,
-    wrapWords,
-    nonJustify,
-    reJustify,
-    getSpaceWidths,
-    adjustLetterSpacing,
-    findBestLetterSpacing
-  ].map(x => x + '').join('\n\n');
-  code = `(()=>{\n${code};\n\nadjustLetterSpacing();})();`;
-  html = html.split('</body>').join(`<script>${code}</script></body>`);
-  return html;
-}
-```
-
----
-## makeHtml.js
-
-#### Description
-- Creates the HTML file using MARP CLI
-
-#### Exports
-* makeHtml
-
-#### Used by
-* *_make* from [_make.js](#_makejs)
-
-#### Code
-
-*File:* [make/makeHtml.js](make/makeHtml.js)
-
-*Cognitive Complexity:* 0
-
-```js
-export async function makeHtml() {
-  await marpCli([
-    'index.md', '--html',
-    '--allow-local-files',
-    '--theme', 'theme.css'
-  ]).catch(console.error);
-}
-```
-
----
-## makeLinkTargetsBlank.js
-
-#### Description
-- Client side code assuring that external links opens in new tabs
-
-#### Exports
-* makeLinkTargetsBlank
-
-#### Used by
-* *makeLinkTargetsBlankAdd* from [makeLinkTargetsBlankAdd.js](#makelinktargetsblankaddjs)
-
-#### Code
-
-*File:* [make/makeLinkTargetsBlank.js](make/makeLinkTargetsBlank.js)
-
-*Cognitive Complexity:* 4
-
-```js
-export function makeLinkTargetsBlank() {
-  document.body.addEventListener('click', e => {
-    let a = e.target.closest('a');
-    if (!a) { return; }
-    if (a.getAttribute('href').indexOf('http') === 0) {
-      a.setAttribute('target', '_blank');
-    }
-  });
-}
-```
-
----
-## makeLinkTargetsBlankAdd.js
-
-#### Description
-- Includes client side code for opening external links in new tabs
-
-#### Exports
-* makeLinkTargetsBlankAdd
-
-#### Uses
-* *makeLinkTargetsBlank* from [makeLinkTargetsBlank.js](#makelinktargetsblankjs)
-
-#### Used by
-* *_make* from [_make.js](#_makejs)
-
-#### Code
-
-*File:* [make/makeLinkTargetsBlankAdd.js](make/makeLinkTargetsBlankAdd.js)
-
-*Cognitive Complexity:* 0
-
-```js
-export function makeLinkTargetsBlankAdd(html) {
-  html = html.split('</body>').join('<script>' + makeLinkTargetsBlank + ';makeLinkTargetsBlank();</script></body>');
-  return html;
+export function pdfMetaData(pdfDoc, r) {
+  let { author, language, title, description } = settings;
+  pdfDoc.setTitle(title);
+  pdfDoc.setSubject(description);
+  pdfDoc.setAuthor(author);
+  pdfDoc.setLanguage(language);
+  pdfDoc.setProducer(author + '\'s toolbox');
+  pdfDoc.setCreator(author);
+  r('PDF  -> Modified meta data.');
 }
 ```
 
@@ -1267,274 +1156,241 @@ export async function makePdfFromHtml(r, preWarmedPromise) {
 ```
 
 ---
-## makePptx.js
+## getPageDimensions.js
 
 #### Description
-- Creates a PPTX/PowerPoint using the npm module pptxgenjs
+- Helps Puppeteer get the page dimensions
 
 #### Exports
-* makePptx
-
-#### Uses
-* *settings* from [__settings.js](#__settingsjs)
-* *addPptxSlideLinks* from [addPptxSlideLinks.js](#addpptxslidelinksjs)
+* getPageDimensions
 
 #### Used by
-* *_makePart2* from [_makePart2.js](#_makepart2js)
+* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
 
 #### Code
 
-*File:* [make/makePptx.js](make/makePptx.js)
+*File:* [make/getPageDimensions.js](make/getPageDimensions.js)
+
+*Cognitive Complexity:* 0
+
+```js
+// note: runs from makePdfFromHtml inside puppeteer browser page
+export function getPageDimensions(el) {
+  let tempDiv = document.createElement('div');
+  tempDiv.style.width = '100mm';
+  el.append(tempDiv);
+  let pxPerMm = getComputedStyle(tempDiv).width.split('px')[0] / 100;
+  let section = document.querySelector('section');
+  let { width: widthPx, height: heightPx } = getComputedStyle(section);
+  widthPx = +widthPx.split('px')[0];
+  heightPx = +heightPx.split('px')[0];
+  let widthMm = Math.round(widthPx / pxPerMm);
+  let heightMm = Math.round(heightPx / pxPerMm);
+  widthPx = Math.round(widthPx);
+  heightPx = Math.round(heightPx);
+  tempDiv.remove();
+  return { pxPerMm, widthPx, heightPx, widthMm, heightMm };
+}
+```
+
+---
+## getLinkPositions.js
+
+#### Description
+- Get link positiions so they can be included in the PPTX/PowerPint
+
+#### Exports
+* getLinkPositions
+
+#### Used by
+* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
+
+#### Code
+
+*File:* [make/getLinkPositions.js](make/getLinkPositions.js)
 
 *Cognitive Complexity:* 1
 
 ```js
-export async function makePptx(widthMm, heightMm, pagePaths, allLinkPositions) {
-  let { author, title, description } = settings;
-  let cFactorInches = 0.0393700787;
-  let width = widthMm * cFactorInches, height = heightMm * cFactorInches;
-  let pptx = new pptxgen();
-  pptx.author = author;
-  pptx.company = author;
-  pptx.subject = description;
-  pptx.title = title;
-  await pptx.defineLayout({ name: 'cSize', width, height });
-  for (let path of pagePaths) {
-    let slide = await pptx.addSlide();
-    await slide.addImage({ path, x: 0, y: 0, w: '100%', h: '100%' });
-    // add links (previously extracted in makePDFFromHtml)
-    await addPptxSlideLinks(slide, allLinkPositions.shift());
-  }
-  await pptx.writeFile({ fileName: './dist/index.pptx', compression: true });
+// note: runs from makePdfFromHtml inside puppeteer browser page
+export function getLinkPositions(el, i, mPPTX) {
+  location.hash = '#' + i;
+  if (!mPPTX) { return []; }
+  return [...document.querySelectorAll(`#x${i} a[href]`)]
+    .map(x => {
+      let bRect = x.getBoundingClientRect();
+      return {
+        href: x.getAttribute('href'),
+        x: bRect.x, y: bRect.y, right: bRect.right, bottom: bRect.bottom
+      };
+    })
+    .filter(x => x.bottom !== 0);
 }
 ```
 
 ---
-## nonJustify.js
+## cleanupAndGetPageLength.js
 
 #### Description
-- Helper for space width calculation during letter spacing
+- Returns the page length
+- Removes navigation tool bar (so not printed to PDF and JPG:s)
 
 #### Exports
-* nonJustify
+* cleanupAndGetPageLength
 
 #### Used by
-* *getSpaceWidths* from [getSpaceWidths.js](#getspacewidthsjs)
-* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
+* *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
 
 #### Code
 
-*File:* [make/nonJustify.js](make/nonJustify.js)
+*File:* [make/cleanupAndGetPageLength.js](make/cleanupAndGetPageLength.js)
 
 *Cognitive Complexity:* 0
 
 ```js
-export function nonJustify() {
-  let head = document.querySelector('head');
-  let style = document.createElement('style');
-  style.classList.add('non-justify')
-  style.innerHTML = '* {text-align: left !important;}';
-  head.append(style);
+export function cleanupAndGetPageLength() {
+  // change id:s of sections to valid id:s (must start with character)
+  [...document.querySelectorAll('section[id]')].forEach(x => x.id = 'x' + x.id);
+  // remove navigator (otherwise it shows in screenshots)
+  document.querySelector('.bespoke-marp-osc').remove();
+  // number of pages in document
+  return document.querySelectorAll('section[id]').length;
 }
 ```
 
 ---
-## pdfMetaData.js
+## includeLetterSpacer.js
 
 #### Description
-- Sets PDF meta data
+- Includes the letter spacing logic in the HTML client side code
 
 #### Exports
-* pdfMetaData
+* includeLetterSpacer
 
 #### Uses
 * *settings* from [__settings.js](#__settingsjs)
-
-#### Used by
-* *fixSloppyPDFCropbox* from [fixSloppyPDFCropbox.js](#fixsloppypdfcropboxjs)
-
-#### Code
-
-*File:* [make/pdfMetaData.js](make/pdfMetaData.js)
-
-*Cognitive Complexity:* 0
-
-```js
-export function pdfMetaData(pdfDoc, r) {
-  let { author, language, title, description } = settings;
-  pdfDoc.setTitle(title);
-  pdfDoc.setSubject(description);
-  pdfDoc.setAuthor(author);
-  pdfDoc.setLanguage(language);
-  pdfDoc.setProducer(author + '\'s toolbox');
-  pdfDoc.setCreator(author);
-  r('PDF  -> Modified meta data.');
-}
-```
-
----
-## preWarmMakePdfFromHtml.js
-
-#### Description
-- Starts Puppeteer early to have it ready when needed
-
-#### Exports
-* preWarmMakePDFFromHtml
+* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacingjs)
+* *findBestLetterSpacing* from [findBestLetterSpacing.js](#findbestletterspacingjs)
+* *getSpaceWidths* from [getSpaceWidths.js](#getspacewidthsjs)
+* *nonJustify* from [nonJustify.js](#nonjustifyjs)
+* *reJustify* from [reJustify.js](#rejustifyjs)
+* *textNodesUnder* from [textNodesUnder.js](#textnodesunderjs)
+* *wrapWords* from [wrapWords.js](#wrapwordsjs)
 
 #### Used by
 * *_make* from [_make.js](#_makejs)
 
 #### Code
 
-*File:* [make/preWarmMakePdfFromHtml.js](make/preWarmMakePdfFromHtml.js)
+*File:* [make/includeLetterSpacer.js](make/includeLetterSpacer.js)
 
 *Cognitive Complexity:* 0
 
 ```js
-export async function preWarmMakePDFFromHtml() {
-  let browser = await puppeteer.launch({ headless: 'new' });
-  let page = await browser.newPage();
-  return { browser, page };
-}
-```
-
----
-## reJustify.js
-
-#### Description
-- Helper for space width calculation during letter spacing
-
-#### Exports
-* reJustify
-
-#### Used by
-* *getSpaceWidths* from [getSpaceWidths.js](#getspacewidthsjs)
-* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
-
-#### Code
-
-*File:* [make/reJustify.js](make/reJustify.js)
-
-*Cognitive Complexity:* 0
-
-```js
-export function reJustify() {
-  document.querySelector('style.non-justify').remove();
-}
-```
-
----
-## removeQuotes.js
-
-#### Description
-- Remove three different types of quotes from a string
-
-#### Exports
-* removeQuotes
-
-#### Used by
-* *embedImages* from [embedImages.js](#embedimagesjs)
-
-#### Code
-
-*File:* [make/removeQuotes.js](make/removeQuotes.js)
-
-*Cognitive Complexity:* 0
-
-```js
-export function removeQuotes(x) {
-  return x
-    .split('"').join('')
-    .split("'").join('')
-    .split('&quot;').join('')
-}
-```
-
----
-## scaleImage.js
-
-#### Description
-- Scales imags using the npm module sharp
-
-#### Exports
-* scaleImage
-
-#### Uses
-* *settings* from [__settings.js](#__settingsjs)
-
-#### Used by
-* *embedImages* from [embedImages.js](#embedimagesjs)
-
-#### Code
-
-*File:* [make/scaleImage.js](make/scaleImage.js)
-
-*Cognitive Complexity:* 0
-
-```js
-export async function scaleImage(buffer) {
-  let { resizeSettings, jpegSettings } = settings;
-  return sharp(buffer)
-    .resize(...resizeSettings)
-    .jpeg(...jpegSettings)
-    .toBuffer();
-};
-```
-
----
-## setHtmlLanguage.js
-
-#### Description
-- Sets the html lang attribute according to settings
-
-#### Exports
-* setHTMLLanguage
-
-#### Uses
-* *settings* from [__settings.js](#__settingsjs)
-
-#### Used by
-* *_make* from [_make.js](#_makejs)
-
-#### Code
-
-*File:* [make/setHtmlLanguage.js](make/setHtmlLanguage.js)
-
-*Cognitive Complexity:* 0
-
-```js
-export function setHTMLLanguage(html) {
-  let { language } = settings;
-  html = html.replace(/<html[^>]*>/g, `<html lang="${language}">`);
+export function includeLetterSpacer(html) {
+  let code = [
+    'const settings = ' + JSON.stringify(settings),
+    adjustLetterSpacing,
+    findBestLetterSpacing,
+    textNodesUnder,
+    wrapWords,
+    getSpaceWidths,
+    nonJustify,
+    reJustify
+  ].map(x => x + '').join('\n\n');
+  code = `(()=>{\n${code};\n\nadjustLetterSpacing();})();`;
+  html = html.split('</body>').join(`<script>${code}</script></body>`);
   return html;
 }
 ```
 
 ---
-## textNodesUnder.js
+## adjustLetterSpacing.js
 
 #### Description
-- Extract text nodes in a DOM element
-- Used for letter spacing
+- Adjust the letter-spacing for justified text to minimize gaps
 
 #### Exports
-* textNodesUnder
+* adjustLetterSpacing
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+* *findBestLetterSpacing* from [findBestLetterSpacing.js](#findbestletterspacingjs)
+* *getSpaceWidths* from [getSpaceWidths.js](#getspacewidthsjs)
+* *wrapWords* from [wrapWords.js](#wrapwordsjs)
 
 #### Used by
 * *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
-* *wrapWords* from [wrapWords.js](#wrapwordsjs)
 
 #### Code
 
-*File:* [make/textNodesUnder.js](make/textNodesUnder.js)
+*File:* [make/adjustLetterSpacing.js](make/adjustLetterSpacing.js)
 
-*Cognitive Complexity:* 1
+*Cognitive Complexity:* 8
 
 ```js
-export function textNodesUnder(el) {
-  var n, a = [], walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
-  while (n = walk.nextNode()) a.push(n);
-  return a;
+export async function adjustLetterSpacing(page = 1, loadPage) {
+  loadPage = loadPage || +location.hash.slice(1);
+  (!loadPage || isNaN(loadPage)) && (loadPage = 1);
+  let {
+    letterSpacingMinRem: minSpace,
+    letterSpacingMaxRem: maxSpace
+  } = settings;
+  document.body.style.opacity = 0; // temp hide content
+  await document.fonts.ready;
+  let section = [...document.querySelectorAll('section')]
+    .find(x => x.id.replace(/\D/g, '') === page + '');
+  if (!section) {
+    location.hash = '#' + loadPage;
+    document.body.style.opacity = 1; // show content
+    return;
+  }
+  location.hash = '#' + page;
+  wrapWords(section);
+  let spaces = getSpaceWidths();
+  let step = (maxSpace - minSpace) / 50;
+  for (let { el, baseW, words } of spaces) {
+    let candidates = [];
+    for (let i = minSpace; i <= maxSpace; i += step) {
+      words.forEach(w => w.style.letterSpacing = i + 'rem');
+      candidates.push({ space: i, val: el.offsetWidth / baseW });
+    }
+    let best = findBestLetterSpacing(candidates);
+    words.forEach(w => w.style.letterSpacing = best.space + 'rem');
+  }
+  adjustLetterSpacing(page + 1, loadPage);
+}
+```
+
+---
+## findBestLetterSpacing.js
+
+#### Description
+- Find the base candidate among different letter spacings
+- Closest to normal spacing
+- If several options give the same spacing -> tigher kerning
+
+#### Exports
+* findBestLetterSpacing
+
+#### Used by
+* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacingjs)
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
+
+#### Code
+
+*File:* [make/findBestLetterSpacing.js](make/findBestLetterSpacing.js)
+
+*Cognitive Complexity:* 7
+
+```js
+export function findBestLetterSpacing(candidates) {
+  return candidates.sort((a, b) => {
+    if (a.val === b.val) {
+      return Math.abs(a.space) < Math.abs(b.space) ? -1 : 1;
+    }
+    return a.val < b.val ? -1 : 1;
+  })[0];
 }
 ```
 
@@ -1581,5 +1437,149 @@ export function wrapWords(insideEl) {
       currentNode = aWord;
     }
   });
+}
+```
+
+---
+## textNodesUnder.js
+
+#### Description
+- Extract text nodes in a DOM element
+- Used for letter spacing
+
+#### Exports
+* textNodesUnder
+
+#### Used by
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
+* *wrapWords* from [wrapWords.js](#wrapwordsjs)
+
+#### Code
+
+*File:* [make/textNodesUnder.js](make/textNodesUnder.js)
+
+*Cognitive Complexity:* 1
+
+```js
+export function textNodesUnder(el) {
+  var n, a = [], walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
+  while (n = walk.nextNode()) a.push(n);
+  return a;
+}
+```
+
+---
+## getSpaceWidths.js
+
+#### Description
+- Get widhts of spaces needed fo letter-spacing adjustments
+
+#### Exports
+* getSpaceWidths
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+* *nonJustify* from [nonJustify.js](#nonjustifyjs)
+* *reJustify* from [reJustify.js](#rejustifyjs)
+
+#### Used by
+* *adjustLetterSpacing* from [adjustLetterSpacing.js](#adjustletterspacingjs)
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
+
+#### Code
+
+*File:* [make/getSpaceWidths.js](make/getSpaceWidths.js)
+
+*Cognitive Complexity:* 2
+
+```js
+export function getSpaceWidths() {
+  let { hyphenateTags: parentSel } = settings;
+  parentSel = parentSel.join(', ');
+  let words = [...document.querySelectorAll('a-word')];
+  let spaces = [...document.querySelectorAll('a-space')];
+  // only keep one space per common parentNode and line
+  let parentNodeMem = [];
+  spaces = spaces.filter(el => {
+    let pNode = el.closest(parentSel);
+    let y = el.getBoundingClientRect().y;
+    let keep = !parentNodeMem.find(([a, b]) => a === pNode && b === y);
+    parentNodeMem.push([pNode, y]);
+    return keep;
+  });
+  // check how stretched the spaces are
+  nonJustify();
+  spaces = spaces
+    .map(el => ({ el, w: el.offsetWidth }))
+    .filter(({ w }) => w);
+  reJustify();
+  spaces.forEach(x => x.w2 = x.el.offsetWidth);
+  spaces = spaces
+    .filter(({ w, w2 }) => w !== w2)
+    .map(({ el, w, w2 }) => ({
+      el,
+      stretch: w2 / w,
+      baseW: w,
+      words: words.filter(x =>
+        x.closest(parentSel) === el.closest(parentSel)
+        && x.getBoundingClientRect().y === el.getBoundingClientRect().y
+      )
+    }));
+  spaces.forEach(x => x.phrase = x.words.map(x => x.innerText).join(' '));
+  return spaces;
+}
+```
+
+---
+## reJustify.js
+
+#### Description
+- Helper for space width calculation during letter spacing
+
+#### Exports
+* reJustify
+
+#### Used by
+* *getSpaceWidths* from [getSpaceWidths.js](#getspacewidthsjs)
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
+
+#### Code
+
+*File:* [make/reJustify.js](make/reJustify.js)
+
+*Cognitive Complexity:* 0
+
+```js
+export function reJustify() {
+  document.querySelector('style.non-justify').remove();
+}
+```
+
+---
+## nonJustify.js
+
+#### Description
+- Helper for space width calculation during letter spacing
+
+#### Exports
+* nonJustify
+
+#### Used by
+* *getSpaceWidths* from [getSpaceWidths.js](#getspacewidthsjs)
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
+
+#### Code
+
+*File:* [make/nonJustify.js](make/nonJustify.js)
+
+*Cognitive Complexity:* 0
+
+```js
+export function nonJustify() {
+  let head = document.querySelector('head');
+  let style = document.createElement('style');
+  style.classList.add('non-justify')
+  style.innerHTML = '* {text-align: left !important;}';
+  head.append(style);
 }
 ```
