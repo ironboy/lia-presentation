@@ -766,7 +766,9 @@ export async function embedImages(html) {
   let imagePaths = [...htmlImages, ...cssImages];
   let images = [];
   for (let path of imagePaths) {
-    images.push(`data:image/${path.split('.').slice(-1)};base64,` + (await scaleImage(readFileSync('./' + path))).toString('base64'));
+    let type = path.split('.').slice(-1)[0];
+    images.push(`data:image/${type};base64,`
+      + (await scaleImage(readFileSync('./' + path), type)).toString('base64'));
   }
   for (let i = 0; i < images.length; i++) {
     html = html.split(imagePaths[i]).join(images[i]);
@@ -860,14 +862,15 @@ export function bgImagesToClasses(html) {
 
 *File:* [make/scaleImage.js](make/scaleImage.js)
 
-*Cognitive Complexity:* 0
+*Cognitive Complexity:* 1
 
 ```js
-export async function scaleImage(buffer) {
+export async function scaleImage(buffer, type) {
+  type === 'jpg' && (type = 'jpeg');
   let { resizeSettings, jpegSettings } = settings;
   return sharp(buffer)
     .resize(...resizeSettings)
-    .jpeg(...jpegSettings)
+  [type](...jpegSettings)
     .toBuffer();
 };
 ```

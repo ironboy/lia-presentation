@@ -10,7 +10,9 @@ export async function embedImages(html) {
   let imagePaths = [...htmlImages, ...cssImages];
   let images = [];
   for (let path of imagePaths) {
-    images.push(`data:image/${path.split('.').slice(-1)};base64,` + (await scaleImage(readFileSync('./' + path))).toString('base64'));
+    let type = path.split('.').slice(-1)[0];
+    images.push(`data:image/${type};base64,`
+      + (await scaleImage(readFileSync('./' + path), type)).toString('base64'));
   }
   for (let i = 0; i < images.length; i++) {
     html = html.split(imagePaths[i]).join(images[i]);
