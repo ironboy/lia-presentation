@@ -99,6 +99,7 @@ We're rather relaxed. But there are some important guidelines you really *should
 * *getSpaceWidths* from [getSpaceWidths.js](#getspacewidthsjs)
 * *hyphenate* from [hyphenate.js](#hyphenatejs)
 * *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
+* *includeWordSpacing* from [includeWordSpacing.js](#includewordspacingjs)
 * *makePdfFromHtml* from [makePdfFromHtml.js](#makepdffromhtmljs)
 * *makePptx* from [makePptx.js](#makepptxjs)
 * *pdfMetaData* from [pdfMetaData.js](#pdfmetadatajs)
@@ -122,6 +123,8 @@ export const settings = {
   hyphenateMinWordLength: 6,
   hyphenateMinCharsBefore: 3,
   hyphenateMinCharsAfter: 3,
+  /* word-spacing / extra width for a space */
+  wordSpacingRem: 0.02,
   /* variable letter-spacing (counteracts big spaces on hyphenation) */
   letterSpacingMinRem: -0.02,
   letterSpacingMaxRem: 0.02,
@@ -258,6 +261,7 @@ export {
 * *embedImages* from [embedImages.js](#embedimagesjs)
 * *hyphenate* from [hyphenate.js](#hyphenatejs)
 * *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
+* *includeWordSpacing* from [includeWordSpacing.js](#includewordspacingjs)
 * *makeHtml* from [makeHtml.js](#makehtmljs)
 * *makeLinkTargetsBlankAdd* from [makeLinkTargetsBlankAdd.js](#makelinktargetsblankaddjs)
 * *preWarmMakePDFFromHtml* from [preWarmMakePdfFromHtml.js](#prewarmmakepdffromhtmljs)
@@ -298,6 +302,8 @@ export async function _make() {
   let { html: htm, language: lang } = await hyphenate(html);
   html = htm;
   r('HTML -> Hyphenation done (language: ' + lang + ')');
+  html = includeWordSpacing(html);
+  r('HTML -> Included code for word spacing.')
   html = includeLetterSpacer(html);
   r('HTML -> Included code for letter spacing.')
   html = makeLinkTargetsBlankAdd(html);
@@ -545,6 +551,42 @@ export function makeLinkTargetsBlank() {
       a.setAttribute('target', '_blank');
     }
   });
+}
+```
+
+---
+## includeWordSpacing.js
+
+#### Description
+- Includes the word spacing as a css rule
+
+#### Exports
+* includeWordSpacing
+
+#### Uses
+* *settings* from [__settings.js](#__settingsjs)
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
+
+#### Code
+
+*File:* [make/includeWordSpacing.js](make/includeWordSpacing.js)
+
+*Cognitive Complexity:* 0
+
+```js
+export function includeWordSpacing(html) {
+  let { wordSpacingRem } = settings;
+  html = html.split('</head>').join(/*css*/`
+    <style>
+    a-space {
+      letter-spacing: ${wordSpacingRem}rem;
+    }
+    </style>
+    </head>
+  `);
+  return html;
 }
 ```
 

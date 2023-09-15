@@ -12,6 +12,8 @@ export const settings = {
   hyphenateMinWordLength: 6,
   hyphenateMinCharsBefore: 3,
   hyphenateMinCharsAfter: 3,
+  /* word-spacing / extra width for a space */
+  wordSpacingRem: 0.02,
   /* variable letter-spacing (counteracts big spaces on hyphenation) */
   letterSpacingMinRem: -0.02,
   letterSpacingMaxRem: 0.02,

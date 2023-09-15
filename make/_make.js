@@ -31,6 +31,8 @@ export async function _make() {
   let { html: htm, language: lang } = await hyphenate(html);
   html = htm;
   r('HTML -> Hyphenation done (language: ' + lang + ')');
+  html = includeWordSpacing(html);
+  r('HTML -> Included code for word spacing.')
   html = includeLetterSpacer(html);
   r('HTML -> Included code for letter spacing.')
   html = makeLinkTargetsBlankAdd(html);
