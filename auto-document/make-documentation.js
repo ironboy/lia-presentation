@@ -5,7 +5,6 @@ import { join as pathJoin } from 'path';
 import { readdirSync, readFileSync, writeFileSync } from 'fs';
 import { markdownGenerator } from './markdownGenerator.js';
 import { parseAndextractInfo } from './parseAndextractInfo.js';
-import { sortInfo } from './sortInfo.js';
 import { performFinalCleaningOfMarkdown } from './performFinalCleaningOfMarkdown.js';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -28,7 +27,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
       });
   }
   parseAndextractInfo(allContent);
-  sortInfo(allContent);
   let md = [];
   for (let { file, exports, description, uses, usedBy, cComplexity } of allContent) {
     markdownGenerator(md, file, exports, description, uses, usedBy, cComplexity);
