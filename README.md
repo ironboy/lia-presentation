@@ -1134,34 +1134,6 @@ export async function makeHtml() {
 ```
 
 ---
-## makeLinkTargetsBlankAdd.js
-
-#### Description
-- Includes client side code for opening external links in new tabs
-
-#### Exports
-* makeLinkTargetsBlankAdd
-
-#### Uses
-* *makeLinkTargetsBlank* from [makeLinkTargetsBlank.js](#makelinktargetsblankjs)
-
-#### Used by
-* *_make* from [_make.js](#_makejs)
-
-#### Code
-
-*File:* [make/makeLinkTargetsBlankAdd.js](make/makeLinkTargetsBlankAdd.js)
-
-*Cognitive Complexity:* 0
-
-```js
-export function makeLinkTargetsBlankAdd(html) {
-  html = html.split('</body>').join('<script>' + makeLinkTargetsBlank + ';makeLinkTargetsBlank();</script></body>');
-  return html;
-}
-```
-
----
 ## makeLinkTargetsBlank.js
 
 #### Description
@@ -1188,6 +1160,34 @@ export function makeLinkTargetsBlank() {
       a.setAttribute('target', '_blank');
     }
   });
+}
+```
+
+---
+## makeLinkTargetsBlankAdd.js
+
+#### Description
+- Includes client side code for opening external links in new tabs
+
+#### Exports
+* makeLinkTargetsBlankAdd
+
+#### Uses
+* *makeLinkTargetsBlank* from [makeLinkTargetsBlank.js](#makelinktargetsblankjs)
+
+#### Used by
+* *_make* from [_make.js](#_makejs)
+
+#### Code
+
+*File:* [make/makeLinkTargetsBlankAdd.js](make/makeLinkTargetsBlankAdd.js)
+
+*Cognitive Complexity:* 0
+
+```js
+export function makeLinkTargetsBlankAdd(html) {
+  html = html.split('</body>').join('<script>' + makeLinkTargetsBlank + ';makeLinkTargetsBlank();</script></body>');
+  return html;
 }
 ```
 
@@ -1511,6 +1511,34 @@ export function setHTMLLanguage(html) {
 ```
 
 ---
+## textNodesUnder.js
+
+#### Description
+- Extract text nodes in a DOM element
+- Used for letter spacing
+
+#### Exports
+* textNodesUnder
+
+#### Used by
+* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
+* *wrapWords* from [wrapWords.js](#wrapwordsjs)
+
+#### Code
+
+*File:* [make/textNodesUnder.js](make/textNodesUnder.js)
+
+*Cognitive Complexity:* 1
+
+```js
+export function textNodesUnder(el) {
+  var n, a = [], walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
+  while (n = walk.nextNode()) a.push(n);
+  return a;
+}
+```
+
+---
 ## wrapWords.js
 
 #### Description
@@ -1553,33 +1581,5 @@ export function wrapWords(insideEl) {
       currentNode = aWord;
     }
   });
-}
-```
-
----
-## textNodesUnder.js
-
-#### Description
-- Extract text nodes in a DOM element
-- Used for letter spacing
-
-#### Exports
-* textNodesUnder
-
-#### Used by
-* *includeLetterSpacer* from [includeLetterSpacer.js](#includeletterspacerjs)
-* *wrapWords* from [wrapWords.js](#wrapwordsjs)
-
-#### Code
-
-*File:* [make/textNodesUnder.js](make/textNodesUnder.js)
-
-*Cognitive Complexity:* 1
-
-```js
-export function textNodesUnder(el) {
-  var n, a = [], walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
-  while (n = walk.nextNode()) a.push(n);
-  return a;
 }
 ```
