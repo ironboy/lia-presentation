@@ -34,7 +34,10 @@ export async function adjustLetterSpacing(page = 1, loadPage) {
       candidates.push({ space: i, val: el.offsetWidth / baseW });
     }
     let best = findBestLetterSpacing(candidates);
-    words.forEach(w => w.style.letterSpacing = best.space + 'rem');
+    // (best.space - step, instead of best.space -> experimental, 
+    //  sometimes minor diff between puppeteer print / pdf and html
+    //  and in the "LIA-folder" test case this seems to fix that)
+    words.forEach(w => w.style.letterSpacing = (best.space - step) + 'rem');
   }
   adjustLetterSpacing(page + 1, loadPage);
 }
