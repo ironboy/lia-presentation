@@ -5,6 +5,7 @@
 @import 'default';
 
 section {
+  /* important css */
   justify-content: start;
   font-family: 'Sofia Sans Semi Condensed';
   /*bread-text-color*/
