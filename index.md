@@ -141,7 +141,7 @@ Mattias har en bakgrund som Technical Advisor på CCC Nordic A/S, Örestad och s
 # Projektinfo: AI-bilderboken
 Projektet ni ska jobba i har följande **mål**/EPICS:
 - Skapa ett system där en författare kan skriva texten till en bilderbok som [markdown](https://www.markdownguide.org) och lägga in bilder manuellt, få den automatiskt layoutad med [MARP](https://marp.app) + [CSS](https://www.w3schools.com/css/) + ytterligare kod för att skapa HTML och PDF från Marp [redan skriven av Node Hill](https://github.com/ironboy/lia-presentation).
-- Gör research på hur bilderböcker fungerar, de har [uppslag](https://www.google.com/search?q=bilderb%C3%B6cker+uppslag&tbm=isch), olika laouyt för vänster/höger-sidor etc. Fundera även på en lämplig [typografi](https://www.figma.com/resource-library/typography-in-design) (teckensnitt och teckenstorlekar) etc för er mall.
+- Gör research på hur bilderböcker fungerar, de har [uppslag](https://www.google.com/search?q=bilderb%C3%B6cker+uppslag&tbm=isch), olika layout för vänster/höger-sidor etc. Fundera även på en lämplig [typografi](https://www.figma.com/resource-library/typography-in-design) (teckensnitt och teckenstorlekar) etc för er mall.
 - Få bilderboken att automatiskt illustreras via AI:<br>[Stable Diffusion:s API](https://stablediffusionweb.com).
 - Går det att extrahera information för illustrationerna direkt från texten eller ska vi införa tillägg i vår markdown-syntax där författaren kan "prompta" (skriva instruktioner till) AI:n?
 
