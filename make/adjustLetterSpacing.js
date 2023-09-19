@@ -23,6 +23,11 @@ export async function adjustLetterSpacing(page = 1, loadPage) {
   let spaces = getSpaceWidths();
   let step = (maxSpace - minSpace) / 50;
   for (let { el, baseW, words } of spaces) {
+    if (el.offsetWidth === 0) { // space at end of line, no width, so find another space
+      el = [...el.parentElement.querySelectorAll('a-space')]
+        .filter(x => x.getBoundingClientRect().y === el.getBoundingClientRect().y)
+        .find(x => x.offsetWidth !== 0) || el;
+    }
     let candidates = [];
     for (let i = minSpace; i <= maxSpace; i += step) {
       words.forEach(w => w.style.letterSpacing = i + 'rem');

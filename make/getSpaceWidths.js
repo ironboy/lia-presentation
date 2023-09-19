@@ -34,6 +34,7 @@ export function getSpaceWidths() {
         && x.getBoundingClientRect().y === el.getBoundingClientRect().y
       )
     }));
-  spaces.forEach(x => x.phrase = x.words.map(x => x.innerText).join(' '));
+  spaces.forEach(x => x.phrase = x.words.map(x => x.innerText)
+    .join(' ').replace(/\s{1,}/g, ' '));
   return spaces;
 }
