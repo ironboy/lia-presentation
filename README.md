@@ -1371,7 +1371,7 @@ export function includeLetterSpacer(html) {
 
 *File:* [make/adjustLetterSpacing.js](make/adjustLetterSpacing.js)
 
-*Cognitive Complexity:* 8
+*Cognitive Complexity:* 11
 
 ```js
 export async function adjustLetterSpacing(page = 1, loadPage) {
@@ -1395,13 +1395,21 @@ export async function adjustLetterSpacing(page = 1, loadPage) {
   let spaces = getSpaceWidths();
   let step = (maxSpace - minSpace) / 50;
   for (let { el, baseW, words } of spaces) {
+    if (el.offsetWidth === 0) { // space at end of line, no width, so find another space
+      el = [...el.parentElement.querySelectorAll('a-space')]
+        .filter(x => x.getBoundingClientRect().y === el.getBoundingClientRect().y)
+        .find(x => x.offsetWidth !== 0) || el;
+    }
     let candidates = [];
     for (let i = minSpace; i <= maxSpace; i += step) {
       words.forEach(w => w.style.letterSpacing = i + 'rem');
       candidates.push({ space: i, val: el.offsetWidth / baseW });
     }
     let best = findBestLetterSpacing(candidates);
-    words.forEach(w => w.style.letterSpacing = best.space + 'rem');
+    // (best.space - step, instead of best.space -> experimental, 
+    //  sometimes minor diff between puppeteer print / pdf and html
+    //  and in the "LIA-folder" test case this seems to fix that)
+    words.forEach(w => w.style.letterSpacing = (best.space - step) + 'rem');
   }
   adjustLetterSpacing(page + 1, loadPage);
 }
@@ -1570,7 +1578,8 @@ export function getSpaceWidths() {
         && x.getBoundingClientRect().y === el.getBoundingClientRect().y
       )
     }));
-  spaces.forEach(x => x.phrase = x.words.map(x => x.innerText).join(' '));
+  spaces.forEach(x => x.phrase = x.words.map(x => x.innerText)
+    .join(' ').replace(/\s{1,}/g, ' '));
   return spaces;
 }
 ```
